@@ -1,0 +1,86 @@
+﻿@using ProaktifArizaTahmini.CORE.Entities;
+
+@model MyData
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h3>Silmek İstiyor Musun?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            TM No
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AvcilarTM)
+        </dd>
+        <dt class="col-sm-2">
+            kV
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.kV)
+        </dd>
+        <dt class="col-sm-2">
+            Hücre No
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HucreNo)
+        </dd>
+        <dt class="col-sm-2">
+            Tm-kV-Hücre
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TmKvHucre)
+        </dd>
+        <dt class="col-sm-2">
+            Fider Adı
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FiderName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IP)
+        </dd>
+        <dt class="col-sm-2">
+            Röle Model
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoleModel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Port)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Port)
+        </dd>
+        <dt class="col-sm-2">
+            Kullanıcı Adı
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User)
+        </dd>
+        <dt class="col-sm-2">
+            Şifre
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dt class="col-sm-2">
+            Dosya Yolu
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Path)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Sil" class="btn btn-danger" /> |
+        <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>
+    </form>
+</div>
