@@ -26,8 +26,8 @@ namespace ComtradeApp
         /// <summary>
         /// It takes the path of the local cfg and dat folders and checks if it has been downloaded before.
         /// </summary>
-        /// <param name="roleFolder">Path to save downloaded files</param>
-        public async Task DownloadCfgAndDatFilesEfCoreAsync(string roleFolder)
+        /// <param name="comtradeFilesPath">Path to save downloaded files</param>
+        public async Task DownloadCfgAndDatFilesEfCoreAsync(string comtradeFilesPath)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace ComtradeApp
                     //we check the files in the folders if they have been downloaded before
                     string tmNoFolderName = item.AvcilarTM;
                     string hucreNoFolderName = item.HucreNo;
-                    string destFolderPath = Path.Combine(roleFolder, tmNoFolderName, hucreNoFolderName);
+                    string destFolderPath = Path.Combine(comtradeFilesPath, tmNoFolderName, hucreNoFolderName);
                     if (!Directory.Exists(destFolderPath))
                     {
                         Directory.CreateDirectory(destFolderPath);
@@ -253,193 +253,6 @@ namespace ComtradeApp
 
             //return DateTime.MinValue; // Eğer dosya ayrıntıları bulunamazsa varsayılan bir değer döndürebilirsiniz
         }
-
-
-
-        ////const string host = "ftp://ftp.dlptest.com/";
-        ////const string username = "dlpuser";
-        ////const string password = "rNrKYTX9g7z3RgJRmxWuGHbeu";
-        ////const string remoteFolder = "bugra-test/";
-        ////const string username = "ADMINISTRATOR";
-        ////const string password = "remote0004";
-        ////const string remoteFolder = "COMTRADE/";
-        ////const string host = "ftp://10.212.72.222/";
-        ///// <summary>
-        ///// It downloads dat and cfg files by taking the necessary information for ftp from the csv file.
-        ///// It takes the path of the local cfg and dat folders and checks if it has been downloaded before.
-        ///// </summary>
-        ///// <param name="ftpCsvPath">The path to the csv file with the information required for ftp</param>
-        ///// <param name="localFolder">Path to save downloaded files</param>
-        ///// <param name="localCfgFolderPath">Path to local CFG folder</param>
-        ///// <param name="localDatFolderPath">Path to local DAT folder</param>
-        //public static void DownloadFiles(string ftpCsvPath, string localFolder, string localCfgFolderPath, string localDatFolderPath)
-        //{
-        //    try
-        //    {
-        //        Serilog.Log.Information("FTP işlemleri başladı..");
-        //        using (var streamReader = new StreamReader(ftpCsvPath))
-        //        {
-        //            var headerLine = streamReader.ReadLine();
-        //            while (!streamReader.EndOfStream)
-        //            {
-        //                var line = streamReader.ReadLine();
-        //                var values = line.Split(';');
-        //                string ip = values[0];
-        //                string port = values[1];
-        //                string username = values[2];
-        //                string password = values[3];
-        //                string remoteFolder = values[4];
-        //                string host = $"ftp://{ip}:{port}";
-        //                //we check the files in the folders if they have been downloaded before
-        //                string[] fileNamesLocal = Directory.GetFiles(localFolder);
-        //                string[] fileNamesCfg = Directory.GetFiles(localCfgFolderPath);
-        //                string[] fileNamesDat = Directory.GetFiles(localDatFolderPath);
-        //                string[] allFileNames = fileNamesLocal.Concat(fileNamesCfg).Concat(fileNamesDat).ToArray();
-
-        //                //add downloads to a list
-        //                List<string> downloadedFiles = new List<string>(allFileNames.Select(Path.GetFileName));
-        //                Serilog.Log.Information($"Daha önce indirilen dosya sayısı : {downloadedFiles.Count}");
-        //                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(host + remoteFolder);
-        //                request.Method = WebRequestMethods.Ftp.ListDirectory;
-        //                request.UsePassive = true;
-        //                request.Credentials = new NetworkCredential(username, password);
-        //                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-        //                Serilog.Log.Information(response.StatusCode.ToString());
-        //                Stream responseStream = response.GetResponseStream();
-        //                StreamReader reader = new StreamReader(responseStream);
-
-        //                // list the files to download 
-        //                List<string> filesToDownload = new List<string>();
-        //                string fileName = reader.ReadLine();
-        //                while (!string.IsNullOrEmpty(fileName))
-        //                {
-        //                    if (!downloadedFiles.Contains(fileName))
-        //                    {
-        //                        filesToDownload.Add(fileName);
-        //                    }
-        //                    fileName = reader.ReadLine();
-        //                }
-        //                reader.Close();
-        //                response.Close();
-        //                Serilog.Log.Information($"İndirelecek dosya sayısı : {filesToDownload.Count}");
-
-        //                if (filesToDownload.Count > 0)
-        //                {
-        //                    foreach (string file in filesToDownload)
-        //                    {
-        //                        WebClient client = new WebClient();
-        //                        client.Credentials = new NetworkCredential(username, password);
-        //                        string remoteFilePath = host + remoteFolder + file;
-        //                        string localFolderPath = localFolder + @"\" + file;
-        //                        if (!string.IsNullOrEmpty(file))
-        //                        {
-        //                            client.DownloadFile(remoteFilePath, localFolderPath);
-        //                            Serilog.Log.Information($"İndirilen dosya : {file}");
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        Serilog.Log.Information("FTP sunucusundan dosyaları indirme tamamlandı.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Serilog.Log.Error(ex, "Dosyaları indirirken hata oluştu.");
-        //    }
-        //    finally
-        //    {
-        //        Serilog.Log.Information("FTP işlemleri sonlandı.. \n");
-        //    }
-
-        //}
-        ///// <summary>
-        ///// It downloads dat and cfg files by taking the necessary information for ftp from the csv file.
-        ///// It takes the path of the local cfg and dat folders and checks if it has been downloaded before.
-        ///// </summary>
-        ///// <param name="ftpCsvPath">The path to the csv file with the information required for ftp</param>
-        ///// <param name="localFolder">Path to save downloaded files</param>
-        ///// <param name="localCfgFolderPath">Path to local CFG folder</param>
-        ///// <param name="localDatFolderPath">Path to local DAT folder</param>
-        //public static void DownloadCfgAndDatFiles(string ftpCsvPath, string localFolder, string localCfgFolderPath, string localDatFolderPath)
-        //{
-        //    try
-        //    {
-        //        Serilog.Log.Information("FTP işlemleri başladı..");
-        //        using (var streamReader = new StreamReader(ftpCsvPath))
-        //        {
-        //            var lines = File.ReadAllLines(ftpCsvPath);
-        //            for (int i = 1; i < lines.Length; i++) // İlk satırı atla
-        //            {
-        //                var line = lines[i];
-        //                if (string.IsNullOrEmpty(line)) break;
-        //                var values = line.Split(',');
-        //                string ip = values[0];
-        //                string port = values[1];
-        //                string username = values[2];
-        //                string password = values[3];
-        //                string remoteFolder = values[4];
-        //                string host = $"ftp://{ip}:{port}/";
-        //                //we check the files in the folders if they have been downloaded before
-        //                string[] fileNamesLocal = Directory.GetFiles(localFolder);
-        //                string[] fileNamesCfg = Directory.GetFiles(localCfgFolderPath);
-        //                string[] fileNamesDat = Directory.GetFiles(localDatFolderPath);
-        //                string[] allFileNames = fileNamesLocal.Concat(fileNamesCfg).Concat(fileNamesDat).ToArray();
-
-        //                //add downloads to a list
-        //                List<string> downloadedFiles = new List<string>(allFileNames.Select(Path.GetFileName));
-        //                Serilog.Log.Information($"Daha önce indirilen dosya sayısı : {downloadedFiles.Count}");
-        //                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(host + remoteFolder);
-        //                request.Method = WebRequestMethods.Ftp.ListDirectory;
-        //                request.UsePassive = true;
-        //                request.Credentials = new NetworkCredential(username, password);
-        //                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-        //                Serilog.Log.Information(response.StatusCode.ToString());
-        //                Stream responseStream = response.GetResponseStream();
-        //                StreamReader reader = new StreamReader(responseStream);
-
-        //                // list the files to download 
-        //                List<string> filesToDownload = new List<string>();
-        //                string fileName = reader.ReadLine();
-        //                while (!string.IsNullOrEmpty(fileName))
-        //                {
-        //                    if (!downloadedFiles.Contains(fileName))
-        //                    {
-        //                        filesToDownload.Add(fileName);
-        //                    }
-        //                    fileName = reader.ReadLine();
-        //                }
-        //                reader.Close();
-        //                response.Close();
-        //                Serilog.Log.Information($"İndirelecek dosya sayısı : {filesToDownload.Count}");
-
-        //                if (filesToDownload.Count > 0)
-        //                {
-        //                    foreach (string file in filesToDownload)
-        //                    {
-        //                        WebClient client = new WebClient();
-        //                        client.Credentials = new NetworkCredential(username, password);
-        //                        string remoteFilePath = host + remoteFolder + file;
-        //                        string localFolderPath = localFolder + @"\" + "(" + DateTime.Now.ToString("yyyy.MM.ddTHH.mm.ss") + ")" + "-" + file;
-        //                        if (!string.IsNullOrEmpty(file))
-        //                        {
-        //                            client.DownloadFile(remoteFilePath, localFolderPath);
-        //                            Serilog.Log.Information($"İndirilen dosya : {file}");
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        Serilog.Log.Information("FTP sunucusundan dosyaları indirme tamamlandı.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Serilog.Log.Error(ex, "Dosyaları indirirken hata oluştu.");
-        //    }
-        //    finally
-        //    {
-        //        Serilog.Log.Information("FTP işlemleri sonlandı.. \n");
-        //    }
-        //}
     }
 
 }

@@ -29,17 +29,17 @@ public class Program
         services.AddSingleton<MyDataRepository>();
         services.AddSingleton<DisturbanceRepository>();
         services.AddSingleton<FtpService>();
-        services.AddSingleton<MovingFilesService>();
+        services.AddSingleton<FtpDeneme3>();
         serviceProvider = services.BuildServiceProvider();
         MyDataRepository myDataRepository = serviceProvider.GetRequiredService<MyDataRepository>();
         DisturbanceRepository disturbanceRepository = serviceProvider.GetRequiredService<DisturbanceRepository>();
         FtpService ftpService = serviceProvider.GetRequiredService<FtpService>();
-        MovingFilesService movingFilesService = serviceProvider.GetRequiredService<MovingFilesService>();
+        FtpDeneme3 ftpService3 = serviceProvider.GetRequiredService<FtpDeneme3>();
         #endregion
 
         #region Paths
         string localFolder = configuration.GetSection("FilePath")["LocalFolder"];
-        string roleFolder = configuration.GetSection("FilePath")["RoleFolder"];
+        string comtradeFilesPath = configuration.GetSection("FilePath")["ComtradeFilesPath"];
         string localCfgFolder = configuration.GetSection("FilePath")["LocalCfgFolder"];
         string localDatFolder = configuration.GetSection("FilePath")["LocalDatFolder"];
         string localRmsCsvFolder = configuration.GetSection("FilePath")["LocalRmsCsvFolder"];
@@ -53,11 +53,10 @@ public class Program
         try
         {
             Serilog.Log.Debug("Uygulama başladı... \n");
-            //FtpService.DownloadCfgAndDatFiles(ftpCsvPath, localFolder, localCfgFolder, localDatFolder);
-           await ftpService.DownloadCfgAndDatFilesEfCoreAsync(roleFolder);
-            //await movingFilesService.MovingDownloadedFiles(localFolder,roleFolder);
-            //CsvConverterService.ConvertDatAndCfgFilesToCsvAsRMSData(pythonExePath, rmsScript, localCfgFolder, localDatFolder, localRmsCsvFolder);
-            //CsvConverterService.ConvertDatAndCfgFilesToCsvAsInstantData(pythonExePath, instantScript, localCfgFolder, localDatFolder, localInstantCsvFolder);
+            //await ftpService.DownloadCfgAndDatFilesEfCoreAsync(comtradeFilesPath);
+            await ftpService3.DownloadCfgAndDatFilesEfCoreAsync(comtradeFilesPath);
+            CsvConverterService.ConvertDatAndCfgFilesToCsvAsRMSData(pythonExePath, rmsScript, comtradeFilesPath, localRmsCsvFolder);
+            CsvConverterService.ConvertDatAndCfgFilesToCsvAsInstantData(pythonExePath, instantScript, comtradeFilesPath, localInstantCsvFolder);
         }
         catch (Exception ex)
         {
