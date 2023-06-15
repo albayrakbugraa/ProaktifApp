@@ -12,10 +12,15 @@ namespace ProaktifArizaTahmini.DAL
     public class AppDbContext : DbContext
     {
         public AppDbContext()
-        { }
-
+        {
+            
+        }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseOracle("User Id=USER1;Password=1234;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XEPDB1)))");
+        }
 
         public DbSet<MyData> MyDatas { get; set; }
         public DbSet<Disturbance> Disturbances { get; set; }

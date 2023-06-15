@@ -1,4 +1,5 @@
-﻿@model ProaktifArizaTahmini.CORE.Entities.MyData
+﻿@using ProaktifArizaTahmini.BLL.Models.DTOs;
+@model MyDataDTO
 
 @{
     ViewData["Title"] = "Düzenle";
@@ -61,6 +62,13 @@
                 <input asp-for="Path" class="form-control" onblur="trimInput(this)" />
                 <span asp-validation-for="Path" class="text-danger"></span>
             </div>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div style="margin-top:20px;" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
             <div class="form-group" style="margin-top:25px">
                 <input type="submit" value="Kaydet" class="btn btn-success" /> |
                 <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>

@@ -60,6 +60,12 @@
                 <input asp-for="Path" class="form-control" onblur="trimInput(this)" />
                 <span asp-validation-for="Path" class="text-danger"></span>
             </div>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div style="margin-top:20px;" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
             <div style="margin-top:25px" class="form-group">
                 <input type="submit" value="Oluştur" class="btn btn-success" /> |
                 <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>

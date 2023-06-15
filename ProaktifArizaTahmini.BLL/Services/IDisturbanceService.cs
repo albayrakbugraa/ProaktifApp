@@ -1,4 +1,5 @@
-﻿using ProaktifArizaTahmini.BLL.Models.RequestModel;
+﻿using ProaktifArizaTahmini.BLL.Models.DTOs;
+using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.CORE.Entities;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace ProaktifArizaTahmini.BLL.Services
         Task<List<Disturbance>> FilterByFaultTime(DateTime FaultStartDate,DateTime FaultEndDate);
         Task<List<Disturbance>> FilteredList(string filterText);
         Task<List<Disturbance>> FilterList(DisturbanceFilterParams filterParams);
+        Task<bool> UpdateByDataIdList(MyDataDTO myData);
     }
 }

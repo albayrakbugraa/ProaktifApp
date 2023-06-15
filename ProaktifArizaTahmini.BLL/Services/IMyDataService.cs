@@ -15,7 +15,7 @@ namespace ProaktifArizaTahmini.BLL.Services
         Task<bool> AddDataList(List<MyData> myDataList);
         Task<MyData> GetMyDataWhere(string tMkVHucre);
         Task<MyData> GetMyDataByDataId(int id);
-        Task<bool> UpdateMyData(int id, MyData model);
+        Task<bool> UpdateMyData(int id, MyDataDTO model);
         Task<bool> CreateMyData(MyDataDTO model);
         Task<bool> DeleteMyData(int id);
         Task<List<MyData>> FilteredList(string filterText);

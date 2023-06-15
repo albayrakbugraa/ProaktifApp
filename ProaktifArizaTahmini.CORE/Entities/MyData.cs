@@ -18,13 +18,7 @@ namespace ProaktifArizaTahmini.CORE.Entities
         [Column("Hucre_No")]
         public string? HucreNo { get; set; }
         [Column("Tm_kV_Hucre")]
-
-        //kaldır
-        public string TmKvHucre
-        {
-            get { return $"{AvcilarTM}_{kV}_{HucreNo}"; }
-            set { }
-        }
+        public string TmKvHucre { get; set; }
         [Column("Fider_Adi")]
         public string? FiderName { get; set; }
         public string? IP { get; set; }

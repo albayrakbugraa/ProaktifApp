@@ -108,7 +108,7 @@ namespace ProaktifArizaTahmini.BLL.Services
             return await myDataRepository.GetWhere(x=>x.TmKvHucre== tMkVHucre);
         }
 
-        public async Task<bool> UpdateMyData(int id, MyData model)
+        public async Task<bool> UpdateMyData(int id, MyDataDTO model)
         {
             MyData myData = await myDataRepository.GetWhere(x => x.ID == id);
             myData = mapper.Map(model, myData);

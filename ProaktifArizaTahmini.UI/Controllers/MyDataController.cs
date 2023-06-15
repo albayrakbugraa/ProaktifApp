@@ -19,12 +19,14 @@ namespace ProaktifArizaTahmini.UI.Controllers
     public class MyDataController : Controller
     {
         private readonly IMyDataService myDataService;
+        private readonly IDisturbanceService disturbanceService;
         private readonly IMapper mapper;
 
-        public MyDataController(IMyDataService myDataService, IMapper mapper)
+        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService)
         {
             this.myDataService = myDataService;
             this.mapper = mapper;
+            this.disturbanceService = disturbanceService;
         }
         public IActionResult Index()
         {
@@ -81,7 +83,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
         }
         public ActionResult Create()
         {
-
             return View();
         }
         [HttpPost]
@@ -99,6 +100,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             }
             catch
             {
+                ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View(model);
             }
         }
@@ -128,21 +130,25 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<ActionResult> Edit(int ID)
         {
             var myData = await myDataService.GetMyDataByDataId(ID);
-            return View(myData);
+            MyDataDTO myDataDTO = new MyDataDTO();
+            myDataDTO = mapper.Map(myData, myDataDTO);
+            return View(myDataDTO);
         }
 
-        [HttpPut]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int ID, MyData model)
+        public async Task<ActionResult> Edit(int ID, MyDataDTO model)
         {
             try
             {
-                bool result = await myDataService.UpdateMyData(ID, model);
-                if (result) return RedirectToAction(nameof(List));
+                bool resultMyData = await myDataService.UpdateMyData(ID, model);
+                bool resultDisturbance = await disturbanceService.UpdateByDataIdList(model);
+                if (resultMyData && resultDisturbance) return RedirectToAction(nameof(List));
                 return View(model);
             }
             catch
             {
+                ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View();
             }
         }

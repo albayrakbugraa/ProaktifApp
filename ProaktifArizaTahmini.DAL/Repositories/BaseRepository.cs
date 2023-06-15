@@ -63,16 +63,6 @@ namespace ProaktifArizaTahmini.DAL.Repositories
         {
             return await db.Set<T>().FirstOrDefaultAsync(expression);
         }
-        //public async Task<T> GetWhere(Expression<Func<T, bool>> expression)
-        //{
-        //    var entity = await db.Set<T>().FirstOrDefaultAsync(expression);
-        //    if (entity != null)
-        //    {
-        //        db.Entry(entity).State = EntityState.Detached;
-        //    }
-        //    return entity;
-        //}
-
 
         public bool Update(T entity)
         {

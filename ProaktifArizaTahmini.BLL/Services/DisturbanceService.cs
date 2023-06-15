@@ -1,4 +1,7 @@
-﻿using ProaktifArizaTahmini.BLL.Models.RequestModel;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using ProaktifArizaTahmini.BLL.Models.DTOs;
+using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.CORE.Entities;
 using ProaktifArizaTahmini.CORE.IRepository;
 using System;
@@ -82,5 +85,29 @@ namespace ProaktifArizaTahmini.BLL.Services
                  );
             return disturbanceList;
         }
+
+        public async Task<bool> UpdateByDataIdList(MyDataDTO myData)
+        {
+            var disturbances = await disturbanceRepository.GetDisturbancesById(myData.ID);
+            foreach (var item in disturbances)
+            {
+                item.IP = myData.IP;
+                item.AvcilarTM = myData.AvcilarTM;
+                item.HucreNo = myData.HucreNo;
+                item.FiderName = myData.FiderName;
+                item.RoleModel = myData.RoleModel;
+                item.TmKvHucre = myData.TmKvHucre;
+                item.kV = myData.kV;
+
+                var result = disturbanceRepository.Update(item);
+                if (!result)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }
