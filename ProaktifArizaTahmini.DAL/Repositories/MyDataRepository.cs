@@ -27,7 +27,6 @@ namespace ProaktifArizaTahmini.DAL.Repositories
                 {
                     var addedData = db.MyDatas.Add(item).Entity;
                 }
-
                 await db.SaveChangesAsync();
             }
             return true;
@@ -35,7 +34,7 @@ namespace ProaktifArizaTahmini.DAL.Repositories
 
         public Task<List<MyData>> FilteredList(string filterText)
         {
-            var filteredData = db.MyDatas.Where(d => d.AvcilarTM.Contains(filterText)
+            var filteredData = db.MyDatas.Where(d => d.TmNo.Contains(filterText)
                                                             || d.kV.Contains(filterText)
                                                             || d.HucreNo.Contains(filterText)
                                                             || d.FiderName.Contains(filterText)

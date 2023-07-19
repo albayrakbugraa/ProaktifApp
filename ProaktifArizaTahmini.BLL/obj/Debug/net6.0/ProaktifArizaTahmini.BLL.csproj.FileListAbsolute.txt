@@ -15,6 +15,11 @@ C:\Users\Bugra Albayrak\Desktop\Arıza Tahmin App\ComtradeApp\ProaktifArizaTahmi
 C:\Users\Bugra Albayrak\Desktop\Arıza Tahmin App\ComtradeApp\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
 C:\Users\Bugra Albayrak\Desktop\Arıza Tahmin App\ComtradeApp\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.pdb
 C:\Users\Bugra Albayrak\Desktop\Arıza Tahmin App\ComtradeApp\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.CopyComplete
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.AssemblyReference.cache
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.AssemblyInfoInputs.cache
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.AssemblyInfo.cs
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.CoreCompileInputs.cache
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.BLL.deps.json
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.BLL.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.BLL.pdb
@@ -22,11 +27,6 @@ C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifAriza
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.pdb
-C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.AssemblyReference.cache
-C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.AssemblyInfoInputs.cache
-C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.AssemblyInfo.cs
-C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.CoreCompileInputs.cache
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.csproj.CopyComplete
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\ProaktifArizaTahmini.BLL.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.BLL\obj\Debug\net6.0\refint\ProaktifArizaTahmini.BLL.dll

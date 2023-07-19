@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1OiIvbTJ/j0wC0xZRz/bi9AA++piwSDawii2nnt3wbI0UdSObXBDDuAdHVBlDkqFMHsBYKxiKLzhzx1zJGz7Ew==",
+  "dgSpecHash": "qe7cvTo1pdN5YQ+/8XiRA+AvAQLSN/qBzIOqKEWj9+THNJfUszyX2KyAJ03cDf7/3s6Cgw1k/ukKr0KNNBJROQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.BLL\\ProaktifArizaTahmini.BLL.csproj",
   "expectedPackageFiles": [
@@ -20,7 +20,9 @@
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\7.0.5\\microsoft.entityframeworkcore.sqlserver.7.0.5.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.binder\\7.0.4\\microsoft.extensions.configuration.binder.7.0.4.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",

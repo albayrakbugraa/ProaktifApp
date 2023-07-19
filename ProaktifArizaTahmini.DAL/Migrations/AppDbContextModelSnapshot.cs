@@ -31,15 +31,25 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("AvcilarTM")
+                    b.Property<string>("CfgFileData")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("Avcilar_Tm");
+                        .HasColumnType("CLOB")
+                        .HasColumnName("Cfg_Dosyasi");
 
                     b.Property<string>("CfgFilePath")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Cfg_Dosya_Yolu");
+
+                    b.Property<string>("ComtradeName")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Comtrade_Dosya_Ismi");
+
+                    b.Property<byte[]>("DatFileData")
+                        .IsRequired()
+                        .HasColumnType("BLOB")
+                        .HasColumnName("Dat_Dosyasi");
 
                     b.Property<string>("DatFilePath")
                         .IsRequired()
@@ -64,8 +74,16 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<string>("InstantDataPath")
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Instant_Dosya_Yolu");
+
                     b.Property<int>("MyDataId")
                         .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("RmsDataPath")
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Rms_Dosya_Yolu");
 
                     b.Property<string>("RoleModel")
                         .IsRequired()
@@ -79,6 +97,11 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Tm_KV_Hucre");
+
+                    b.Property<string>("TmNo")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("TM_No");
 
                     b.Property<string>("kV")
                         .IsRequired()
@@ -99,11 +122,6 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnName("Id");
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("AvcilarTM")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(450)")
-                        .HasColumnName("Avcilar_Tm");
 
                     b.Property<string>("FiderName")
                         .HasColumnType("NVARCHAR2(2000)")
@@ -135,6 +153,11 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Tm_kV_Hucre");
 
+                    b.Property<string>("TmNo")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(450)")
+                        .HasColumnName("TM_No");
+
                     b.Property<string>("User")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
@@ -144,7 +167,7 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AvcilarTM", "kV", "HucreNo")
+                    b.HasIndex("TmNo", "kV", "HucreNo")
                         .IsUnique()
                         .HasFilter("\"kV\" IS NOT NULL AND \"Hucre_No\" IS NOT NULL");
 

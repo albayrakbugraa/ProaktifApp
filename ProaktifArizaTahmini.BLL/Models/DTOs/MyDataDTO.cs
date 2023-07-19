@@ -11,12 +11,12 @@ namespace ProaktifArizaTahmini.BLL.Models.DTOs
     public class MyDataDTO
     {
         public int ID { get; set; }
-        public string AvcilarTM { get; set; }
+        public string TmNo { get; set; }
         public string? kV { get; set; }
         public string? HucreNo { get; set; }
         public string TmKvHucre
         {
-            get { return $"{AvcilarTM}_{kV}_{HucreNo}"; }
+            get { return $"{TmNo}_{kV}_{HucreNo}"; }
             set { }
         }
         public string? FiderName { get; set; }

@@ -11,15 +11,15 @@ namespace ComtradeApp.Models
     {
         [Column("Id")]
         public int ID { get; set; }
-        [Column("Avcilar_Tm")]
-        public string AvcilarTM { get; set; }
+        [Column("TM_No")]
+        public string TmNo { get; set; }
         public string? kV { get; set; }
         [Column("Hucre_No")]
         public string? HucreNo { get; set; }
         [Column("Tm_kV_Hucre")]
         public string TmKvHucre
         {
-            get { return $"{AvcilarTM}_{kV}_{HucreNo}"; }
+            get { return $"{TmNo}_{kV}_{HucreNo}"; }
             set { }
         }
         [Column("Fider_Adi")]

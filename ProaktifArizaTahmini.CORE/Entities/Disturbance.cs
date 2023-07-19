@@ -11,8 +11,8 @@ namespace ProaktifArizaTahmini.CORE.Entities
     {
         [Column("Id")]
         public int ID { get; set; }
-        [Column("Avcilar_Tm")]
-        public string AvcilarTM { get; set; }
+        [Column("TM_No")]
+        public string TmNo { get; set; }
         public string kV { get; set; }
         [Column("Hucre_No")]
         public string HucreNo { get; set; }
@@ -27,8 +27,18 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public DateTime FaultTime { get; set; }
         [Column("Cfg_Dosya_Yolu")]
         public string CfgFilePath { get; set; }
+        [Column("Cfg_Dosyasi", TypeName = "CLOB")]
+        public string CfgFileData { get; set; }
         [Column("Dat_Dosya_Yolu")]
         public string DatFilePath { get; set; }
+        [Column("Dat_Dosyasi", TypeName = "BLOB")]
+        public byte[] DatFileData { get; set; }
+        [Column("Comtrade_Dosya_Ismi")]
+        public string ComtradeName { get; set; }
+        [Column("Rms_Dosya_Yolu")]
+        public string? RmsDataPath { get; set; }
+        [Column("Instant_Dosya_Yolu")]
+        public string? InstantDataPath { get; set; }
         public bool Status { get; set; }
         public int MyDataId { get; set; }
         public MyData MyData { get; set; }

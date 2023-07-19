@@ -4,11 +4,12 @@
     var formData = new FormData(form);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/MyData/List", true);
+    xhr.open("POST", "/MyData/ImportExcel", true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Yükleme tamamlandıktan sonra yapılacak işlemler
-            console.log(xhr.responseText);
+            //console.log(xhr.responseText);
+            //console.log(formData);
         }
     };
     xhr.send(formData);

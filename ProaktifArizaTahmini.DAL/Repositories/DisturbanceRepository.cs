@@ -18,7 +18,7 @@ namespace ProaktifArizaTahmini.DAL.Repositories
         }
         public Task<List<Disturbance>> FilteredList(string filterText)
         {
-            var filteredData = db.Disturbances.Where(d => d.AvcilarTM.Contains(filterText)
+            var filteredData = db.Disturbances.Where(d => d.TmNo.Contains(filterText)
                                                             || d.kV.Contains(filterText)
                                                             || d.HucreNo.Contains(filterText)
                                                             || d.FiderName.Contains(filterText)

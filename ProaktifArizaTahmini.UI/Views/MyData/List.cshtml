@@ -56,6 +56,14 @@
                 </table>
             </div>
         </form>
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                <h4>Hata!</h4>
+                <p>Minimum karakter sınırını karşılamayan giriş(ler) tespit edildi.</p>
+                <p>@ViewBag.ErrorMessage</p>
+            </div>
+        }
         <table class="table table-striped" id="example">
             <thead>
                 <tr>
@@ -80,7 +88,7 @@
                             <td>
                                 @counter
                             </td>
-                            <td>@item.AvcilarTM</td>
+                            <td>@item.TmNo</td>
                             <td>@item.kV</td>
                             <td>@item.HucreNo</td>
                             <td>@item.FiderName</td>
@@ -131,7 +139,7 @@
         </div>
         <div style="margin-left:10px;">
 
-            @Html.PagedListPager(Model.MyDataList, page => Url.Action("List", new { page,pageSize=ViewBag.PageSize, CurrentFilterTm = Model.CurrentFilterTm,CurrentFilterKv = @Model.CurrentFilterKv,CurrentFilterHucre = @Model.CurrentFilterHucre,CurrentFilterFider = @Model.CurrentFilterFider,CurrentFilterIp = @Model.CurrentFilterIp,CurrentFilterRole = @Model.CurrentFilterRole,CurrentFilterKullanici = @Model.CurrentFilterKullanici,CurrentFilterSifre = @Model.CurrentFilterSifre, }), new PagedListRenderOptions {
+            @Html.PagedListPager(Model.MyDataList, page => Url.Action("List", new { page,pageSize=ViewBag.PageSize, CurrentFilterTm = Model.CurrentFilterTm,CurrentFilterKv = @Model.CurrentFilterKv,CurrentFilterHucre = @Model.CurrentFilterHucre,CurrentFilterFider = @Model.CurrentFilterFider,CurrentFilterIp = @Model.CurrentFilterIp,CurrentFilterRole = @Model.CurrentFilterRole,CurrentFilterKullanici = @Model.CurrentFilterKullanici,CurrentFilterSifre = @Model.CurrentFilterSifre, MyDataList=Model.MyDataList}), new PagedListRenderOptions {
             UlElementClasses = new[] { "pagination", "my-custom-class" },
             LiElementClasses = new[] { "page-item" },
             PageClasses = new[] { "page-link" }

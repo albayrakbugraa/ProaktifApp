@@ -27,7 +27,7 @@ namespace ProaktifArizaTahmini.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MyData>().HasIndex(md => new { md.AvcilarTM, md.kV, md.HucreNo }).IsUnique();
+            modelBuilder.Entity<MyData>().HasIndex(md => new { md.TmNo, md.kV, md.HucreNo }).IsUnique();
             modelBuilder.Entity<Disturbance>().HasOne<MyData>(d => d.MyData).WithMany(m => m.Disturbances).HasForeignKey(d => d.MyDataId);
             modelBuilder.Entity<MyData>().Property(m => m.ID).ValueGeneratedOnAdd();
             base.OnModelCreating(modelBuilder);

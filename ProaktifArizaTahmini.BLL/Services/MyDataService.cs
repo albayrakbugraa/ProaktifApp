@@ -57,7 +57,7 @@ namespace ProaktifArizaTahmini.BLL.Services
         {
             var myDatas = await myDataRepository.GetAll();
             var filteredData= myDatas.Where(data =>
-                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.AvcilarTM != null && data.AvcilarTM.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextKv) || (data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextHucre) || (data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextFider) || (data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper()))) &&
@@ -87,7 +87,7 @@ namespace ProaktifArizaTahmini.BLL.Services
                      kV = x.kV,
                      IP = x.IP,
                      HucreNo = x.HucreNo,
-                     AvcilarTM = x.AvcilarTM,
+                     TmNo = x.TmNo,
                      FiderName = x.FiderName,
                      User = x.User,
                      Password = x.Password,
@@ -98,7 +98,7 @@ namespace ProaktifArizaTahmini.BLL.Services
                      TmKvHucre = x.TmKvHucre
                  },
                  expression: null,
-                 orderBy: x => x.OrderBy(x => x.AvcilarTM)
+                 orderBy: x => x.OrderBy(x => x.TmNo)
                  );
             return myDataList;
         }

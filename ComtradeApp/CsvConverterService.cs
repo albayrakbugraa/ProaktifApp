@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComtradeApp.Repository;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,72 +10,80 @@ namespace ComtradeApp
 {
     public class CsvConverterService
     {
-        /// <summary>
-        /// Method to convert dat and cfg files to csv with python
-        /// </summary>
-        /// <param name="script">Python script local path</param> 
-        /// <param name="localRmsCsvFolderPath">Csv local path</param> 
-        /// <param name="pythonExePath">Python.exe local path</param> 
-        public static void ConvertDatAndCfgFilesToCsvAsRMSData(string pythonExePath, string script,string comtradeFilesPath, string localRmsCsvFolderPath)
+        private readonly DisturbanceRepository disturbanceRepository;
+        public CsvConverterService(DisturbanceRepository disturbanceRepository)
+        {
+            this.disturbanceRepository = disturbanceRepository;
+        }
+
+        public async Task ConvertDatAndCfgFilesToCsvAsRMSDataAsync(string pythonExePath, string script, string csvFilesPath)
         {
             Serilog.Log.Information("RMS formatında CSV dönüştürücü başladı..");
-            //we check the files in the folders if they have been downloaded before
-            string[] fileNamesLocal = Directory.GetFiles(localRmsCsvFolderPath);
-            //add downloads to a list
-            List<string> processedFiles = new List<string>(fileNamesLocal.Select(Path.GetFileName));
-            List<string> cfgFiles = Directory.GetFiles(comtradeFilesPath, "*.cfg", SearchOption.AllDirectories).ToList();
-            List<string> datFiles = Directory.GetFiles(comtradeFilesPath, "*.dat", SearchOption.AllDirectories).ToList();
-
             try
             {
-                for (int i = 0; i < Math.Min(cfgFiles.Count, datFiles.Count); i++)
+                var disturbances = await disturbanceRepository.GetAll();
+                foreach (var item in disturbances)
                 {
-                    var cfgFile = cfgFiles[i];
-                    var datFile = datFiles[i];
-                    string cfg = Path.GetFileNameWithoutExtension(cfgFile) + "(RMS).csv";
-                    string dat = Path.GetFileNameWithoutExtension(datFile) + "(RMS).csv";
-                    if (processedFiles.Contains(cfg) || processedFiles.Contains(dat))
-                    {
-                        Serilog.Log.Information($"\"{cfg.Split("(RMS)").First()}.cfg\" - \"{dat.Split("(RMS)").First()}.dat\" daha önce dönüştürüldü !");
-                        continue;
-                    }
-                    var psi = new ProcessStartInfo();
-                    psi.FileName = pythonExePath;
-                    string fileNameDat = Path.GetFileNameWithoutExtension(cfgFile);
-                    string fileNameCfg = Path.GetFileNameWithoutExtension(datFile);
-                    //dat and cfg come with the same name, so it doesn't matter which one we name the csv file
-                    string filePathCsv = localRmsCsvFolderPath + fileNameDat + "(RMS)" + ".csv";
-                    psi.Arguments = $"\"{script}\" \"{cfgFile}\" \"{datFile}\" \"{filePathCsv}\"";
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.RedirectStandardError = true;
+                    string tmNoFolderName = item.TmNo;
+                    string hucreNoFolderName = item.HucreNo;
+                    string destFolderPath = Path.Combine(csvFilesPath, tmNoFolderName, hucreNoFolderName);
+                    string format = "ddMMyy,HHmmssfff";
+                    string dateTime = item.FaultTime.ToString(format);
+                    string cfgFile = item.CfgFilePath;
+                    string datFile = item.DatFilePath;
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},RMS.csv";
 
-                    using (var process = Process.Start(psi))
+                    if (!File.Exists(csvName))
                     {
-                        using (var reader = process.StandardError)
+                        if (!Directory.Exists(destFolderPath))
                         {
-                            string error = reader.ReadToEnd();
-                            if (!string.IsNullOrEmpty(error))
-                                Serilog.Log.Error("Python hatası: {Error}", error);
+                            Directory.CreateDirectory(destFolderPath);
                         }
-                    }
-                    if (File.Exists(filePathCsv))
-                    {
-                        Serilog.Log.Information($"CSV dosyası RMS formatında başarılı şekilde oluşturuldu : {filePathCsv.Split('\\').Last()}");
+                        try
+                        {
+                            var psi = new ProcessStartInfo();
+                            psi.FileName = pythonExePath;
+                            psi.Arguments = $"\"{script}\" \"{cfgFile}\" \"{datFile}\" \"{csvName}\"";
+                            psi.UseShellExecute = false;
+                            psi.CreateNoWindow = true;
+                            psi.RedirectStandardOutput = true;
+                            psi.RedirectStandardError = true;
+
+                            using (var process = Process.Start(psi))
+                            {
+                                using (var reader = process.StandardError)
+                                {
+                                    string error = reader.ReadToEnd();
+                                    if (!string.IsNullOrEmpty(error))
+                                        Serilog.Log.Error("Python hatası: {Error}", error);
+                                }
+                            }
+                            item.RmsDataPath = csvName;
+                            bool result = disturbanceRepository.Update(item);
+                            if (!result) Serilog.Log.Error("RMS formatındaki CSV dosyasının yolu kaydedilemedi.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
+                        }
+                        if (File.Exists(csvName))
+                        {
+                            Serilog.Log.Information($"CSV dosyası RMS formatında başarılı şekilde oluşturuldu : {csvName}");
+                        }
+                        else
+                        {
+                            Serilog.Log.Error($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile} ");
+                        }
                     }
                     else
                     {
-                        Serilog.Log.Error($"CSV dosyası oluşturulamadı : {fileNameDat} - {fileNameCfg} ");
+                        Serilog.Log.Information($"CSV dosyası daha önce dönüştürülmüş: {csvName}");
                     }
-                    processedFiles.Add(cfgFile);
-                    processedFiles.Add(datFile);
                 }
-
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
+                Serilog.Log.Error(ex, "Veritabanına bağlanırken hata oluştu!");
             }
             finally
             {
@@ -82,73 +91,82 @@ namespace ComtradeApp
             }
         }
 
-        public static void ConvertDatAndCfgFilesToCsvAsInstantData(string pythonExePath, string script, string comtradeFilesPath,string localInstantCsvFolderPath)
+        public async Task ConvertDatAndCfgFilesToCsvAsInstantData(string pythonExePath, string script, string csvFilesPath)
         {
-            Serilog.Log.Information("INSTANT formatında CSV dönüştürücü başladı..");
-            //we check the files in the folders if they have been downloaded before
-            string[] fileNamesLocal = Directory.GetFiles(localInstantCsvFolderPath);
-
-            //add downloads to a list
-            List<string> processedFiles = new List<string>(fileNamesLocal.Select(Path.GetFileName));
-            List<string> cfgFiles = Directory.GetFiles(comtradeFilesPath, "*.cfg", SearchOption.AllDirectories).ToList();
-            List<string> datFiles = Directory.GetFiles(comtradeFilesPath, "*.dat", SearchOption.AllDirectories).ToList();
-
+            Serilog.Log.Information("Instantaneous formatında CSV dönüştürücü başladı..");
             try
             {
-                for (int i = 0; i < Math.Min(cfgFiles.Count, datFiles.Count); i++)
+                var disturbances = await disturbanceRepository.GetAll();
+                foreach (var item in disturbances)
                 {
-                    var cfgFile = cfgFiles[i];
-                    var datFile = datFiles[i];
-                    string cfg = Path.GetFileNameWithoutExtension(cfgFile) + "(INSTANT).csv";
-                    string dat = Path.GetFileNameWithoutExtension(datFile) + "(INSTANT).csv";
-                    if (processedFiles.Contains(cfg) || processedFiles.Contains(dat))
-                    {
-                        Serilog.Log.Information($"\"{cfg.Split("(INSTANT)").First()}.cfg\" - \"{dat.Split("(INSTANT)").First()}.dat\" daha önce dönüştürüldü !");
-                        continue;
-                    }
-                    var psi = new ProcessStartInfo();
-                    psi.FileName = pythonExePath;
-                    string fileNameDat = Path.GetFileNameWithoutExtension(cfgFile);
-                    string fileNameCfg = Path.GetFileNameWithoutExtension(datFile);
-                    //dat and cfg come with the same name, so it doesn't matter which one we name the csv file
-                    string filePathCsv = localInstantCsvFolderPath + fileNameDat + "(INSTANT)" + ".csv";
-                    psi.Arguments = $"\"{script}\" \"{cfgFile}\" \"{datFile}\" \"{filePathCsv}\"";
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.RedirectStandardError = true;
+                    string tmNoFolderName = item.TmNo;
+                    string hucreNoFolderName = item.HucreNo;
+                    string destFolderPath = Path.Combine(csvFilesPath, tmNoFolderName, hucreNoFolderName);
+                    string format = "ddMMyy,HHmmssfff";
+                    string dateTime = item.FaultTime.ToString(format);
+                    string cfgFile = item.CfgFilePath;
+                    string datFile = item.DatFilePath;
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},Instantaneous.csv";
 
-                    using (var process = Process.Start(psi))
+                    if (!File.Exists(csvName)) // Dosya zaten varsa dönüştürme işlemi yapma
                     {
-                        using (var reader = process.StandardError)
+                        if (!Directory.Exists(destFolderPath))
                         {
-                            string error = reader.ReadToEnd();
-                            if (!string.IsNullOrEmpty(error))
-                                Serilog.Log.Error("Python hatası: {Error}", error);
+                            Directory.CreateDirectory(destFolderPath);
                         }
-                    }
-                    if (File.Exists(filePathCsv))
-                    {
-                        Serilog.Log.Information($"CSV dosyası INSTANT formatında başarılı şekilde oluşturuldu : {filePathCsv.Split('\\').Last()}");
+                        try
+                        {
+                            var psi = new ProcessStartInfo();
+                            psi.FileName = pythonExePath;
+                            psi.Arguments = $"\"{script}\" \"{cfgFile}\" \"{datFile}\" \"{csvName}\"";
+                            psi.UseShellExecute = false;
+                            psi.CreateNoWindow = true;
+                            psi.RedirectStandardOutput = true;
+                            psi.RedirectStandardError = true;
+
+                            using (var process = Process.Start(psi))
+                            {
+                                using (var reader = process.StandardError)
+                                {
+                                    string error = reader.ReadToEnd();
+                                    if (!string.IsNullOrEmpty(error))
+                                        Serilog.Log.Error("Python hatası: {Error}", error);
+                                }
+                            }
+                            item.InstantDataPath = csvName;
+                            bool result = disturbanceRepository.Update(item);
+                            if (!result) Serilog.Log.Error("Instant formatındaki CSV dosyasının yolu kaydedilemedi.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
+                        }
+                        if (File.Exists(csvName))
+                        {
+                            Serilog.Log.Information($"CSV dosyası Instantaneous formatında başarılı şekilde oluşturuldu : {csvName}");
+                        }
+                        else
+                        {
+                            Serilog.Log.Error($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile} ");
+                        }
                     }
                     else
                     {
-                        Serilog.Log.Error($"CSV dosyası oluşturulamadı : {fileNameDat} - {fileNameCfg} ");
+                        Serilog.Log.Information($"CSV dosyası daha önce dönüştürülmüş: {csvName}");
                     }
-                    processedFiles.Add(cfgFile);
-                    processedFiles.Add(datFile);
-                }
 
+                }
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
+                Serilog.Log.Error(ex, "Veritabanına bağlanırken hata oluştu!");
             }
             finally
             {
                 Serilog.Log.Debug("CSV dönüştürücü kapandı.. \n");
             }
         }
+
 
     }
 }

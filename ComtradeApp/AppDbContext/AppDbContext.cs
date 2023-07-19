@@ -19,7 +19,7 @@ namespace ComtradeApp.AppDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MyData>().HasIndex(md => new { md.AvcilarTM, md.kV, md.HucreNo }).IsUnique();
+            modelBuilder.Entity<MyData>().HasIndex(md => new { md.TmNo, md.kV, md.HucreNo }).IsUnique();
             base.OnModelCreating(modelBuilder);
         }
     }

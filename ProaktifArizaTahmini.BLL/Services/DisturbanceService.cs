@@ -26,7 +26,7 @@ namespace ProaktifArizaTahmini.BLL.Services
                 selector: x=> new Disturbance
                 {
                     FaultTime = x.FaultTime,
-                    AvcilarTM = x.AvcilarTM,
+                    TmNo = x.TmNo,
                     CfgFilePath = x.CfgFilePath,
                     DatFilePath = x.DatFilePath,
                     FiderName = x.FiderName,
@@ -52,7 +52,7 @@ namespace ProaktifArizaTahmini.BLL.Services
         {
             var myDatas = await disturbanceRepository.GetAll();
             var filteredData = myDatas.Where(data =>
-                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.AvcilarTM != null && data.AvcilarTM.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextKv) || (data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextHucre) || (data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper()))) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextFider) || (data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper()))) &&
@@ -71,7 +71,7 @@ namespace ProaktifArizaTahmini.BLL.Services
                  selector: x => new Disturbance
                  {
                      FaultTime = x.FaultTime,
-                     AvcilarTM = x.AvcilarTM,
+                     TmNo = x.TmNo,
                      CfgFilePath = x.CfgFilePath,
                      DatFilePath = x.DatFilePath,
                      FiderName = x.FiderName,
@@ -92,7 +92,7 @@ namespace ProaktifArizaTahmini.BLL.Services
             foreach (var item in disturbances)
             {
                 item.IP = myData.IP;
-                item.AvcilarTM = myData.AvcilarTM;
+                item.TmNo = myData.TmNo;
                 item.HucreNo = myData.HucreNo;
                 item.FiderName = myData.FiderName;
                 item.RoleModel = myData.RoleModel;

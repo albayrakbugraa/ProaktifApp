@@ -12,8 +12,8 @@ namespace ProaktifArizaTahmini.CORE.Entities
     {
         [Column("Id")]
         public int ID { get; set; }
-        [Column("Avcilar_Tm")]
-        public string AvcilarTM { get; set; }
+        [Column("TM_No")]
+        public string TmNo { get; set; }
         public string? kV { get; set; }
         [Column("Hucre_No")]
         public string? HucreNo { get; set; }

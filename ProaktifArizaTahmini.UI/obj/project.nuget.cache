@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "25xBhaKK8Z4K0SCZTxYUlXLvXCqpaHUH/eqfW4Pu1xwgOPE61Cmd1JOUiFDQbpEz4eTrTP1uKku9OQTRJbn7Kg==",
+  "dgSpecHash": "UBXAlzC+HdQGuuwaEmqaqHmaNwgEEpNB0N/AyAWh68T0OfQ3HWJq/ibcZbu9O0l6r2lZvAwsKxmL8so9/auIXg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.UI\\ProaktifArizaTahmini.UI.csproj",
   "expectedPackageFiles": [
@@ -48,8 +48,9 @@
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\7.0.5\\microsoft.entityframeworkcore.sqlserver.7.0.5.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
-    "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration\\6.0.0\\microsoft.extensions.configuration.6.0.0.nupkg.sha512",
+    "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.binder\\7.0.4\\microsoft.extensions.configuration.binder.7.0.4.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\6.0.0\\microsoft.extensions.configuration.fileextensions.6.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.configuration.json\\6.0.0\\microsoft.extensions.configuration.json.6.0.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",

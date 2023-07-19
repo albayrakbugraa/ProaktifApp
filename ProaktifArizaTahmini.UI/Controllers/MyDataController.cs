@@ -21,44 +21,46 @@ namespace ProaktifArizaTahmini.UI.Controllers
         private readonly IMyDataService myDataService;
         private readonly IDisturbanceService disturbanceService;
         private readonly IMapper mapper;
-
-        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService)
+        private readonly IConfiguration configuration;
+        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService,IConfiguration configuration)
         {
             this.myDataService = myDataService;
             this.mapper = mapper;
             this.disturbanceService = disturbanceService;
+            this.configuration = configuration;
         }
         public IActionResult Index()
         {
             return View();
         }
-        
         public async Task<IActionResult> List(MyDataFilterParams myDataVM, int? page, int? pageSize)
         {
+            int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
+
             ViewData["ActivePage"] = "MyData";
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
             List<MyData> myDataList = new List<MyData>();
+
             var properties = myDataVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
-            if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null))
+
+            if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null && p.GetValue(myDataVM).ToString().Length < minCharLimit))
+            {
+                ViewBag.ErrorMessage = $"Minimum {minCharLimit} karakter gereklidir.";
+                myDataList = await myDataService.GetMyDatas();
+                ClearInvalidProperties(myDataVM, minCharLimit);
+                myDataList = await myDataService.FilterList(myDataVM);
+            }
+            else if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null))
             {
                 page = 1;
             }
             else
             {
                 myDataList = await myDataService.GetMyDatas();
-                if (myDataVM != null)
-                {
-                    myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
-                    myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
-                    myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
-                    myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
-                    myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
-                    myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
-                    myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
-                    myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
-                }
+                RestoreFilterTexts(myDataVM);
             }
+
             if (myDataVM != null)
             {
                 myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
@@ -70,17 +72,140 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
                 myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
             }
+
             if (myDataVM != null && myDataVM.GetType().GetProperties().Any(p => p.GetValue(myDataVM) != null))
             {
                 myDataList = await myDataService.FilterList(myDataVM);
             }
-            MyDataFilterParams filterParams = new MyDataFilterParams();
-            filterParams=mapper.Map(myDataVM, filterParams);
-            int pageNumber = (page ?? 1);
+
+            MyDataFilterParams filterParams = mapper.Map<MyDataFilterParams>(myDataVM);
+            int pageNumber = page ?? 1;
             IPagedList<MyData> myDataPagedList = new PagedList<MyData>(myDataList, pageNumber, (int)ViewBag.PageSize);
-            filterParams.MyDataList=myDataPagedList;
+            filterParams.MyDataList = myDataPagedList;
+
             return View(filterParams);
         }
+
+        private void ClearInvalidProperties(MyDataFilterParams myDataVM, int minCharLimit)
+        {
+            var properties = myDataVM.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    var value = property.GetValue(myDataVM) as string;
+                    if (value != null && value.Length < minCharLimit)
+                    {
+                        property.SetValue(myDataVM, null);
+                    }
+                }
+            }
+        }
+
+        private void RestoreFilterTexts(MyDataFilterParams myDataVM)
+        {
+            if (myDataVM != null)
+            {
+                myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
+                myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
+                myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
+                myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
+                myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
+                myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
+                myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
+                myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
+            }
+        }
+
+
+        //public async Task<IActionResult> List(MyDataFilterParams myDataVM, int? page, int? pageSize)
+        //{
+        //    int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
+
+        //    ViewData["ActivePage"] = "MyData";
+        //    int defaultPageSize = 20;
+        //    ViewBag.PageSize = pageSize ?? defaultPageSize;
+        //    List<MyData> myDataList = new List<MyData>();
+        //    var properties = myDataVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
+        //    // Filtreleme yapılıyorsa ve minimum karakter sınırı sağlanmıyorsa
+        //    if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null && p.GetValue(myDataVM).ToString().Length < minCharLimit))
+        //    {
+        //        ViewBag.ErrorMessage= $"Minimum {minCharLimit} karakter gereklidir.";
+        //        myDataList = await myDataService.GetMyDatas();
+        //        if (myDataVM != null)
+        //        {
+        //            myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
+        //            myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
+        //            myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
+        //            myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
+        //            myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
+        //            myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
+        //            myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
+        //            myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
+        //            var properties2 = myDataVM.GetType().GetProperties();
+        //            foreach (var property in properties2)
+        //            {
+        //                if (property.PropertyType == typeof(string))
+        //                {
+        //                    var value = property.GetValue(myDataVM) as string;
+        //                    if (value != null && value.Length < minCharLimit)
+        //                    {
+        //                        property.SetValue(myDataVM, null);
+        //                    }
+        //                }
+        //            }
+
+        //            myDataList = await myDataService.FilterList(myDataVM);
+        //        }
+
+        //        MyDataFilterParams filterParams2 = new MyDataFilterParams();
+        //        filterParams2 = mapper.Map(myDataVM, filterParams2);
+        //        int pageNumber2 = (page ?? 1);
+        //        IPagedList<MyData> myDataPagedList2 = new PagedList<MyData>(myDataList, pageNumber2, (int)ViewBag.PageSize);
+        //        filterParams2.MyDataList = myDataPagedList2;
+        //        return View(filterParams2);
+        //    }
+        //    if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null))
+        //    {
+        //        page = 1;
+        //    }
+        //    else
+        //    {
+        //        myDataList = await myDataService.GetMyDatas();
+        //        if (myDataVM != null)
+        //        {
+        //            myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
+        //            myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
+        //            myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
+        //            myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
+        //            myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
+        //            myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
+        //            myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
+        //            myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
+        //        }
+        //    }
+        //    if (myDataVM != null)
+        //    {
+        //        myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
+        //        myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
+        //        myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
+        //        myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
+        //        myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
+        //        myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
+        //        myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
+        //        myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
+        //    }
+        //    if (myDataVM != null && myDataVM.GetType().GetProperties().Any(p => p.GetValue(myDataVM) != null))
+        //    {
+        //        myDataList = await myDataService.FilterList(myDataVM);
+        //    }
+        //    MyDataFilterParams filterParams = new MyDataFilterParams();
+        //    filterParams=mapper.Map(myDataVM, filterParams);
+        //    int pageNumber = (page ?? 1);
+        //    IPagedList<MyData> myDataPagedList = new PagedList<MyData>(myDataList, pageNumber, (int)ViewBag.PageSize);
+        //    filterParams.MyDataList=myDataPagedList;
+        //    return View(filterParams);
+        //}
         public ActionResult Create()
         {
             return View();
@@ -103,6 +228,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View(model);
             }
+        
         }
         public async Task<ActionResult> DeleteAsync(int ID)
         {
@@ -161,8 +287,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 myDatas = ReadDataFromExcel(excelFile);
                 bool resultMyData = await myDataService.AddDataList(myDatas);                
             }
-            return RedirectToAction("List", myDatas);
-
+            return RedirectToAction("List");
         }
         private List<MyData> ReadDataFromExcel(IFormFile excelFile)
         {
@@ -177,10 +302,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 for (int row = 2; row <= rowCount; row++) // İlk satırı başlık olarak kabul edin, bu yüzden 2'den başlıyoruz
                 {
                     MyData data = new MyData();                   
-                    data.AvcilarTM = GetValueOrDefault<string>(worksheet.Cells[row, 1]?.Value);
+                    data.TmNo = GetValueOrDefault<string>(worksheet.Cells[row, 1]?.Value);
                     data.kV = GetValueOrDefault<string>(worksheet.Cells[row, 2]?.Value);
                     data.HucreNo = GetValueOrDefault<string>(worksheet.Cells[row, 3]?.Value);
-                    //data.TmKvHucre = GetValueOrDefault<string>(worksheet.Cells[row, 4]?.Value);
+                    data.TmKvHucre = $"{data.TmNo}_{data.kV}_{data.HucreNo}";
                     data.FiderName = GetValueOrDefault<string>(worksheet.Cells[row, 5]?.Value);
                     data.IP = GetValueOrDefault<string>(worksheet.Cells[row, 6]?.Value);
                     data.RoleModel = GetValueOrDefault<string>(worksheet.Cells[row, 7]?.Value);

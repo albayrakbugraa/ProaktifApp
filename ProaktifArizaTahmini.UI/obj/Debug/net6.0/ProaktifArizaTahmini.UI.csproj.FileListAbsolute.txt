@@ -608,3 +608,5 @@ C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifAriza
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.UI\obj\Debug\net6.0\ProaktifArizaTahmini.UI.pdb
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.UI\obj\Debug\net6.0\ProaktifArizaTahmini.UI.genruntimeconfig.cache
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.UI\obj\Debug\net6.0\ref\ProaktifArizaTahmini.UI.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.UI\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.UI\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Binder.dll
