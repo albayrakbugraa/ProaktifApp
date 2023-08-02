@@ -34,3 +34,15 @@ C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifAriza
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\refint\ProaktifArizaTahmini.CORE.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
 C:\Users\Bugra Albayrak\Desktop\ProaktifAriza\ProaktifArizaTahmini\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ref\ProaktifArizaTahmini.CORE.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.deps.json
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.csproj.AssemblyReference.cache
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.AssemblyInfoInputs.cache
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.AssemblyInfo.cs
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.csproj.CoreCompileInputs.cache
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\refint\ProaktifArizaTahmini.CORE.dll
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
+C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.CORE\obj\Debug\net6.0\ref\ProaktifArizaTahmini.CORE.dll

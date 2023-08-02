@@ -20,14 +20,16 @@ namespace ProaktifArizaTahmini.UI.Controllers
     {
         private readonly IMyDataService myDataService;
         private readonly IDisturbanceService disturbanceService;
+        private readonly IHistoryOfChangeService historyOfChangeService;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
-        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService,IConfiguration configuration)
+        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService, IConfiguration configuration, IHistoryOfChangeService historyOfChangeService)
         {
             this.myDataService = myDataService;
             this.mapper = mapper;
             this.disturbanceService = disturbanceService;
             this.configuration = configuration;
+            this.historyOfChangeService = historyOfChangeService;
         }
         public IActionResult Index()
         {
@@ -36,22 +38,20 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<IActionResult> List(MyDataFilterParams myDataVM, int? page, int? pageSize)
         {
             int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
-
             ViewData["ActivePage"] = "MyData";
+
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
             List<MyData> myDataList = new List<MyData>();
 
             var properties = myDataVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
 
-            if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null && p.GetValue(myDataVM).ToString().Length < minCharLimit))
+            if (properties.Any(p => p.GetValue(myDataVM) != null && p.GetValue(myDataVM).ToString().Length < minCharLimit))
             {
                 ViewBag.ErrorMessage = $"Minimum {minCharLimit} karakter gereklidir.";
-                myDataList = await myDataService.GetMyDatas();
                 ClearInvalidProperties(myDataVM, minCharLimit);
-                myDataList = await myDataService.FilterList(myDataVM);
             }
-            else if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null))
+            else if (properties.Any(p => p.GetValue(myDataVM) != null))
             {
                 page = 1;
             }
@@ -60,20 +60,9 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 myDataList = await myDataService.GetMyDatas();
                 RestoreFilterTexts(myDataVM);
             }
+            RestoreCurrentFilterTexts(myDataVM);
 
-            if (myDataVM != null)
-            {
-                myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
-                myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
-                myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
-                myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
-                myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
-                myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
-                myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
-                myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
-            }
-
-            if (myDataVM != null && myDataVM.GetType().GetProperties().Any(p => p.GetValue(myDataVM) != null))
+            if (myDataVM.GetType().GetProperties().Any(p => p.GetValue(myDataVM) != null))
             {
                 myDataList = await myDataService.FilterList(myDataVM);
             }
@@ -104,108 +93,27 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
         private void RestoreFilterTexts(MyDataFilterParams myDataVM)
         {
-            if (myDataVM != null)
-            {
-                myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
-                myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
-                myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
-                myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
-                myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
-                myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
-                myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
-                myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
-            }
+            myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
+            myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
+            myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
+            myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
+            myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
+            myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
+            myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
+            myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
+        }
+        private void RestoreCurrentFilterTexts(MyDataFilterParams myDataVM)
+        {
+            myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
+            myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
+            myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
+            myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
+            myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
+            myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
+            myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
+            myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
         }
 
-
-        //public async Task<IActionResult> List(MyDataFilterParams myDataVM, int? page, int? pageSize)
-        //{
-        //    int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
-
-        //    ViewData["ActivePage"] = "MyData";
-        //    int defaultPageSize = 20;
-        //    ViewBag.PageSize = pageSize ?? defaultPageSize;
-        //    List<MyData> myDataList = new List<MyData>();
-        //    var properties = myDataVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
-        //    // Filtreleme yapılıyorsa ve minimum karakter sınırı sağlanmıyorsa
-        //    if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null && p.GetValue(myDataVM).ToString().Length < minCharLimit))
-        //    {
-        //        ViewBag.ErrorMessage= $"Minimum {minCharLimit} karakter gereklidir.";
-        //        myDataList = await myDataService.GetMyDatas();
-        //        if (myDataVM != null)
-        //        {
-        //            myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
-        //            myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
-        //            myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
-        //            myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
-        //            myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
-        //            myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
-        //            myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
-        //            myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
-        //            var properties2 = myDataVM.GetType().GetProperties();
-        //            foreach (var property in properties2)
-        //            {
-        //                if (property.PropertyType == typeof(string))
-        //                {
-        //                    var value = property.GetValue(myDataVM) as string;
-        //                    if (value != null && value.Length < minCharLimit)
-        //                    {
-        //                        property.SetValue(myDataVM, null);
-        //                    }
-        //                }
-        //            }
-
-        //            myDataList = await myDataService.FilterList(myDataVM);
-        //        }
-
-        //        MyDataFilterParams filterParams2 = new MyDataFilterParams();
-        //        filterParams2 = mapper.Map(myDataVM, filterParams2);
-        //        int pageNumber2 = (page ?? 1);
-        //        IPagedList<MyData> myDataPagedList2 = new PagedList<MyData>(myDataList, pageNumber2, (int)ViewBag.PageSize);
-        //        filterParams2.MyDataList = myDataPagedList2;
-        //        return View(filterParams2);
-        //    }
-        //    if (myDataVM != null && properties.Any(p => p.GetValue(myDataVM) != null))
-        //    {
-        //        page = 1;
-        //    }
-        //    else
-        //    {
-        //        myDataList = await myDataService.GetMyDatas();
-        //        if (myDataVM != null)
-        //        {
-        //            myDataVM.FilterTextTm = myDataVM.CurrentFilterTm;
-        //            myDataVM.FilterTextKv = myDataVM.CurrentFilterKv;
-        //            myDataVM.FilterTextHucre = myDataVM.CurrentFilterHucre;
-        //            myDataVM.FilterTextFider = myDataVM.CurrentFilterFider;
-        //            myDataVM.FilterTextIp = myDataVM.CurrentFilterIp;
-        //            myDataVM.FilterTextRole = myDataVM.CurrentFilterRole;
-        //            myDataVM.FilterTextKullanici = myDataVM.CurrentFilterKullanici;
-        //            myDataVM.FilterTextSifre = myDataVM.CurrentFilterSifre;
-        //        }
-        //    }
-        //    if (myDataVM != null)
-        //    {
-        //        myDataVM.CurrentFilterTm = myDataVM.FilterTextTm;
-        //        myDataVM.CurrentFilterKv = myDataVM.FilterTextKv;
-        //        myDataVM.CurrentFilterHucre = myDataVM.FilterTextHucre;
-        //        myDataVM.CurrentFilterFider = myDataVM.FilterTextFider;
-        //        myDataVM.CurrentFilterIp = myDataVM.FilterTextIp;
-        //        myDataVM.CurrentFilterRole = myDataVM.FilterTextRole;
-        //        myDataVM.CurrentFilterKullanici = myDataVM.FilterTextKullanici;
-        //        myDataVM.CurrentFilterSifre = myDataVM.FilterTextSifre;
-        //    }
-        //    if (myDataVM != null && myDataVM.GetType().GetProperties().Any(p => p.GetValue(myDataVM) != null))
-        //    {
-        //        myDataList = await myDataService.FilterList(myDataVM);
-        //    }
-        //    MyDataFilterParams filterParams = new MyDataFilterParams();
-        //    filterParams=mapper.Map(myDataVM, filterParams);
-        //    int pageNumber = (page ?? 1);
-        //    IPagedList<MyData> myDataPagedList = new PagedList<MyData>(myDataList, pageNumber, (int)ViewBag.PageSize);
-        //    filterParams.MyDataList=myDataPagedList;
-        //    return View(filterParams);
-        //}
         public ActionResult Create()
         {
             return View();
@@ -267,9 +175,16 @@ namespace ProaktifArizaTahmini.UI.Controllers
         {
             try
             {
+                var data = await myDataService.GetMyDataByDataId(ID);
+                HistoryOfChange historyOfChange = new HistoryOfChange();
+                historyOfChange.OldIP = data.IP;
                 bool resultMyData = await myDataService.UpdateMyData(ID, model);
                 bool resultDisturbance = await disturbanceService.UpdateByDataIdList(model);
-                if (resultMyData && resultDisturbance) return RedirectToAction(nameof(List));
+                historyOfChange.MyDataId = ID;
+                historyOfChange.ChangedDate = DateTime.Now;
+                historyOfChange.NewIP = model.IP;
+                bool resultHistory = await historyOfChangeService.Create(historyOfChange);
+                if (resultMyData && resultDisturbance && resultHistory) return RedirectToAction(nameof(List));
                 return View(model);
             }
             catch

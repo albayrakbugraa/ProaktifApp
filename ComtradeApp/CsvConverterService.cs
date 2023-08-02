@@ -11,9 +11,11 @@ namespace ComtradeApp
     public class CsvConverterService
     {
         private readonly DisturbanceRepository disturbanceRepository;
-        public CsvConverterService(DisturbanceRepository disturbanceRepository)
+        private readonly HistoryOfChangeRepository historyOfChangeRepository;
+        public CsvConverterService(DisturbanceRepository disturbanceRepository, HistoryOfChangeRepository historyOfChangeRepository)
         {
             this.disturbanceRepository = disturbanceRepository;
+            this.historyOfChangeRepository = historyOfChangeRepository;
         }
 
         public async Task ConvertDatAndCfgFilesToCsvAsRMSDataAsync(string pythonExePath, string script, string csvFilesPath)
@@ -24,9 +26,14 @@ namespace ComtradeApp
                 var disturbances = await disturbanceRepository.GetAll();
                 foreach (var item in disturbances)
                 {
+                    var historyOfChange = await historyOfChangeRepository.GetByMyDataId(item.ID);
+                    if (historyOfChange != null && item.IP == historyOfChange.NewIP)
+                    {
+                        await historyOfChangeRepository.UpdateFolderNames(item, csvFilesPath);
+                    }
                     string tmNoFolderName = item.TmNo;
                     string hucreNoFolderName = item.HucreNo;
-                    string destFolderPath = Path.Combine(csvFilesPath, tmNoFolderName, hucreNoFolderName);
+                    string destFolderPath = Path.Combine(csvFilesPath, $"{item.IP}-{item.TmKvHucre}");
                     string format = "ddMMyy,HHmmssfff";
                     string dateTime = item.FaultTime.ToString(format);
                     string cfgFile = item.CfgFilePath;
@@ -99,9 +106,14 @@ namespace ComtradeApp
                 var disturbances = await disturbanceRepository.GetAll();
                 foreach (var item in disturbances)
                 {
+                    var historyOfChange = await historyOfChangeRepository.GetByMyDataId(item.ID);
+                    if (historyOfChange != null && item.IP == historyOfChange.NewIP)
+                    {
+                        await historyOfChangeRepository.UpdateFolderNames(item, csvFilesPath);
+                    }
                     string tmNoFolderName = item.TmNo;
                     string hucreNoFolderName = item.HucreNo;
-                    string destFolderPath = Path.Combine(csvFilesPath, tmNoFolderName, hucreNoFolderName);
+                    string destFolderPath = Path.Combine(csvFilesPath, $"{item.IP}-{item.TmKvHucre}");
                     string format = "ddMMyy,HHmmssfff";
                     string dateTime = item.FaultTime.ToString(format);
                     string cfgFile = item.CfgFilePath;

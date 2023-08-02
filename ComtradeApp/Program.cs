@@ -26,11 +26,13 @@ public class Program
         services.AddDbContext<AppDbContext>(options => options.UseOracle(configuration.GetConnectionString("DefaultConnection")));
         services.AddSingleton<MyDataRepository>();
         services.AddSingleton<DisturbanceRepository>();
+        services.AddSingleton<HistoryOfChangeRepository>();
         services.AddSingleton<FtpService>();
         services.AddSingleton<CsvConverterService>();
         serviceProvider = services.BuildServiceProvider();
         MyDataRepository myDataRepository = serviceProvider.GetRequiredService<MyDataRepository>();
         DisturbanceRepository disturbanceRepository = serviceProvider.GetRequiredService<DisturbanceRepository>();
+        HistoryOfChangeRepository historyOfChangeRepository = serviceProvider.GetRequiredService<HistoryOfChangeRepository>();
         FtpService ftpService = serviceProvider.GetRequiredService<FtpService>();
         CsvConverterService csvConverterService = serviceProvider.GetRequiredService<CsvConverterService>();
         #endregion

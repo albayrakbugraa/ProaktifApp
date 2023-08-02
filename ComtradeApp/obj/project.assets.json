@@ -1486,6 +1486,18 @@
             "rid": "win"
           }
         }
+      },
+      "WinSCP/6.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/WinSCPnet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/WinSCPnet.dll": {}
+        },
+        "build": {
+          "buildTransitive/WinSCP.targets": {}
+        }
       }
     }
   },
@@ -4225,6 +4237,25 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "WinSCP/6.1.1": {
+      "sha512": "kAubKICr2QuW4x9E8B+ghmfCZfHkXuULNP30ZudySUtRfycAKZ7s/700m/llFILce4/xq4fbljwwpMDC2W8tdg==",
+      "type": "package",
+      "path": "winscp/6.1.1",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/WinSCP.targets",
+        "buildTransitive/WinSCP.targets",
+        "docs/README.md",
+        "lib/net40/WinSCPnet.dll",
+        "lib/netstandard2.0/WinSCPnet.dll",
+        "tools/WinSCP.exe",
+        "winscp.6.1.1.nupkg.sha512",
+        "winscp.nuspec",
+        "winscp64.png"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -4237,7 +4268,8 @@
       "Oracle.EntityFrameworkCore >= 7.21.9",
       "Serilog >= 2.12.0",
       "Serilog.Settings.Configuration >= 7.0.0",
-      "Serilog.Sinks.File >= 5.0.0"
+      "Serilog.Sinks.File >= 5.0.0",
+      "WinSCP >= 6.1.1"
     ]
   },
   "packageFolders": {
@@ -4246,11 +4278,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj",
+      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
       "projectName": "ComtradeApp",
-      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj",
+      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
       "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\obj\\",
+      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4316,6 +4348,10 @@
           "Serilog.Sinks.File": {
             "target": "Package",
             "version": "[5.0.0, )"
+          },
+          "WinSCP": {
+            "target": "Package",
+            "version": "[6.1.1, )"
           }
         },
         "imports": [

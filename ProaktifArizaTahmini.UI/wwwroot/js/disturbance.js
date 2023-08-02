@@ -1,4 +1,5 @@
 ﻿
+
 function searchTable1() {
     // Arama metnini alın
     var input = document.getElementById("searchInput");

@@ -9,7 +9,6 @@ namespace ProaktifArizaTahmini.CORE.IRepository
 {
     public interface IDisturbanceRepository : IBaseRepository<Disturbance>
     {
-        Task<List<Disturbance>> FilteredList(string filterText);
         Task<List<Disturbance>> GetDisturbancesById(int Id);
     }
 }

@@ -114,6 +114,39 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.ToTable("Disturbances");
                 });
 
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.HistoryOfChange", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Id");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateTime>("ChangedDate")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("Degistirilme_Tarihi");
+
+                    b.Property<int>("MyDataId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NewIP")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("New_IP");
+
+                    b.Property<string>("OldIP")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Old_IP");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MyDataId");
+
+                    b.ToTable("HistoryOfChanges");
+                });
+
             modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.MyData", b =>
                 {
                     b.Property<int>("ID")
@@ -185,9 +218,22 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Navigation("MyData");
                 });
 
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.HistoryOfChange", b =>
+                {
+                    b.HasOne("ProaktifArizaTahmini.CORE.Entities.MyData", "MyData")
+                        .WithMany("HistoryOfChanges")
+                        .HasForeignKey("MyDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyData");
+                });
+
             modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.MyData", b =>
                 {
                     b.Navigation("Disturbances");
+
+                    b.Navigation("HistoryOfChanges");
                 });
 #pragma warning restore 612, 618
         }

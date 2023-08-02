@@ -3804,11 +3804,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
+      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
       "projectName": "ProaktifArizaTahmini.DAL",
-      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
+      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
       "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.DAL\\obj\\",
+      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3825,8 +3825,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
-              "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj"
+            "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
+              "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj"
             }
           }
         }

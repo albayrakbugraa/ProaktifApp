@@ -1,5 +1,6 @@
 ﻿using ComtradeApp.Models;
 using Microsoft.EntityFrameworkCore;
+using ProaktifArizaTahmini.CORE.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace ComtradeApp.AppDbContext
 
         public DbSet<MyData> MyDatas { get; set; }
         public DbSet<Disturbance> Disturbances { get; set; }
+        public DbSet<HistoryOfChange> HistoryOfChanges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

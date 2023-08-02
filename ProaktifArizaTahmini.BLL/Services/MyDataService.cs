@@ -47,12 +47,6 @@ namespace ProaktifArizaTahmini.BLL.Services
             return result;
         }
 
-        public Task<List<MyData>> FilteredList(string filterText)
-        {
-            var dataList = myDataRepository.FilteredList(filterText);
-            return dataList;
-        }
-
         public async Task<List<MyData>> FilterList(MyDataFilterParams filterParams)
         {
             var myDatas = await myDataRepository.GetAll();

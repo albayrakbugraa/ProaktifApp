@@ -20,33 +20,19 @@ namespace ProaktifArizaTahmini.BLL.Services
             this.disturbanceRepository = disturbanceRepository;
         }
 
-        public async Task<List<Disturbance>> FilterByFaultTime(DateTime FaultStartDate, DateTime FaultEndDate)
+        public async Task<string> GetcfgFile(int id)
         {
-            var filteredDisturbances = await disturbanceRepository.GetFilteredList(
-                selector: x=> new Disturbance
-                {
-                    FaultTime = x.FaultTime,
-                    TmNo = x.TmNo,
-                    CfgFilePath = x.CfgFilePath,
-                    DatFilePath = x.DatFilePath,
-                    FiderName = x.FiderName,
-                    HucreNo = x.HucreNo,
-                    IP = x.IP,
-                    RoleModel = x.RoleModel,
-                    TmKvHucre = x.TmKvHucre
-                },
-                expression:x=> x.FaultTime >= FaultStartDate && x.FaultTime <= FaultEndDate,
-                orderBy: x=>x.OrderByDescending(x=>x.FaultTime)
-                );  
-            return filteredDisturbances;
+            var disturbance = await disturbanceRepository.GetWhere(d=>d.ID == id);
+            string cfgFile = disturbance.CfgFileData;
+            return cfgFile;
         }
-
-        public Task<List<Disturbance>> FilteredList(string filterText)
+        public async Task<byte[]> GetDatFile(int id)
         {
-            var dataList = disturbanceRepository.FilteredList(filterText);
-            return dataList;
+            byte[] datFile = null;
+            var disturbance = await disturbanceRepository.GetWhere(d => d.ID == id);
+            datFile = disturbance.DatFileData;
+            return datFile;
         }
-
 
         public async Task<List<Disturbance>> FilterList(DisturbanceFilterParams filterParams)
         {
@@ -109,5 +95,10 @@ namespace ProaktifArizaTahmini.BLL.Services
             return true;
         }
 
+        public async Task<Disturbance> GetById(int id)
+        {
+            var disturbance = await disturbanceRepository.GetWhere(x => x.ID == id);
+            return disturbance;
+        }
     }
 }

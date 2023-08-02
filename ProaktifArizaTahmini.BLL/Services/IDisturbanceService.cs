@@ -12,9 +12,10 @@ namespace ProaktifArizaTahmini.BLL.Services
     public interface IDisturbanceService
     {
         Task<List<Disturbance>> GetDisturbances();
-        Task<List<Disturbance>> FilterByFaultTime(DateTime FaultStartDate,DateTime FaultEndDate);
-        Task<List<Disturbance>> FilteredList(string filterText);
         Task<List<Disturbance>> FilterList(DisturbanceFilterParams filterParams);
         Task<bool> UpdateByDataIdList(MyDataDTO myData);
+        Task<string> GetcfgFile(int id);
+        Task<byte[]> GetDatFile(int id);
+        Task<Disturbance> GetById(int id);
     }
 }

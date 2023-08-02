@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nVFzfIdkz3dkl9O7JoUCx5BUCA4nGFO+RkalG7IUawrBnRE4cEnVsUx9sW7XBXbsTveM5XYtlKvY/8lDTCEwMQ==",
+  "dgSpecHash": "1HiaKoQHcTTvVo8qRrVDuLzgiTW55U7ZXFgoKe/k82G5gICqV8hI0VRMmOfULJuecUi0j8Gz2mdOO8TmzOkvbQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
+  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

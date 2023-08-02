@@ -32,19 +32,5 @@ namespace ProaktifArizaTahmini.DAL.Repositories
             return true;
         }
 
-        public Task<List<MyData>> FilteredList(string filterText)
-        {
-            var filteredData = db.MyDatas.Where(d => d.TmNo.Contains(filterText)
-                                                            || d.kV.Contains(filterText)
-                                                            || d.HucreNo.Contains(filterText)
-                                                            || d.FiderName.Contains(filterText)
-                                                            || d.IP.Contains(filterText)
-                                                            || d.RoleModel.Contains(filterText)
-                                                            || d.User.Contains(filterText)
-                                                            || d.Password.Contains(filterText))
-                                                .ToListAsync();
-            return filteredData;
-        }
-
     }
 }

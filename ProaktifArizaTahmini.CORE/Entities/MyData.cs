@@ -29,6 +29,7 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public string Password { get; set; }
         public string? Path { get; set; }
         public ICollection<Disturbance> Disturbances { get; set; }
+        public ICollection<HistoryOfChange> HistoryOfChanges { get; set; }
 
     }
 }

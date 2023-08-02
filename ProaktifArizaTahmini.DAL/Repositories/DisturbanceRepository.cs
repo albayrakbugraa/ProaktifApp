@@ -16,18 +16,6 @@ namespace ProaktifArizaTahmini.DAL.Repositories
         {
             this.db = db;
         }
-        public Task<List<Disturbance>> FilteredList(string filterText)
-        {
-            var filteredData = db.Disturbances.Where(d => d.TmNo.Contains(filterText)
-                                                            || d.kV.Contains(filterText)
-                                                            || d.HucreNo.Contains(filterText)
-                                                            || d.FiderName.Contains(filterText)
-                                                            || d.IP.Contains(filterText)
-                                                            || d.RoleModel.Contains(filterText)
-                                                            )
-                                                .ToListAsync();
-            return filteredData;
-        }
 
         public Task<List<Disturbance>> GetDisturbancesById(int Id)
         {

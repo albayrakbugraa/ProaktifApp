@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using WinSCP;
+using static System.Collections.Specialized.BitVector32;
 
 namespace ComtradeApp
 {
@@ -14,10 +17,12 @@ namespace ComtradeApp
     {
         private readonly MyDataRepository myDataRepository;
         private readonly DisturbanceRepository disturbanceRepository;
-        public FtpService(MyDataRepository myDataRepository, DisturbanceRepository disturbanceRepository)
+        private readonly HistoryOfChangeRepository historyOfChangeRepository;
+        public FtpService(MyDataRepository myDataRepository, DisturbanceRepository disturbanceRepository, HistoryOfChangeRepository historyOfChangeRepository)
         {
             this.myDataRepository = myDataRepository;
             this.disturbanceRepository = disturbanceRepository;
+            this.historyOfChangeRepository = historyOfChangeRepository;
         }
         public async Task DownloadCfgAndDatFilesEfCoreAsync(string comtradeFilesPath)
         {
@@ -25,7 +30,7 @@ namespace ComtradeApp
             {
                 Serilog.Log.Information("FTP işlemleri başladı..");
 
-                //var data = await myDataRepository.GetWhere(x => x.ID == 21);
+                //var data = await myDataRepository.GetWhere(x => x.ID == 1);
                 //List<MyData> myDatas = new List<MyData>();
                 //myDatas.Add(data);
                 var myDatas = await myDataRepository.GetAll();
@@ -33,11 +38,15 @@ namespace ComtradeApp
                 foreach (var item in myDatas)
                 {
                     Serilog.Log.Information($"Bağlantı Kurulan Röle Bilgileri \r Tm_kV_Hücre : {item.TmKvHucre} \r IP : {item.IP} \r Röle Model : {item.RoleModel} \n");
-
+                    var historyOfChange = await historyOfChangeRepository.GetByMyDataId(item.ID);
+                    if (historyOfChange != null && item.IP == historyOfChange.NewIP)
+                    {
+                        await historyOfChangeRepository.UpdateFolderNames(item, comtradeFilesPath);
+                    }
                     string host = $"ftp://{item.IP}:{item.Port}/";
                     string tmNoFolderName = item.TmNo;
                     string hucreNoFolderName = item.HucreNo;
-                    string destFolderPath = Path.Combine(comtradeFilesPath, tmNoFolderName, hucreNoFolderName);
+                    string destFolderPath = Path.Combine(comtradeFilesPath, $"{item.IP}-{item.TmKvHucre}");
 
                     if (!Directory.Exists(destFolderPath))
                     {
@@ -51,18 +60,28 @@ namespace ComtradeApp
                     parameters.Host = host;
                     parameters.ComtradeFilesPath = comtradeFilesPath;
                     parameters.DestFolderPath = destFolderPath;
-                    //Download(parameters);
-                    parameters.FilesToDownload = GetFilesToDownloadFromFtp(parameters);
-                    Serilog.Log.Information($"İndirelecek dosya sayısı : {parameters.FilesToDownload.Count}");
-
-                    if (parameters.FilesToDownload.Count > 0)
+                    if (item.User == "supervisor")
                     {
-                        List<string>[] downloadedFilesArray = DownloadFilesFromFtp(parameters);
-                        parameters.DownloadedCfgFiles = downloadedFilesArray[0];
-                        parameters.DownloadedDatFiles = downloadedFilesArray[1];
+                        parameters = Download(parameters);
+                        if (parameters.FilesToDownload.Count > 0 && parameters.FilesToDownload != null)
+                        {
+                            CheckMissingFiles(parameters);
+                            await CreateDisturbancesAsync(parameters);
+                        }
+                    }
+                    else
+                    {
+                        parameters.FilesToDownload = GetFilesToDownloadFromFtp(parameters);
+                        Serilog.Log.Information($"İndirelecek dosya sayısı : {parameters.FilesToDownload.Count}");
 
-                        CheckMissingFiles(parameters);
-                        await CreateDisturbancesAsync(parameters);
+                        if (parameters.FilesToDownload.Count > 0)
+                        {
+                            List<string>[] downloadedFilesArray = DownloadFilesFromFtp(parameters);
+                            parameters.DownloadedCfgFiles = downloadedFilesArray[0];
+                            parameters.DownloadedDatFiles = downloadedFilesArray[1];
+                            CheckMissingFiles(parameters);
+                            await CreateDisturbancesAsync(parameters);
+                        }
                     }
                 }
 
@@ -77,110 +96,77 @@ namespace ComtradeApp
                 Serilog.Log.Information("FTP işlemleri sonlandı.. \n");
             }
         }
-        private void Download(ParametersModel parameters)
+        private ParametersModel Download(ParametersModel parameters)
         {
-            // Get the object used to communicate with the server.
-            //try
-            //{
-            //    FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://10.212.160.249/COMTRADE_1/cmt00072.cfg");
-            //    //FtpWebRequest request = (FtpWebRequest)WebRequest.Create(parameters.Host.Trim() + "IEC61850/log.txt");
-            //    request.Method = WebRequestMethods.Ftp.DownloadFile;
-            //    request.UsePassive= true;
-            //    request.Credentials = new NetworkCredential(parameters.myData.User.Trim(), parameters.myData.Password.Trim());
-            //    FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            //    Stream responseStream = response.GetResponseStream();
-            //    StreamReader reader = new StreamReader(responseStream);
-            //    Console.WriteLine(reader.ReadToEnd());
-            //    Console.WriteLine($"Download Complete, status {response.StatusDescription}");
-            //    reader.Close();
-            //    response.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw;
-            //}
-            //try
-            //{
-            //    FtpWebRequest fileDownloadRequest = (FtpWebRequest)WebRequest.Create(parameters.Host + parameters.myData.Path + "cmt00045.cfg");
-            //    fileDownloadRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-            //    fileDownloadRequest.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
-            //    fileDownloadRequest.KeepAlive = false;
-            //    fileDownloadRequest.UseBinary = true;
-            //    fileDownloadRequest.EnableSsl= true;
+            try
+            {
+                // WinSCP oturum nesnesini oluşturun
+                SessionOptions sessionOptions = new SessionOptions
+                {
+                    Protocol = Protocol.Ftp,
+                    HostName = parameters.myData.IP,
+                    UserName = parameters.myData.User,
+                    Password = parameters.myData.Password,
+                };
+                using (Session session = new Session())
+                {
+                    parameters.FilesToDownload = new List<string>();
+                    parameters.DownloadedCfgFiles = new List<string>();
+                    parameters.DownloadedDatFiles = new List<string>();
 
-            //    string localFilePath = Path.Combine(parameters.DestFolderPath, "cmt00045.cfg");
+                    // FTP sunucusuna bağlan
+                    session.Open(sessionOptions);
 
-            //    try
-            //    {
-            //        using (FtpWebResponse fileDownloadResponse = (FtpWebResponse)fileDownloadRequest.GetResponse())
-            //        {
-            //            using (Stream fileDownloadStream = fileDownloadResponse.GetResponseStream())
-            //            {
-            //                using (FileStream fileStream = File.Create(localFilePath))
-            //                {
-            //                    fileDownloadStream.CopyTo(fileStream);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
+                    // Dosyaların indirileceği yerel klasör
+                    string localFolderPath = parameters.DestFolderPath + "\\";
 
-            //        throw;
-            //    }
-            //    //FtpWebRequest request = (FtpWebRequest)WebRequest.Create(parameters.Host + parameters.myData.Path);
-            //    //request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            //    //request.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
-            //    //request.UsePassive = true;
+                    // İndirme işlemi için oturumun transfer opsiyonlarını 
+                    TransferOptions transferOptions = new TransferOptions();
+                    transferOptions.TransferMode = TransferMode.Binary;
 
-            //    //using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-            //    //{
-            //    //    using (Stream responseStream = response.GetResponseStream())
-            //    //    {
-            //    //        using (StreamReader reader = new StreamReader(responseStream))
-            //    //        {
-            //    //            while (!reader.EndOfStream)
-            //    //            {
-            //    //                string fileDetails = reader.ReadLine();
-            //    //                string[] itemParts = fileDetails.Split(' ');
-            //    //                string fileName = itemParts[itemParts.Length - 1];
-            //    //                FtpWebRequest fileDownloadRequest = (FtpWebRequest)WebRequest.Create(parameters.Host + parameters.myData.Path + fileName);
-            //    //                fileDownloadRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-            //    //                fileDownloadRequest.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
-            //    //                fileDownloadRequest.KeepAlive = true;
-            //    //                fileDownloadRequest.UseBinary = true;
+                    // FTP sunucusundaki klasörün adı
+                    string remoteFolderPath = parameters.myData.Path;
 
-            //    //                string localFilePath = Path.Combine(parameters.DestFolderPath, fileName);
+                    // Klasördeki tüm dosyaların listesini al
+                    RemoteDirectoryInfo directoryInfo = session.ListDirectory(remoteFolderPath);
+                    foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
+                    {
+                        // Eğer dosya, bir dosya (Directory olmayan) ise, dosyayı indir
+                        if (!fileInfo.IsDirectory && !parameters.DownloadedFiles.Contains(fileInfo.Name))
+                        {
+                            if (!fileInfo.IsDirectory) parameters.FilesToDownload.Add(fileInfo.Name);
 
-            //    //                try
-            //    //                {
-            //    //                    using (FtpWebResponse fileDownloadResponse = (FtpWebResponse)fileDownloadRequest.GetResponse())
-            //    //                    {
-            //    //                        using (Stream fileDownloadStream = fileDownloadResponse.GetResponseStream())
-            //    //                        {
-            //    //                            using (FileStream fileStream = File.Create(localFilePath))
-            //    //                            {
-            //    //                                fileDownloadStream.CopyTo(fileStream);
-            //    //                            }
-            //    //                        }
-            //    //                    }
-            //    //                }
-            //    //                catch (Exception ex)
-            //    //                {
+                            string remoteFilePath = remoteFolderPath + fileInfo.Name;
+                            string localFilePath = localFolderPath + fileInfo.Name;
+                            TransferOperationResult transferResult = session.GetFiles(remoteFilePath, localFilePath, false, transferOptions);
 
-            //    //                    throw;
-            //    //                }
-            //    //            }
-            //    //        }
-            //    //    }
-            //    //}
+                            // Transfer işleminin başarılı olup olmadığını kontrol et
+                            if (transferResult.IsSuccess)
+                            {
+                                Serilog.Log.Information($"İndirilen dosya : {fileInfo.Name}");
+                                if (fileInfo.Name.ToLower().EndsWith(".cfg"))
+                                {
+                                    parameters.DownloadedCfgFiles.Add(fileInfo.Name);
+                                }
+                                else if (fileInfo.Name.ToLower().EndsWith(".dat"))
+                                {
+                                    parameters.DownloadedDatFiles.Add(fileInfo.Name);
+                                }
 
-            //}
-            //catch (WebException ex)
-            //{
-            //    Console.WriteLine("Hata: " + ex.Message);
-            //}
-
+                            }
+                            else
+                            {
+                                Serilog.Log.Error($" Röle bilgisi aşağıdaki gibi olan röleden {fileInfo.Name} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel} \r Dosya Adı: {fileInfo.Name} \r ");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Error("Hata: " + ex.Message);
+            }
+            return parameters;
         }
         private List<string> GetFilesToDownloadFromFtp(ParametersModel parameters)
         {
@@ -200,8 +186,8 @@ namespace ComtradeApp
                 string fileName = reader.ReadLine();
                 while (!string.IsNullOrEmpty(fileName))
                 {
-                    //    string[] itemParts = fileName.Split(' ');
-                    //    string fileName2 = itemParts[itemParts.Length - 1];
+                    //string[] itemParts = fileName.Split(' ');
+                    //string fileName2 = itemParts[itemParts.Length - 1];
                     if (!parameters.DownloadedFiles.Contains(fileName))
                     {
                         filesToDownload.Add(fileName);
@@ -293,22 +279,37 @@ namespace ComtradeApp
                 foreach (string cfgFile in parameters.DownloadedCfgFiles)
                 {
                     string datFileName = Path.ChangeExtension(cfgFile, ".dat");
+                    string cfgFilePath = Path.Combine(parameters.DestFolderPath, cfgFile);
+                    string datFilePath = Path.Combine(parameters.DestFolderPath, datFileName);
 
                     if (File.Exists(Path.Combine(parameters.DestFolderPath, datFileName)))
                     {
+                        string cfgFileData = File.ReadAllText(cfgFilePath);
+                        byte[] datFileData = File.ReadAllBytes(datFilePath);
                         Disturbance disturbance = new Disturbance();
                         disturbance.IP = parameters.myData.IP;
                         disturbance.TmNo = parameters.myData.TmNo;
-                        disturbance.CfgFilePath = Path.Combine(parameters.DestFolderPath, cfgFile);
-                        disturbance.FaultTime = GetFileCreationTime(parameters, cfgFile);
+                        disturbance.CfgFilePath = cfgFilePath;
+                        if (parameters.myData.User == "supervisor")
+                        {
+                            FileInfo fileInfo = new FileInfo(Path.Combine(parameters.DestFolderPath, datFileName));
+                            disturbance.FaultTime = fileInfo.LastWriteTime;
+                        }
+                        else
+                        {
+                            disturbance.FaultTime = GetFileCreationTime(parameters, cfgFile);
+                        }
                         disturbance.HucreNo = parameters.myData.HucreNo;
                         disturbance.FiderName = parameters.myData.FiderName;
                         disturbance.RoleModel = parameters.myData.RoleModel;
-                        disturbance.DatFilePath = Path.Combine(parameters.DestFolderPath, datFileName);
+                        disturbance.DatFilePath = datFilePath;
                         disturbance.TmKvHucre = parameters.myData.TmKvHucre;
                         disturbance.kV = parameters.myData.kV;
                         disturbance.Status = true;
                         disturbance.MyDataId = parameters.myData.ID;
+                        disturbance.CfgFileData = cfgFileData;
+                        disturbance.DatFileData = datFileData;
+                        disturbance.ComtradeName = Path.GetFileNameWithoutExtension(cfgFile);
 
                         bool result = await disturbanceRepository.Create(disturbance);
                         if (result)
@@ -379,7 +380,7 @@ namespace ComtradeApp
                     }
                 }
 
-                return DateTime.MinValue; // Eğer dosya ayrıntıları bulunamazsa varsayılan bir değer döndürebilirsiniz
+                return DateTime.MinValue; // Eğer dosya ayrıntıları bulunamazsa varsayılan bir değer döndürür
             }
             catch (Exception ex)
             {

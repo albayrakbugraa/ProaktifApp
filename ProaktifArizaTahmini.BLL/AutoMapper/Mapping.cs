@@ -17,6 +17,7 @@ namespace ProaktifArizaTahmini.BLL.AutoMapper
             CreateMap<MyData, MyDataDTO>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<MyDataDTO, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<MyData, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
+            CreateMap<HistoryOfChange, HistoryOfChange>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<MyDataFilterParams, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<DisturbanceFilterParams, Disturbance>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
         }

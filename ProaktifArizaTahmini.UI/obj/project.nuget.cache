@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UBXAlzC+HdQGuuwaEmqaqHmaNwgEEpNB0N/AyAWh68T0OfQ3HWJq/ibcZbu9O0l6r2lZvAwsKxmL8so9/auIXg==",
+  "dgSpecHash": "ydZSsf68Joi1EyPkD/ZYymGAU4q0MNF5bT6+cUXldtA8O/1US00qz+5ojO9+WdWVPYIT/x/WOiSEeUzxdMTrXA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ProaktifArizaTahmini.UI\\ProaktifArizaTahmini.UI.csproj",
+  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\ProaktifArizaTahmini.UI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

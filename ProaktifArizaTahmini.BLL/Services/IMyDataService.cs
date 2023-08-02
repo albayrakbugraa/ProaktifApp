@@ -18,7 +18,6 @@ namespace ProaktifArizaTahmini.BLL.Services
         Task<bool> UpdateMyData(int id, MyDataDTO model);
         Task<bool> CreateMyData(MyDataDTO model);
         Task<bool> DeleteMyData(int id);
-        Task<List<MyData>> FilteredList(string filterText);
         Task<List<MyData>> FilterList(MyDataFilterParams filterParams);
     }
 }

@@ -26,8 +26,10 @@ namespace ProaktifArizaTahmini.BLL
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IDisturbanceRepository, DisturbanceRepository>();
             services.AddTransient<IMyDataRepository, MyDataRepository>();
+            services.AddTransient<IHistoryOfChangeRepository, HistoryOfChangeRepository>();
             services.AddScoped<IMyDataService, MyDataService>();
             services.AddScoped<IDisturbanceService, DisturbanceService>();
+            services.AddScoped<IHistoryOfChangeService, HistoryOfChangeService>();
         }
     }
 }

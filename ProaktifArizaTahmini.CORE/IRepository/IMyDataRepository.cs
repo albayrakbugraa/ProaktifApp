@@ -10,6 +10,5 @@ namespace ProaktifArizaTahmini.CORE.IRepository
     public interface IMyDataRepository : IBaseRepository<MyData>
     {
         Task<bool> AddAllDataList(List<MyData> myDataList);
-        Task<List<MyData>> FilteredList(string filterText);
     }
 }

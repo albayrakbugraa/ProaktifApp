@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.BLL.Services;
 using ProaktifArizaTahmini.CORE.Entities;
+using System.Configuration;
 using System.IO.Compression;
+using System.Text;
 using X.PagedList;
 
 namespace ProaktifArizaTahmini.UI.Controllers
@@ -14,19 +16,41 @@ namespace ProaktifArizaTahmini.UI.Controllers
     {
         private readonly IDisturbanceService disturbanceService;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public DisturbanceController(IDisturbanceService disturbanceService, IMapper mapper)
+        public DisturbanceController(IDisturbanceService disturbanceService, IMapper mapper, IConfiguration configuration)
         {
             this.disturbanceService = disturbanceService;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
-        public async Task<IActionResult> Deneme(DisturbanceFilterParams disturbanceVM, int? page, int? pageSize)
+        public async Task<IActionResult> List(DisturbanceFilterParams disturbanceVM, int? page, int? pageSize)
         {
+            int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
             ViewData["ActivePage"] = "Disturbance";
+
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
             List<Disturbance> myDataList = new List<Disturbance>();
+
             var properties = disturbanceVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
+
+            foreach (var property in properties)
+            {
+                // Özellik adı "time" ile bitiyorsa veya içeriyorsa doğrulamayı atla
+                if (property.Name.Contains("time", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var propertyValue = property.GetValue(disturbanceVM)?.ToString();
+                if (propertyValue != null && propertyValue.Length < minCharLimit)
+                {
+                    // Minimum karakter sınırını içeren bir hata mesajı gösterin.
+                    ViewBag.ErrorMessage = $"Minimum {minCharLimit} karakter gereklidir.";
+                    ClearInvalidProperties(disturbanceVM, minCharLimit);
+                }
+            }
             if (properties.Any(p => p.GetValue(disturbanceVM) != null) && page==null)
             {
                 page = 1;
@@ -34,16 +58,51 @@ namespace ProaktifArizaTahmini.UI.Controllers
             else
             {
                 myDataList = await disturbanceService.GetDisturbances();
-                disturbanceVM.FilterTextTm = disturbanceVM.CurrentFilterTm;
-                disturbanceVM.FilterTextKv = disturbanceVM.CurrentFilterKv;
-                disturbanceVM.FilterTextHucre = disturbanceVM.CurrentFilterHucre;
-                disturbanceVM.FilterTextFider = disturbanceVM.CurrentFilterFider;
-                disturbanceVM.FilterTextIp = disturbanceVM.CurrentFilterIp;
-                disturbanceVM.FilterTextRole = disturbanceVM.CurrentFilterRole;
-                disturbanceVM.FilterFaultTimeStart = DateTime.Parse(disturbanceVM.CurrentFaultTimeStart);
-                disturbanceVM.FilterFaultTimeEnd = DateTime.Parse(disturbanceVM.CurrentFaultTimeEnd);
-
+                RestoreFilterTexts(disturbanceVM);
             }
+            RestoreCurrentFilterTexts(disturbanceVM);
+
+            if (disturbanceVM.GetType().GetProperties().Any(p => p.GetValue(disturbanceVM) != null))
+            {
+                myDataList = await disturbanceService.FilterList(disturbanceVM);
+            }
+
+            DisturbanceFilterParams filterParams = mapper.Map<DisturbanceFilterParams>(disturbanceVM);
+            int pageNumber = (page ?? 1);
+            IPagedList<Disturbance> myDataPagedList = new PagedList<Disturbance>(myDataList.OrderByDescending(x => x.FaultTime), pageNumber, (int)ViewBag.PageSize);
+            filterParams.DisturbanceListVM = myDataPagedList;
+            return View(filterParams);
+        }
+
+        private void ClearInvalidProperties(DisturbanceFilterParams disturbanceVM, int minCharLimit)
+        {
+            var properties = disturbanceVM.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    var value = property.GetValue(disturbanceVM) as string;
+                    if (value != null && value.Length < minCharLimit)
+                    {
+                        property.SetValue(disturbanceVM, null);
+                    }
+                }
+            }
+        }
+
+        private void RestoreFilterTexts(DisturbanceFilterParams disturbanceVM)
+        {
+            disturbanceVM.FilterTextTm = disturbanceVM.CurrentFilterTm;
+            disturbanceVM.FilterTextKv = disturbanceVM.CurrentFilterKv;
+            disturbanceVM.FilterTextHucre = disturbanceVM.CurrentFilterHucre;
+            disturbanceVM.FilterTextFider = disturbanceVM.CurrentFilterFider;
+            disturbanceVM.FilterTextIp = disturbanceVM.CurrentFilterIp;
+            disturbanceVM.FilterTextRole = disturbanceVM.CurrentFilterRole;
+            disturbanceVM.FilterFaultTimeStart = DateTime.Parse(disturbanceVM.CurrentFaultTimeStart);
+            disturbanceVM.FilterFaultTimeEnd = DateTime.Parse(disturbanceVM.CurrentFaultTimeEnd);
+        }
+        private void RestoreCurrentFilterTexts(DisturbanceFilterParams disturbanceVM)
+        {
             disturbanceVM.CurrentFilterTm = disturbanceVM.FilterTextTm;
             disturbanceVM.CurrentFilterKv = disturbanceVM.FilterTextKv;
             disturbanceVM.CurrentFilterHucre = disturbanceVM.FilterTextHucre;
@@ -52,67 +111,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             disturbanceVM.CurrentFilterRole = disturbanceVM.FilterTextRole;
             disturbanceVM.CurrentFaultTimeStart = disturbanceVM.FilterFaultTimeStart.ToString("yyyy-MM-ddTHH:mm");
             disturbanceVM.CurrentFaultTimeEnd = disturbanceVM.FilterFaultTimeEnd.ToString("yyyy-MM-ddTHH:mm");
-
-            if (disturbanceVM != null && disturbanceVM.GetType().GetProperties().Any(p => p.GetValue(disturbanceVM) != null))
-            {
-                myDataList = await disturbanceService.FilterList(disturbanceVM);
-            }
-            DisturbanceFilterParams filterParams = new DisturbanceFilterParams();
-            filterParams = mapper.Map(disturbanceVM, filterParams);
-            int pageNumber = (page ?? 1);
-            IPagedList<Disturbance> myDataPagedList = new PagedList<Disturbance>(myDataList.OrderByDescending(x => x.FaultTime), pageNumber, (int)ViewBag.PageSize);
-            filterParams.DisturbanceListVM = myDataPagedList;
-            return View(filterParams);
-        }
-        public async Task<IActionResult> List(string filterText, string currentFilter, int? page, int? pageSize)
-        {
-            int defaultPageSize = 20;
-            ViewBag.PageSize = pageSize ?? defaultPageSize;
-            List<Disturbance> disturbanceList = new List<Disturbance>();
-            if (filterText != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                disturbanceList = await disturbanceService.GetDisturbances();
-                filterText = currentFilter;
-                ViewBag.DataCount = disturbanceList.Count;
-            }
-            ViewBag.CurrentFilter = filterText;
-
-            if (!String.IsNullOrEmpty(filterText))
-            {
-                disturbanceList = await disturbanceService.FilteredList(filterText.ToUpper());
-                ViewBag.DataCount = disturbanceList.Count;
-            }
-            int pageNumber = (page ?? 1);
-            return View(disturbanceList.ToPagedList(pageNumber, (int)ViewBag.PageSize));
-        }
-        [HttpPost]
-        public async Task<IActionResult> List(DateTime FaultStartDate, DateTime FaultEndDate, int page = 1, int pageSize = 10)
-        {
-            if (FaultEndDate == DateTime.MinValue)
-            {
-                var endDate = DateTime.MaxValue;
-                var filteredDisturbances = await disturbanceService.FilterByFaultTime(FaultStartDate, endDate);
-                var value = filteredDisturbances.ToPagedList(page, pageSize);
-                return View(value);
-            }
-            else
-            {
-                var filteredDisturbances = await disturbanceService.FilterByFaultTime(FaultStartDate, FaultEndDate);
-                var value = filteredDisturbances.ToPagedList(page, pageSize);
-                return View(value);
-            }
-
-        }
-
-        [HttpPost]
-        [Route("disturbances/filterpagesize")]
-        public IActionResult PageSize(DateTime FaultStartDate, DateTime FaultEndDate, int page = 1, int pageSize = 10)
-        {
-            return RedirectToAction("List", new { FaultStartDate, FaultEndDate, page, pageSize });
         }
 
         [HttpPost]
@@ -167,6 +165,42 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
             combinedMemoryStream.Seek(0, SeekOrigin.Begin);
             return File(combinedMemoryStream, mimeType, "comtrade.zip");
+        }
+        [HttpPost]
+        public async Task<IActionResult> DownloadFilesFromDatabase(int ID)
+        {
+            var disturbance = await disturbanceService.GetById(ID);
+            string comtradeName = disturbance.ComtradeName;
+            string cfgFile = disturbance.CfgFileData;
+            byte[] datFile = disturbance.DatFileData;
+            //string cfgFile = await disturbanceService.GetcfgFile(ID);
+            //byte[] datFile = await disturbanceService.GetDatFile(ID);
+            if (string.IsNullOrEmpty(cfgFile) || datFile == null || datFile.Length == 0)
+            {
+                return NotFound();
+            }
+            var memoryStream = new MemoryStream();
+            using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                // .cfg dosyasını zip arşivine ekleyin
+                var cfgEntry = zipArchive.CreateEntry(comtradeName+".cfg", CompressionLevel.Optimal);
+                using (var cfgEntryStream = cfgEntry.Open())
+                using (var cfgMemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(cfgFile)))
+                {
+                    cfgMemoryStream.CopyTo(cfgEntryStream);
+                }
+
+                // .dat dosyasını zip arşivine ekleyin
+                var datEntry = zipArchive.CreateEntry(comtradeName+".dat", CompressionLevel.Optimal);
+                using (var datEntryStream = datEntry.Open())
+                using (var datMemoryStream = new MemoryStream(datFile))
+                {
+                    datMemoryStream.CopyTo(datEntryStream);
+                }
+            }
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return File(memoryStream, "application/zip", "Comtrade-Files.zip");
         }
 
     }

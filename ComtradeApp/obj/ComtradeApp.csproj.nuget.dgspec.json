@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj": {}
+    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj": {
+    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj",
+        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
         "projectName": "ComtradeApp",
-        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\ComtradeApp.csproj",
+        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
         "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifAriza\\ProaktifArizaTahmini\\ComtradeApp\\obj\\",
+        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -77,6 +77,10 @@
             "Serilog.Sinks.File": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "WinSCP": {
+              "target": "Package",
+              "version": "[6.1.1, )"
             }
           },
           "imports": [
