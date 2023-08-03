@@ -16,6 +16,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Bugra Albayrak/Desktop/ProaktifArizaTahmini-26.07.23/ProaktifArizaTahmini.UI/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Bugra Albayrak/Desktop/ProaktifArizaTahmini-26.07.23/ProaktifArizaTahmini.UI/Views/Disturbance/List.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzdHVyYmFuY2VcTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

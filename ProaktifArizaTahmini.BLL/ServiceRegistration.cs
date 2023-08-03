@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProaktifArizaTahmini.BLL.Services;
+using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
+using ProaktifArizaTahmini.BLL.Services.HistoryOfChangeServices;
+using ProaktifArizaTahmini.BLL.Services.MyDataServices;
+using ProaktifArizaTahmini.BLL.Services.UserLogServices;
+using ProaktifArizaTahmini.BLL.Services.UserServices;
 using ProaktifArizaTahmini.CORE.IRepository;
 using ProaktifArizaTahmini.DAL;
 using ProaktifArizaTahmini.DAL.Repositories;
@@ -27,9 +31,13 @@ namespace ProaktifArizaTahmini.BLL
             services.AddTransient<IDisturbanceRepository, DisturbanceRepository>();
             services.AddTransient<IMyDataRepository, MyDataRepository>();
             services.AddTransient<IHistoryOfChangeRepository, HistoryOfChangeRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserLogRepository, UserLogRepository>();
             services.AddScoped<IMyDataService, MyDataService>();
             services.AddScoped<IDisturbanceService, DisturbanceService>();
             services.AddScoped<IHistoryOfChangeService, HistoryOfChangeService>();
+            services.AddScoped<IUserLogService, UserLogService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

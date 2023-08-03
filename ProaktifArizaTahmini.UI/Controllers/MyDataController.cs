@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using ProaktifArizaTahmini.BLL.Models.DTOs;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
-using ProaktifArizaTahmini.BLL.Services;
+using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
+using ProaktifArizaTahmini.BLL.Services.HistoryOfChangeServices;
+using ProaktifArizaTahmini.BLL.Services.MyDataServices;
 using ProaktifArizaTahmini.CORE.Entities;
 using ProaktifArizaTahmini.UI.Models;
 using System.Formats.Asn1;
@@ -16,6 +19,7 @@ using static NuGet.Packaging.PackagingConstants;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
+    [Authorize]
     public class MyDataController : Controller
     {
         private readonly IMyDataService myDataService;

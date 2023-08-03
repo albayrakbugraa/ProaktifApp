@@ -7,11 +7,19 @@ using ProaktifArizaTahmini.DAL;
 using ProaktifArizaTahmini.DAL.Repositories;
 using System.Configuration;
 using ProaktifArizaTahmini.BLL;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme )
+    .AddCookie(options=> {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+    });
+
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Mapping));
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Ticari olmayan kullan�m i�in
@@ -33,8 +41,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseAuthentication();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

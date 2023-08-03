@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pUiC/9FCdePiILd6kvDSJ3Pbjw8BZxiDgDNr+d1luNQ=",
+  "Hash": "+Q7S4wTkvOxgbzG6uuhimVnTQXeB30/U03fnBK8veco=",
   "Source": "ProaktifArizaTahmini.UI",
   "BasePath": "_content/ProaktifArizaTahmini.UI",
   "Mode": "Default",
@@ -51,6 +51,23 @@
       "OriginalItemSpec": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\ProaktifArizaTahmini.UI.bundle.scp.css"
     },
     {
+      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\css\\signin.css",
+      "SourceId": "ProaktifArizaTahmini.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\",
+      "BasePath": "_content/ProaktifArizaTahmini.UI",
+      "RelativePath": "css/signin.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\signin.css"
+    },
+    {
       "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\css\\site.css",
       "SourceId": "ProaktifArizaTahmini.UI",
       "SourceType": "Discovered",
@@ -83,6 +100,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\img\\logo.png",
+      "SourceId": "ProaktifArizaTahmini.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\",
+      "BasePath": "_content/ProaktifArizaTahmini.UI",
+      "RelativePath": "img/logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\logo.png"
     },
     {
       "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\jquery\\jquery.min.js",

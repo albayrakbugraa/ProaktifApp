@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
-using ProaktifArizaTahmini.BLL.Services;
+using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
 using ProaktifArizaTahmini.CORE.Entities;
 using System.Configuration;
 using System.IO.Compression;
@@ -12,6 +13,7 @@ using X.PagedList;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
+    [Authorize]
     public class DisturbanceController : Controller
     {
         private readonly IDisturbanceService disturbanceService;

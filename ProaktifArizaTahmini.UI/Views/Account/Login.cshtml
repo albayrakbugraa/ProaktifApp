@@ -1,0 +1,107 @@
+﻿@using ProaktifArizaTahmini.BLL.Models.RequestModel;
+<!-- Content Wrapper -->
+@model LoginModel
+
+@{
+    ViewBag.Title = "Giriş Yap";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProaktifArizaTahmini.UI</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/signin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProaktifArizaTahmini.UI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-xI0pBXoDo9XG1O2fkH4t1Lly37MTK77OVldEwTj3Ck6D9V3c+kjFdTD5eG4vA0TD" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#7952b3">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+    <script type="text/javascript" src="chrome-extension://aggiiclaiamajehmlfpkjmlbadmkledi/popup.js" async=""></script>
+    <script type="text/javascript" src="chrome-extension://aggiiclaiamajehmlfpkjmlbadmkledi/tat_popup.js" async=""></script>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center">
+            <main class="form-signin">
+                <form asp-action="Login" asp-controller="Account" method="post">
+                    <div class="header-title">
+                        <img style="border-radius:8px;" src="~/img/logo.png" width="300px">
+                    </div>
+                    <div style="margin-top:30px;" class="header-title">
+                        <small><strong>Lütfen Kullanıcı Bilgilerinizle Giriş Yapınız</strong></small>
+                    </div>
+                    <br />
+
+                    <div class="form-floating">
+                        <input asp-for="Username" class="form-control" id="floatingInput" placeholder="Domain Kullanıcı Adı">
+                        <label asp-for="Username">Kullanıcı Adı</label>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <label asp-for="Password">Şifre</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" asp-for="RememberMe"> Beni Hatırla
+                        </label>
+                    </div>
+                    @if (ViewData.ModelState["Error"] != null && ViewData.ModelState["Error"].Errors.Count > 0)
+                    {
+
+                    <div class="alert alert-danger">
+                        <button class="close" data-close="alert"></button>
+                        <span>@ViewData.ModelState["Error"].Errors[0].ErrorMessage </span>
+                    </div>
+                    }
+                    @if (ViewData.ModelState["State"] != null && ViewData.ModelState["State"].Errors.Count > 0)
+                    {
+
+                    <div class="alert alert-danger">
+                        <button class="close" data-close="alert"></button>
+                        <span>@ViewData.ModelState["State"].Errors[0].ErrorMessage </span>
+                    </div>
+                    }
+                    <input type="submit" value="Giriş" class="w-100 btn btn-lg btn-primary" />
+                    <p class="mt-5 mb-3 text-muted">© 2023 Proaktif Arıza</p>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

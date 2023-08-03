@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProaktifArizaTahmini.BLL.Services
+namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
 {
     public class DisturbanceService : IDisturbanceService
     {
@@ -22,7 +22,7 @@ namespace ProaktifArizaTahmini.BLL.Services
 
         public async Task<string> GetcfgFile(int id)
         {
-            var disturbance = await disturbanceRepository.GetWhere(d=>d.ID == id);
+            var disturbance = await disturbanceRepository.GetWhere(d => d.ID == id);
             string cfgFile = disturbance.CfgFileData;
             return cfgFile;
         }
@@ -38,13 +38,13 @@ namespace ProaktifArizaTahmini.BLL.Services
         {
             var myDatas = await disturbanceRepository.GetAll();
             var filteredData = myDatas.Where(data =>
-                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextKv) || (data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextHucre) || (data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextFider) || (data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextIp) || (data.IP != null && data.IP.ToUpper().Contains(filterParams.FilterTextIp.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextRole) || (data.RoleModel != null && data.RoleModel.ToUpper().Contains(filterParams.FilterTextRole.ToUpper()))) &&
-                    (data.FaultTime >= filterParams.FilterFaultTimeStart && data.FaultTime <= filterParams.FilterFaultTimeEnd)
+                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextKv) || data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextHucre) || data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextFider) || data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextIp) || data.IP != null && data.IP.ToUpper().Contains(filterParams.FilterTextIp.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextRole) || data.RoleModel != null && data.RoleModel.ToUpper().Contains(filterParams.FilterTextRole.ToUpper())) &&
+                    data.FaultTime >= filterParams.FilterFaultTimeStart && data.FaultTime <= filterParams.FilterFaultTimeEnd
                 )
                 .ToList();
 
@@ -66,7 +66,7 @@ namespace ProaktifArizaTahmini.BLL.Services
                      RoleModel = x.RoleModel,
                      TmKvHucre = x.TmKvHucre
                  },
-                 expression: x=>x.Status==true,
+                 expression: x => x.Status == true,
                  orderBy: x => x.OrderByDescending(x => x.FaultTime)
                  );
             return disturbanceList;

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProaktifArizaTahmini.BLL.Services
+namespace ProaktifArizaTahmini.BLL.Services.MyDataServices
 {
     public class MyDataService : IMyDataService
     {
@@ -29,7 +29,7 @@ namespace ProaktifArizaTahmini.BLL.Services
 
         public async Task<bool> CreateMyData(MyDataDTO model)
         {
-            var result = await myDataRepository.Any(x=>x.TmKvHucre==model.TmKvHucre);
+            var result = await myDataRepository.Any(x => x.TmKvHucre == model.TmKvHucre);
             if (!result)
             {
                 MyData myData = new MyData();
@@ -50,15 +50,15 @@ namespace ProaktifArizaTahmini.BLL.Services
         public async Task<List<MyData>> FilterList(MyDataFilterParams filterParams)
         {
             var myDatas = await myDataRepository.GetAll();
-            var filteredData= myDatas.Where(data =>
-                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || (data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextKv) || (data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextHucre) || (data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextFider) || (data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextIp) || (data.IP != null && data.IP.ToUpper().Contains(filterParams.FilterTextIp.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextRole) || (data.RoleModel != null && data.RoleModel.ToUpper().Contains(filterParams.FilterTextRole.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextKullanici) || (data.User != null && data.User.ToUpper().Contains(filterParams.FilterTextKullanici.ToUpper()))) &&
-                    (string.IsNullOrEmpty(filterParams.FilterTextSifre) || (data.Password != null && data.Password.ToUpper().Contains(filterParams.FilterTextSifre.ToUpper())))
+            var filteredData = myDatas.Where(data =>
+                    (string.IsNullOrEmpty(filterParams.FilterTextTm) || data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextKv) || data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextHucre) || data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextFider) || data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextIp) || data.IP != null && data.IP.ToUpper().Contains(filterParams.FilterTextIp.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextRole) || data.RoleModel != null && data.RoleModel.ToUpper().Contains(filterParams.FilterTextRole.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextKullanici) || data.User != null && data.User.ToUpper().Contains(filterParams.FilterTextKullanici.ToUpper())) &&
+                    (string.IsNullOrEmpty(filterParams.FilterTextSifre) || data.Password != null && data.Password.ToUpper().Contains(filterParams.FilterTextSifre.ToUpper()))
                 )
                 .ToList();
 
@@ -77,7 +77,7 @@ namespace ProaktifArizaTahmini.BLL.Services
             var myDataList = await myDataRepository.GetFilteredList(
                  selector: x => new MyData
                  {
-                     ID=x.ID,
+                     ID = x.ID,
                      kV = x.kV,
                      IP = x.IP,
                      HucreNo = x.HucreNo,
@@ -99,7 +99,7 @@ namespace ProaktifArizaTahmini.BLL.Services
 
         public async Task<MyData> GetMyDataWhere(string tMkVHucre)
         {
-            return await myDataRepository.GetWhere(x=>x.TmKvHucre== tMkVHucre);
+            return await myDataRepository.GetWhere(x => x.TmKvHucre == tMkVHucre);
         }
 
         public async Task<bool> UpdateMyData(int id, MyDataDTO model)
@@ -108,6 +108,6 @@ namespace ProaktifArizaTahmini.BLL.Services
             myData = mapper.Map(model, myData);
             bool result = myDataRepository.Update(myData);
             return result;
-        }        
+        }
     }
 }
