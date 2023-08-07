@@ -13,17 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication(
-    CookieAuthenticationDefaults.AuthenticationScheme )
-    .AddCookie(options=> {
-        options.LoginPath = "/Account/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    });
-
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Mapping));
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Ticari olmayan kullan�m i�in
-
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,9 +37,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
-app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

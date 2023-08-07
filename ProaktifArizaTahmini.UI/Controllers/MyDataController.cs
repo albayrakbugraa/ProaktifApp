@@ -19,7 +19,7 @@ using static NuGet.Packaging.PackagingConstants;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class MyDataController : Controller
     {
         private readonly IMyDataService myDataService;

@@ -24,9 +24,8 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public IActionResult Login()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
-
             if (claimUser.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "MyData");
             return View();
         }
 
@@ -50,7 +49,9 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     loginModel.LoginResult = LoginResult.LoginSuccess;
 
                     List<Claim> claims = new List<Claim>() {
-                    new Claim(ClaimTypes.NameIdentifier, loginModel.Username)
+                    new Claim(ClaimTypes.NameIdentifier, user.Username),
+                    new Claim(ClaimTypes.Name,user.Name),
+                    new Claim(ClaimTypes.Surname,user.Surname),
                      };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
@@ -65,7 +66,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("List", "MyData");
                 }
                 else if (await userService.GetChangedUser(loginModel.Username, loginModel.Password) != null)
                 {
@@ -98,7 +99,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("List", "MyData");
                 }
                 else
                 {
@@ -109,7 +110,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                         domainUser.IsActive = false;
                         domainUser.UserTypeId = (int?)UserTypeNames.Domain;
                         domainUser.Password = cryptPassword;
-                        await userService.CreateUser(domainUser);
+                        bool result = await userService.CreateUser(domainUser);
                         loginModel.LoginResult = LoginResult.WaitingActivated;
                         ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
                         return View();
@@ -154,7 +155,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                     new ClaimsPrincipal(claimsIdentity), properties);
 
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToAction("List", "MyData");
                             }
                         }
                     }
@@ -176,6 +177,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
-        
+
     }
 }

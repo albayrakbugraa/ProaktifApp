@@ -30,8 +30,7 @@ namespace ProaktifArizaTahmini.BLL.Services.UserServices
         {
             User user = new User();
             user = mapper.Map(domainUser, user);
-            bool result = await userRepository.Create(user);
-            return result;
+            return await userRepository.Create(user);
         }
 
         public async Task<bool> DeleteUser(int ID)

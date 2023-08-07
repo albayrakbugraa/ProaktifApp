@@ -14,7 +14,7 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public int ID { get; set; }
 
         [StringLength(20)]
-        public string TcKimlik { get; set; }
+        public string? TcKimlik { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -36,33 +36,33 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public string Email { get; set; }
 
         [StringLength(20)]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         [StringLength(20)]
-        public string Mobile { get; set; }
+        public string? Mobile { get; set; }
 
         [StringLength(100)]
-        public string Company { get; set; }
+        public string? Company { get; set; }
 
         [StringLength(100)]
-        public string Departure { get; set; }
+        public string? Departure { get; set; }
 
         [StringLength(100)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [StringLength(500)]
-        public string Manager { get; set; }
+        public string? Manager { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
         [StringLength(500)]
-        public string Adress { get; set; }
+        public string? Adress { get; set; }
 
         [StringLength(1000)]
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         [StringLength(50)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
         public int? UserTypeId { get; set; }
         public UserType UserType { get; set; }
