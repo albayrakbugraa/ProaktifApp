@@ -40,6 +40,10 @@ namespace ComtradeApp.Models
         [Column("Instant_Dosya_Yolu")]
         public string? InstantDataPath { get; set; }
         public bool Status { get; set; }
+        [Column("SFTP_Durumu")]
+        public bool sFtpStatus { get; set; }
+        [Column("Gönderilme_Tarihi")]
+        public DateTime PutTime { get; set; }
         public int MyDataId { get; set; }
         public MyData MyData { get; set; }
     }

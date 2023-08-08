@@ -914,7 +914,6 @@ C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmi
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\obj\Debug\net6.0\ProaktifArizaTahmini.UI.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\obj\Debug\net6.0\refint\ProaktifArizaTahmini.UI.dll
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\obj\Debug\net6.0\ProaktifArizaTahmini.UI.pdb
-C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\bin\Debug\net6.0\appsettings.json
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\bin\Debug\net6.0\libman.json
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.UI\bin\Debug\net6.0\ProaktifArizaTahmini.UI.staticwebassets.runtime.json

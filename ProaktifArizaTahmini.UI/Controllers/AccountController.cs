@@ -107,7 +107,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     {
                         //İlk Kez Giriş Yapıldığı İçin Yeni Bir Kullanıcı Oluşturuyoruz
                         var domainUser = new ActiveDirectory().IsActiveDirectory(loginModel);
-                        domainUser.IsActive = false;
+                        domainUser.IsActive = true;
                         domainUser.UserTypeId = (int?)UserTypeNames.Domain;
                         domainUser.Password = cryptPassword;
                         bool result = await userService.CreateUser(domainUser);

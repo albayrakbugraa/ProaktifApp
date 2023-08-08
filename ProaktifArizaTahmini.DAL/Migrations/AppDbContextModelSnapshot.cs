@@ -207,6 +207,211 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.ToTable("MyDatas");
                 });
 
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.User", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Id");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Adress")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Company")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Departure")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Manager")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<string>("Mobile")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<string>("TcKimlik")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<int?>("UserTypeId")
+                        .IsRequired()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserTypeId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.UserLog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Id");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Environment")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ExceptionMessage")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("IpAdress")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<DateTime>("LogDate")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<bool>("LogResult")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("LogType")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("MethodName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<int?>("UserId")
+                        .IsRequired()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogs");
+                });
+
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.UserType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Id");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<int>("UserTypeName")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UserTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Domain",
+                            UserTypeName = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Misafir",
+                            UserTypeName = 2
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Test",
+                            UserTypeName = 3
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "Kurum Dışı",
+                            UserTypeName = 4
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Description = "Kurum İçi Domainsiz",
+                            UserTypeName = 5
+                        });
+                });
+
             modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.Disturbance", b =>
                 {
                     b.HasOne("ProaktifArizaTahmini.CORE.Entities.MyData", "MyData")
@@ -229,11 +434,43 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Navigation("MyData");
                 });
 
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.User", b =>
+                {
+                    b.HasOne("ProaktifArizaTahmini.CORE.Entities.UserType", "UserType")
+                        .WithMany("Users")
+                        .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserType");
+                });
+
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.UserLog", b =>
+                {
+                    b.HasOne("ProaktifArizaTahmini.CORE.Entities.User", "User")
+                        .WithMany("UserLogs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.MyData", b =>
                 {
                     b.Navigation("Disturbances");
 
                     b.Navigation("HistoryOfChanges");
+                });
+
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.User", b =>
+                {
+                    b.Navigation("UserLogs");
+                });
+
+            modelBuilder.Entity("ProaktifArizaTahmini.CORE.Entities.UserType", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

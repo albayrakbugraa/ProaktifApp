@@ -310,6 +310,8 @@ namespace ComtradeApp
                         disturbance.CfgFileData = cfgFileData;
                         disturbance.DatFileData = datFileData;
                         disturbance.ComtradeName = Path.GetFileNameWithoutExtension(cfgFile);
+                        disturbance.sFtpStatus = false;
+                        disturbance.PutTime = DateTime.MinValue;
 
                         bool result = await disturbanceRepository.Create(disturbance);
                         if (result)

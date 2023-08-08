@@ -38,7 +38,7 @@ namespace ComtradeApp
                     string dateTime = item.FaultTime.ToString(format);
                     string cfgFile = item.CfgFilePath;
                     string datFile = item.DatFilePath;
-                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},RMS.csv";
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},{item.ComtradeName},RMS.csv";
 
                     if (!File.Exists(csvName))
                     {
@@ -62,12 +62,13 @@ namespace ComtradeApp
                                 {
                                     string error = reader.ReadToEnd();
                                     if (!string.IsNullOrEmpty(error))
+                                    {
                                         Serilog.Log.Error("Python hatası: {Error}", error);
+                                    }
                                 }
+
                             }
-                            item.RmsDataPath = csvName;
-                            bool result = disturbanceRepository.Update(item);
-                            if (!result) Serilog.Log.Error("RMS formatındaki CSV dosyasının yolu kaydedilemedi.");
+
                         }
                         catch (Exception ex)
                         {
@@ -75,6 +76,9 @@ namespace ComtradeApp
                         }
                         if (File.Exists(csvName))
                         {
+                            item.RmsDataPath = csvName;
+                            bool result = disturbanceRepository.Update(item);
+                            if (!result) Serilog.Log.Error("RMS formatındaki CSV dosyasının yolu kaydedilemedi.");
                             Serilog.Log.Information($"CSV dosyası RMS formatında başarılı şekilde oluşturuldu : {csvName}");
                         }
                         else
@@ -118,7 +122,7 @@ namespace ComtradeApp
                     string dateTime = item.FaultTime.ToString(format);
                     string cfgFile = item.CfgFilePath;
                     string datFile = item.DatFilePath;
-                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},Instantaneous.csv";
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},{item.ComtradeName},Instantaneous.csv";
 
                     if (!File.Exists(csvName)) // Dosya zaten varsa dönüştürme işlemi yapma
                     {
@@ -145,9 +149,7 @@ namespace ComtradeApp
                                         Serilog.Log.Error("Python hatası: {Error}", error);
                                 }
                             }
-                            item.InstantDataPath = csvName;
-                            bool result = disturbanceRepository.Update(item);
-                            if (!result) Serilog.Log.Error("Instant formatındaki CSV dosyasının yolu kaydedilemedi.");
+
                         }
                         catch (Exception ex)
                         {
@@ -155,6 +157,9 @@ namespace ComtradeApp
                         }
                         if (File.Exists(csvName))
                         {
+                            item.InstantDataPath = csvName;
+                            bool result = disturbanceRepository.Update(item);
+                            if (!result) Serilog.Log.Error("Instant formatındaki CSV dosyasının yolu kaydedilemedi.");
                             Serilog.Log.Information($"CSV dosyası Instantaneous formatında başarılı şekilde oluşturuldu : {csvName}");
                         }
                         else
