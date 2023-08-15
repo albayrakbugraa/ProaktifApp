@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+Q7S4wTkvOxgbzG6uuhimVnTQXeB30/U03fnBK8veco=",
+  "Hash": "4IHagbTM70g0UuKy58HsFNrPVUlgv4/j51opTRZyYVM=",
   "Source": "ProaktifArizaTahmini.UI",
   "BasePath": "_content/ProaktifArizaTahmini.UI",
   "Mode": "Default",
@@ -102,6 +102,23 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\img\\edit-solid.svg",
+      "SourceId": "ProaktifArizaTahmini.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\",
+      "BasePath": "_content/ProaktifArizaTahmini.UI",
+      "RelativePath": "img/edit-solid.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\edit-solid.svg"
+    },
+    {
       "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\img\\logo.png",
       "SourceId": "ProaktifArizaTahmini.UI",
       "SourceType": "Discovered",
@@ -117,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\logo.png"
+    },
+    {
+      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\img\\trash-alt-solid.svg",
+      "SourceId": "ProaktifArizaTahmini.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\",
+      "BasePath": "_content/ProaktifArizaTahmini.UI",
+      "RelativePath": "img/trash-alt-solid.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\trash-alt-solid.svg"
     },
     {
       "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\jquery\\jquery.min.js",

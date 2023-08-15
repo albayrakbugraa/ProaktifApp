@@ -81,18 +81,9 @@
                     @if (ViewData.ModelState["Error"] != null && ViewData.ModelState["Error"].Errors.Count > 0)
                     {
 
-                    <div class="alert alert-danger">
-                        <button class="close" data-close="alert"></button>
-                        <span>@ViewData.ModelState["Error"].Errors[0].ErrorMessage </span>
-                    </div>
-                    }
-                    @if (ViewData.ModelState["State"] != null && ViewData.ModelState["State"].Errors.Count > 0)
-                    {
-
-                    <div class="alert alert-danger">
-                        <button class="close" data-close="alert"></button>
-                        <span>@ViewData.ModelState["State"].Errors[0].ErrorMessage </span>
-                    </div>
+                        <div class="alert alert-danger">
+                            <span>@ViewData.ModelState["Error"].Errors[0].ErrorMessage </span>
+                        </div>
                     }
                     <input type="submit" value="Giriş" class="w-100 btn btn-lg btn-primary" />
                     <p class="mt-5 mb-3 text-muted">© 2023 Proaktif Arıza</p>

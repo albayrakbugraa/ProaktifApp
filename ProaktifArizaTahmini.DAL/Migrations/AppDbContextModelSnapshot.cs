@@ -81,6 +81,10 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Property<int>("MyDataId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<DateTime>("PutTime")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("Gönderilme_Tarihi");
+
                     b.Property<string>("RmsDataPath")
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Rms_Dosya_Yolu");
@@ -106,6 +110,10 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Property<string>("kV")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("sFtpStatus")
+                        .HasColumnType("NUMBER(1)")
+                        .HasColumnName("SFTP_Durumu");
 
                     b.HasKey("ID");
 
@@ -310,37 +318,20 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("Environment")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("ExceptionMessage")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("IpAdress")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
-
                     b.Property<DateTime>("LogDate")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<bool>("LogResult")
-                        .HasColumnType("NUMBER(1)");
-
-                    b.Property<int>("LogType")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("MethodName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("NVARCHAR2(1000)");
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int?>("UserId")
                         .IsRequired()
@@ -348,8 +339,7 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.HasKey("ID");
 

@@ -53,6 +53,12 @@ namespace ProaktifArizaTahmini.BLL.Services.UserServices
             return user;
         }
 
+        public async Task<User> GetUserByUsername(string username)
+        {
+            var user = await userRepository.GetWhere(x => x.Username == username);
+            return user;
+        }
+
         public async Task<bool> UpdateUser(User user)
         {
             var updateUser = await userRepository.GetWhere(x => x.ID == user.ID);

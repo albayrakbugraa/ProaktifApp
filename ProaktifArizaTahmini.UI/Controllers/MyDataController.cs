@@ -10,10 +10,14 @@ using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
 using ProaktifArizaTahmini.BLL.Services.HistoryOfChangeServices;
 using ProaktifArizaTahmini.BLL.Services.MyDataServices;
+using ProaktifArizaTahmini.BLL.Services.UserLogServices;
+using ProaktifArizaTahmini.BLL.Services.UserServices;
 using ProaktifArizaTahmini.CORE.Entities;
+using ProaktifArizaTahmini.CORE.IRepository;
 using ProaktifArizaTahmini.UI.Models;
 using System.Formats.Asn1;
 using System.Globalization;
+using System.Security.Claims;
 using X.PagedList;
 using static NuGet.Packaging.PackagingConstants;
 
@@ -25,16 +29,22 @@ namespace ProaktifArizaTahmini.UI.Controllers
         private readonly IMyDataService myDataService;
         private readonly IDisturbanceService disturbanceService;
         private readonly IHistoryOfChangeService historyOfChangeService;
+        private readonly IUserLogService userLogService ;
+        private readonly IUserService userService;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
-        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService, IConfiguration configuration, IHistoryOfChangeService historyOfChangeService)
+
+        public MyDataController(IMyDataService myDataService, IMapper mapper, IDisturbanceService disturbanceService, IConfiguration configuration, IHistoryOfChangeService historyOfChangeService, IUserLogService userLogService, IUserService userService)
         {
             this.myDataService = myDataService;
             this.mapper = mapper;
             this.disturbanceService = disturbanceService;
             this.configuration = configuration;
             this.historyOfChangeService = historyOfChangeService;
+            this.userLogService = userLogService;
+            this.userService = userService;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -131,6 +141,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 bool result = await myDataService.CreateMyData(model);
                 if (result)
                 {
+                    ClaimsPrincipal claimUser = HttpContext.User;
+                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);   
+                    var user = await userService.GetUserByUsername(username);
+                    await userLogService.CreateData(user);
                     return RedirectToAction(nameof(List));
                 }
                 return View(model);
@@ -156,7 +170,14 @@ namespace ProaktifArizaTahmini.UI.Controllers
             {
                 var myData = await myDataService.GetMyDataByDataId(ID);
                 bool result = await myDataService.DeleteMyData(myData.ID);
-                if (result) return RedirectToAction(nameof(List));
+                if (result)
+                {
+                    ClaimsPrincipal claimUser = HttpContext.User;
+                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var user = await userService.GetUserByUsername(username);
+                    await userLogService.DeleteData(user);
+                    return RedirectToAction(nameof(List));
+                }
                 return View(myData);
             }
             catch
@@ -188,7 +209,14 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 historyOfChange.ChangedDate = DateTime.Now;
                 historyOfChange.NewIP = model.IP;
                 bool resultHistory = await historyOfChangeService.Create(historyOfChange);
-                if (resultMyData && resultDisturbance && resultHistory) return RedirectToAction(nameof(List));
+                if (resultMyData && resultDisturbance && resultHistory) 
+                {
+                    ClaimsPrincipal claimUser = HttpContext.User;
+                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var user = await userService.GetUserByUsername(username);
+                    await userLogService.UpdateData(user);
+                    return RedirectToAction(nameof(List));
+                } 
                 return View(model);
             }
             catch
@@ -204,7 +232,11 @@ namespace ProaktifArizaTahmini.UI.Controllers
             if (excelFile != null && excelFile.Length > 0)
             {
                 myDatas = ReadDataFromExcel(excelFile);
-                bool resultMyData = await myDataService.AddDataList(myDatas);                
+                bool resultMyData = await myDataService.AddDataList(myDatas);
+                ClaimsPrincipal claimUser = HttpContext.User;
+                string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await userService.GetUserByUsername(username);
+                await userLogService.ImportExcel(user);
             }
             return RedirectToAction("List");
         }

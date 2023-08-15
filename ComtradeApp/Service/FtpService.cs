@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using WinSCP;
 using static System.Collections.Specialized.BitVector32;
 
-namespace ComtradeApp
+namespace ComtradeApp.Service
 {
     public class FtpService
     {

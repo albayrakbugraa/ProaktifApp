@@ -15,5 +15,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserServices
         Task<bool> UpdateUser(User user);
         Task<bool> CreateUser(User domainUser);
         Task<bool> DeleteUser(int ID);
+        Task<User> GetUserByUsername(string username);
     }
 }

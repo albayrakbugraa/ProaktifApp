@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComtradeApp
+namespace ComtradeApp.Service
 {
     public class CsvConverterService
     {

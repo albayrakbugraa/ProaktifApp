@@ -9,23 +9,31 @@ using System.Security.Claims;
 using System.Runtime.InteropServices;
 using ProaktifArizaTahmini.UI.Models;
 using System.Diagnostics;
+using ProaktifArizaTahmini.BLL.Services.UserLogServices;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IUserService userService;
+        private readonly IUserLogService userLogService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IUserLogService userLogService)
         {
             this.userService = userService;
+            this.userLogService = userLogService;
         }
 
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
             if (claimUser.Identity.IsAuthenticated)
+            {
+                string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await userService.GetUserByUsername(username);
+                await userLogService.LogIn(user);
                 return RedirectToAction("List", "MyData");
+            }
             return View();
         }
 
@@ -65,7 +73,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
-
+                    await userLogService.LogIn(user);
                     return RedirectToAction("List", "MyData");
                 }
                 else if (await userService.GetChangedUser(loginModel.Username, loginModel.Password) != null)
@@ -98,7 +106,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
-
+                    await userLogService.LogIn(user);
                     return RedirectToAction("List", "MyData");
                 }
                 else
@@ -154,7 +162,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
                                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                     new ClaimsPrincipal(claimsIdentity), properties);
-
+                                await userLogService.LogIn(user);
                                 return RedirectToAction("List", "MyData");
                             }
                         }
@@ -175,6 +183,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal claimUser = HttpContext.User;
+            string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userService.GetUserByUsername(username);
+            await userLogService.LogOut(user);
             return RedirectToAction("Login", "Account");
         }
 

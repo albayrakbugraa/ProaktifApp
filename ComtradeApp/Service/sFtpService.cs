@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinSCP;
 
-namespace ComtradeApp
+namespace ComtradeApp.Service
 {
     public class sFtpService
     {

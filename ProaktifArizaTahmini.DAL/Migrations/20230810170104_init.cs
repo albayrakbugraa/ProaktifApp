@@ -72,6 +72,8 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     Rms_Dosya_Yolu = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Instant_Dosya_Yolu = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Status = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    SFTP_Durumu = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    Gönderilme_Tarihi = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     MyDataId = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
@@ -151,15 +153,8 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Username = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "NVARCHAR2(1000)", maxLength: 1000, nullable: false),
                     MethodName = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
-                    LogType = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    LogResult = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    LogDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    IpAdress = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    ExceptionMessage = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Environment = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    LogDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -97,11 +97,11 @@
                             <td>@item.User</td>
                             <td>@item.Password</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.ID">
-                                    <i class="fas fa-edit alert-success"></i>
+                                <a asp-action="Edit" asp-route-id="@item.ID" style=" text-decoration: none;">
+                                    @*<i class="fas fa-edit alert-success"></i>*@<img style="width: 16px;" src="~/img/edit-solid.svg" />
                                 </a> |
-                                <a asp-action="Delete" asp-route-id="@item.ID">
-                                    <i class="fas fa-trash-alt alert-danger"></i>
+                                <a asp-action="Delete" asp-route-id="@item.ID" style=" text-decoration: none;">
+                                    @*<i class="fas fa-trash-alt alert-danger"></i>*@<img style="width: 16px;" src="~/img/trash-alt-solid.svg" />
                                 </a>
                             </td>
                         </tr>
