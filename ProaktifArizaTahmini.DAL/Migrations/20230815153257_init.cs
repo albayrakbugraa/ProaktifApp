@@ -63,7 +63,9 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     Fider_Adi = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     IP = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Role_Model = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Ariza_Saati = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    Ariza_Saati_Baslangic = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    Ariza_Saati_Bitis = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    Ariza_Saati_Suresi = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
                     Cfg_Dosya_Yolu = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Cfg_Dosyasi = table.Column<string>(type: "CLOB", nullable: false),
                     Dat_Dosya_Yolu = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
@@ -152,9 +154,12 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    MethodName = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
-                    LogDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
+                    Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Surname = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Username = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    MethodName = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    LogDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {

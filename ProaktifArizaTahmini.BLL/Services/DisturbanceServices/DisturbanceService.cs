@@ -44,7 +44,7 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
                     (string.IsNullOrEmpty(filterParams.FilterTextFider) || data.FiderName != null && data.FiderName.ToUpper().Contains(filterParams.FilterTextFider.ToUpper())) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextIp) || data.IP != null && data.IP.ToUpper().Contains(filterParams.FilterTextIp.ToUpper())) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextRole) || data.RoleModel != null && data.RoleModel.ToUpper().Contains(filterParams.FilterTextRole.ToUpper())) &&
-                    data.FaultTime >= filterParams.FilterFaultTimeStart && data.FaultTime <= filterParams.FilterFaultTimeEnd
+                    data.FaultTimeStart >= filterParams.FilterFaultTimeStart && data.FaultTimeStart <= filterParams.FilterFaultTimeEnd
                 )
                 .ToList();
 
@@ -56,7 +56,7 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
             var disturbanceList = await disturbanceRepository.GetFilteredList(
                  selector: x => new Disturbance
                  {
-                     FaultTime = x.FaultTime,
+                     FaultTimeStart = x.FaultTimeStart,
                      TmNo = x.TmNo,
                      CfgFilePath = x.CfgFilePath,
                      DatFilePath = x.DatFilePath,
@@ -64,10 +64,12 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
                      HucreNo = x.HucreNo,
                      IP = x.IP,
                      RoleModel = x.RoleModel,
-                     TmKvHucre = x.TmKvHucre
+                     TmKvHucre = x.TmKvHucre,
+                     TotalFaultTime = x.TotalFaultTime,
+                     FaultTimeEnd = x.FaultTimeEnd
                  },
                  expression: x => x.Status == true,
-                 orderBy: x => x.OrderByDescending(x => x.FaultTime)
+                 orderBy: x => x.OrderByDescending(x => x.FaultTimeStart)
                  );
             return disturbanceList;
         }

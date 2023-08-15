@@ -35,10 +35,10 @@ namespace ComtradeApp.Service
                     string hucreNoFolderName = item.HucreNo;
                     string destFolderPath = Path.Combine(csvFilesPath, $"{item.IP}-{item.TmKvHucre}");
                     string format = "ddMMyy,HHmmssfff";
-                    string dateTime = item.FaultTime.ToString(format);
+                    string dateTime = item.FaultTimeStart.ToString(format);
                     string cfgFile = item.CfgFilePath;
                     string datFile = item.DatFilePath;
-                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},{item.ComtradeName},RMS.csv";
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},RMS.csv";
 
                     if (!File.Exists(csvName))
                     {
@@ -119,10 +119,10 @@ namespace ComtradeApp.Service
                     string hucreNoFolderName = item.HucreNo;
                     string destFolderPath = Path.Combine(csvFilesPath, $"{item.IP}-{item.TmKvHucre}");
                     string format = "ddMMyy,HHmmssfff";
-                    string dateTime = item.FaultTime.ToString(format);
+                    string dateTime = item.FaultTimeStart.ToString(format);
                     string cfgFile = item.CfgFilePath;
                     string datFile = item.DatFilePath;
-                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},{item.ComtradeName},Instantaneous.csv";
+                    string csvName = destFolderPath + $"\\{dateTime},{item.HucreNo} {item.TmNo},{item.IP},Instantaneous.csv";
 
                     if (!File.Exists(csvName)) // Dosya zaten varsa dönüştürme işlemi yapma
                     {

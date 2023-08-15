@@ -12,7 +12,22 @@ namespace ProaktifArizaTahmini.BLL.Models.DTOs
     {
         public int ID { get; set; }
         public string TmNo { get; set; }
-        public string? kV { get; set; }
+        private string? _kV;
+        public string? kV
+        {
+            get { return _kV; }
+            set
+            {
+                if (value != null)
+                {
+                    _kV = value + "kV";
+                }
+                else
+                {
+                    _kV = null;
+                }
+            }
+        }
         public string? HucreNo { get; set; }
         public string TmKvHucre
         {

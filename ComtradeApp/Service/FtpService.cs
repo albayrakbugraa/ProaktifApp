@@ -2,6 +2,7 @@
 using ComtradeApp.Repository;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -286,19 +287,29 @@ namespace ComtradeApp.Service
                     {
                         string cfgFileData = File.ReadAllText(cfgFilePath);
                         byte[] datFileData = File.ReadAllBytes(datFilePath);
+
+                        string[] lines = cfgFileData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        DateTime faultTimeEnd = DateTime.ParseExact(lines[lines.Length - 3], "dd/MM/yyyy,HH:mm:ss.ffffff", CultureInfo.InvariantCulture, DateTimeStyles.None);
+                        DateTime faultTimeStart = DateTime.ParseExact(lines[lines.Length - 4], "dd/MM/yyyy,HH:mm:ss.ffffff", CultureInfo.InvariantCulture, DateTimeStyles.None);
+                        TimeSpan totalTime = faultTimeEnd - faultTimeStart;
+                        double totalFaultTime = totalTime.TotalSeconds;
+
                         Disturbance disturbance = new Disturbance();
                         disturbance.IP = parameters.myData.IP;
                         disturbance.TmNo = parameters.myData.TmNo;
                         disturbance.CfgFilePath = cfgFilePath;
-                        if (parameters.myData.User == "supervisor")
-                        {
-                            FileInfo fileInfo = new FileInfo(Path.Combine(parameters.DestFolderPath, datFileName));
-                            disturbance.FaultTime = fileInfo.LastWriteTime;
-                        }
-                        else
-                        {
-                            disturbance.FaultTime = GetFileCreationTime(parameters, cfgFile);
-                        }
+                        disturbance.FaultTimeStart = faultTimeStart;
+                        disturbance.FaultTimeEnd = faultTimeEnd;   
+                        disturbance.TotalFaultTime = totalFaultTime;
+                        //if (parameters.myData.User == "supervisor")
+                        //{
+                        //    FileInfo fileInfo = new FileInfo(Path.Combine(parameters.DestFolderPath, datFileName));
+                        //    disturbance.FaultTimeStart = fileInfo.LastWriteTime;
+                        //}
+                        //else
+                        //{
+                        //    disturbance.FaultTimeStart = GetFileCreationTime(parameters, cfgFile);
+                        //}
                         disturbance.HucreNo = parameters.myData.HucreNo;
                         disturbance.FiderName = parameters.myData.FiderName;
                         disturbance.RoleModel = parameters.myData.RoleModel;

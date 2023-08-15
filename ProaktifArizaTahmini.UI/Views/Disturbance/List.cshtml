@@ -6,7 +6,7 @@
 @model DisturbanceFilterParams
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "Arıza Listesi";
     int counter = (Model.DisturbanceListVM.PageNumber - 1) * Model.DisturbanceListVM.PageSize + 1;
 }
 
@@ -70,13 +70,15 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Avcılar TM</th>
+                    <th>TM No</th>
                     <th>kV</th>
                     <th>Hücre No</th>
                     <th>Fider Adı</th>
                     <th>IP</th>
                     <th>Role Model</th>
-                    <th>Arıza Saati</th>
+                    <th>Arıza Saati Başlangıç</th>
+                    <th>Arıza Saati Bitiş</th>
+                    <th>Toplam Süre(sn)</th>
                     <th>Comtrade Dosyası</th>
                 </tr>
             </thead>
@@ -95,7 +97,9 @@
                             <td>@item.FiderName</td>
                             <td>@item.IP</td>
                             <td>@item.RoleModel</td>
-                            <td>@item.FaultTime</td>
+                            <td>@item.FaultTimeStart</td>
+                            <td>@item.FaultTimeEnd</td>
+                            <td>@item.TotalFaultTime</td>
                             <td>
                                 <div id="dynamicFilePaths">
                                     @*<input type="hidden" id="filePath1" value="@item.CfgFilePath" />

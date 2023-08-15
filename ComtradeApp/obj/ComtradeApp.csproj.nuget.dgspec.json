@@ -70,6 +70,10 @@
               "target": "Package",
               "version": "[7.21.9, )"
             },
+            "Oracle.ManagedDataAccess.Core": {
+              "target": "Package",
+              "version": "[3.21.110, )"
+            },
             "Quartz": {
               "target": "Package",
               "version": "[3.7.0, )"
@@ -86,9 +90,17 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
             "Serilog.Sinks.File": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "Serilog.Sinks.Oracle": {
+              "target": "Package",
+              "version": "[1.1.1, )"
             },
             "WinSCP": {
               "target": "Package",

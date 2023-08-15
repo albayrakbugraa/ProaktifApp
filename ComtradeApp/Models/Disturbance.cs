@@ -23,8 +23,12 @@ namespace ComtradeApp.Models
         public string IP { get; set; }
         [Column("Role_Model")]
         public string RoleModel { get; set; }
-        [Column("Ariza_Saati")]
-        public DateTime FaultTime { get; set; }
+        [Column("Ariza_Saati_Baslangic")]
+        public DateTime FaultTimeStart { get; set; }
+        [Column("Ariza_Saati_Bitis")]
+        public DateTime FaultTimeEnd { get; set; }
+        [Column("Ariza_Saati_Suresi")]
+        public double TotalFaultTime { get; set; }
         [Column("Cfg_Dosya_Yolu")]
         public string CfgFilePath { get; set; }
         [Column("Cfg_Dosyasi", TypeName = "CLOB")]

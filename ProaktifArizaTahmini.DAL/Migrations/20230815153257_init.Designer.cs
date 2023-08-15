@@ -12,8 +12,8 @@ using ProaktifArizaTahmini.DAL;
 namespace ProaktifArizaTahmini.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230810175504_mig2")]
-    partial class mig2
+    [Migration("20230815153257_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,9 +59,13 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Dat_Dosya_Yolu");
 
-                    b.Property<DateTime>("FaultTime")
+                    b.Property<DateTime>("FaultTimeEnd")
                         .HasColumnType("TIMESTAMP(7)")
-                        .HasColumnName("Ariza_Saati");
+                        .HasColumnName("Ariza_Saati_Bitis");
+
+                    b.Property<DateTime>("FaultTimeStart")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("Ariza_Saati_Baslangic");
 
                     b.Property<string>("FiderName")
                         .IsRequired()
@@ -109,6 +113,10 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("TM_No");
+
+                    b.Property<double>("TotalFaultTime")
+                        .HasColumnType("BINARY_DOUBLE")
+                        .HasColumnName("Ariza_Saati_Suresi");
 
                     b.Property<string>("kV")
                         .IsRequired()

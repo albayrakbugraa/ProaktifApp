@@ -13,7 +13,7 @@ using X.PagedList;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class DisturbanceController : Controller
     {
         private readonly IDisturbanceService disturbanceService;
@@ -71,7 +71,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
             DisturbanceFilterParams filterParams = mapper.Map<DisturbanceFilterParams>(disturbanceVM);
             int pageNumber = (page ?? 1);
-            IPagedList<Disturbance> myDataPagedList = new PagedList<Disturbance>(myDataList.OrderByDescending(x => x.FaultTime), pageNumber, (int)ViewBag.PageSize);
+            IPagedList<Disturbance> myDataPagedList = new PagedList<Disturbance>(myDataList.OrderByDescending(x => x.FaultTimeStart), pageNumber, (int)ViewBag.PageSize);
             filterParams.DisturbanceListVM = myDataPagedList;
             return View(filterParams);
         }
