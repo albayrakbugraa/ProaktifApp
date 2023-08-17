@@ -33,7 +33,6 @@ namespace ProaktifArizaTahmini.CORE.Entities
         [StringLength(50)]
         public string? Surname { get; set; }
 
-        [Column("Soyisim")]
         [StringLength(200)]
         public string? Email { get; set; }
 
