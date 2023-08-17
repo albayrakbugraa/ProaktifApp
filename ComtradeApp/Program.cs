@@ -40,13 +40,13 @@ var host = Host.CreateDefaultBuilder(args)
                     { "SshHostKeyFingerprint", hostContext.Configuration.GetSection("sFtpSettings")["SshHostKeyFingerprint"] }
                 };
         services.AddDbContext<AppDbContext>(options => options.UseOracle(hostContext.Configuration.GetConnectionString("DefaultConnection")));
-        services.AddSingleton<RelayInformationRepository>();
-        services.AddSingleton<DisturbanceRepository>();
-        services.AddSingleton<HistoryOfChangeRepository>();
-        services.AddSingleton<LogRepository>();
-        services.AddSingleton<FtpService>();
-        services.AddSingleton<CsvConverterService>();
-        services.AddSingleton<sFtpService>();
+        services.AddTransient<RelayInformationRepository>();
+        services.AddTransient<DisturbanceRepository>();
+        services.AddTransient<HistoryOfChangeRepository>();
+        services.AddTransient<LogRepository>();
+        services.AddTransient<FtpService>();
+        services.AddTransient<CsvConverterService>();
+        services.AddTransient<sFtpService>();
         services.AddQuartz(q =>
         {
             q.UseMicrosoftDependencyInjectionJobFactory();

@@ -70,6 +70,8 @@ namespace ComtradeApp.Service
                         parameters = await DownloadWithWinScp(parameters);
                         if (parameters.FilesToDownload.Count > 0 && parameters.FilesToDownload != null)
                         {
+                            await log.InformationLog($"Tm_kV_Hücre : {item.TmKvHucre}  IP : {item.IP}  Röle Model : {item.RoleModel} İndilecek dosya sayısı : {parameters.FilesToDownload.Count}", "FTP");
+                            Serilog.Log.Information($"Tm_kV_Hücre : {item.TmKvHucre}  IP : {item.IP}  Röle Model : {item.RoleModel} İndilecek dosya sayısı : {parameters.FilesToDownload.Count}");
                             await CheckMissingFiles(parameters);
                             await CreateDisturbancesAsync(parameters);
                         }
@@ -77,10 +79,12 @@ namespace ComtradeApp.Service
                     else
                     {
                         parameters.FilesToDownload = await GetFilesToDownloadFromFtp(parameters);
-                        Serilog.Log.Information($"İndirelecek dosya sayısı : {parameters.FilesToDownload.Count}");
 
                         if (parameters.FilesToDownload.Count > 0)
                         {
+
+                            Serilog.Log.Information($"Tm_kV_Hücre : {item.TmKvHucre}  IP : {item.IP}  Röle Model : {item.RoleModel} İndilecek dosya sayısı : {parameters.FilesToDownload.Count}");
+                            await log.InformationLog($"Tm_kV_Hücre : {item.TmKvHucre}  IP : {item.IP}  Röle Model : {item.RoleModel} İndilecek dosya sayısı : {parameters.FilesToDownload.Count}", "FTP");
                             List<string>[] downloadedFilesArray = await DownloadFilesFromFtp(parameters);
                             parameters.DownloadedCfgFiles = downloadedFilesArray[0];
                             parameters.DownloadedDatFiles = downloadedFilesArray[1];
@@ -174,8 +178,8 @@ namespace ComtradeApp.Service
             }
             catch (Exception ex)
             {
-                await log.ErrorLog("Hata", ex.ToString(), "FTP");
-                Serilog.Log.Error("Hata: " + ex.Message);
+                await log.ErrorLog($"{parameters.RelayInformation.TmKvHucre} - {parameters.RelayInformation.IP} - {parameters.RelayInformation.RoleModel} : FTP sunucusuna bağlanırken hata oluştu.", ex.ToString(), "FTP");
+                Serilog.Log.Error($"{parameters.RelayInformation.TmKvHucre} - {parameters.RelayInformation.IP} - {parameters.RelayInformation.RoleModel} : FTP sunucusuna bağlanırken hata oluştu." + ex.Message);
             }
             return parameters;
         }

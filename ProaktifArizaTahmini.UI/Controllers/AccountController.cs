@@ -143,7 +143,8 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(claimsIdentity), properties);
-                        await userLogService.LogIn(domainUser);
+                        var loginUser = await userService.GetUser(loginModel.Username, cryptPassword);
+                        await userLogService.LogIn(loginUser);
                         return RedirectToAction("List", "RelayInformation");
 
 

@@ -30,6 +30,8 @@ namespace ComtradeApp.Service
 
                 var disturbances = disturbanceRepository.GetBySftpStatus(false);
 
+                if (disturbances.Count==0) await log.InformationLog("Henüz gönderilecek dosya yok", "SFTP");
+
                 SessionOptions sessionOptions = new SessionOptions
                 {
                     Protocol = Protocol.Sftp,
