@@ -1,0 +1,89 @@
+﻿@using ProaktifArizaTahmini.BLL.Models.DTOs;
+@model RelayInformationDTO
+
+@{
+    ViewData["Title"] = "Düzenle";
+}
+
+<h1>Düzenle</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="TmNo" class="control-label">TM No</label>
+                <input asp-for="TmNo" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="TmNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="kV" class="control-label">kV</label>
+                <input asp-for="kV" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="kV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HucreNo" class="control-label">Hücre No</label>
+                <input asp-for="HucreNo" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="HucreNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FiderName" class="control-label">Fider Adı</label>
+                <input asp-for="FiderName" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="FiderName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IP" class="control-label">IP</label>
+                <input asp-for="IP" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="IP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleModel" class="control-label">Röle Model</label>
+                <input asp-for="RoleModel" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="RoleModel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Port" class="control-label">Port</label>
+                <input asp-for="Port" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="Port" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User" class="control-label">Kullanıcı Adı</label>
+                <input asp-for="User" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="User" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Şifre</label>
+                <input asp-for="Password" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Path" class="control-label">Dosya Yolu</label>
+                <input asp-for="Path" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="Path" class="text-danger"></span>
+            </div>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div style="margin-top:20px;" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            <div class="form-group" style="margin-top:25px">
+                <input type="submit" value="Kaydet" class="btn btn-success" /> |
+                <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function trimInput(element) {
+            element.value = element.value.trim();
+        }
+    </script>
+}

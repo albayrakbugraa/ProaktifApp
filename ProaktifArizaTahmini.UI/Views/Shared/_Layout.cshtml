@@ -12,44 +12,17 @@
 
 </head>
 <body>
-    @*<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container-fluid">
-    <a class="navbar-brand" asp-area="" asp-controller="MyData" asp-action="List">Proaktif Arıza Tahmini Panel</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-    aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav flex-grow-1">
-    <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="" asp-controller="MyData" asp-action="List">Excel Dataları</a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="" asp-controller="Disturbance" asp-action="List">Arıza Kaydı</a>
-    </li>
-    </ul>
-    </div>
-    </div>
-    </nav>
-    </header>*@
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                    <a asp-area="" asp-controller="MyData" asp-action="List" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none @(ViewData["ActivePage"]?.ToString() == "MyData" ? "activeClass" : "")" style="margin-top:20px;">
+                    <a asp-area="" asp-controller="RelayInformation" asp-action="List" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none @(ViewData["ActivePage"]?.ToString() == "RelayInformation" ? "activeClass" : "")" style="margin-top:20px;">
                         <span class="fs-5 d-none d-sm-inline">Proaktif Arıza Tahmini</span>
                     </a>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 text-xl align-items-center align-items-sm-start" id="myTab" role="tablist" style="margin-top:30px;">
-                        @*<li class="nav-item" role="presentation">
-                        <a asp-area="" asp-controller="MyData" asp-action="List" class="nav-link align-middle px-0 @(ViewData["ActivePage"]?.ToString() == "MyData" ? "activeClass" : "")" id="home-tab" aria-selected="true" type="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
-                        </svg> <span class="ms-1 d-none d-sm-inline"> Ana Sayfa</span>
-                        </a>
-                        </li>*@
+                        
                         <li class="nav-item" role="presentation">
-                            <a asp-area="" asp-controller="MyData" asp-action="List" class="nav-link align-middle px-0 @(ViewData["ActivePage"]?.ToString() == "MyData" ? "activeClass" : "")" id="mydata-tab" aria-selected="false" type="button">
+                            <a asp-area="" asp-controller="RelayInformation" asp-action="List" class="nav-link align-middle px-0 @(ViewData["ActivePage"]?.ToString() == "RelayInformation" ? "activeClass" : "")" id="RelayInformation-tab" aria-selected="false" type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
                                     <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
                                     <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />

@@ -13,7 +13,7 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
     {
         Task<List<Disturbance>> GetDisturbances();
         Task<List<Disturbance>> FilterList(DisturbanceFilterParams filterParams);
-        Task<bool> UpdateByDataIdList(MyDataDTO myData);
+        Task<bool> UpdateByDataIdList(RelayInformationDTO relayInformation);
         Task<string> GetcfgFile(int id);
         Task<byte[]> GetDatFile(int id);
         Task<Disturbance> GetById(int id);

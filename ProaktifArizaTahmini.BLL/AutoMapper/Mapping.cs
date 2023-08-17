@@ -14,12 +14,12 @@ namespace ProaktifArizaTahmini.BLL.AutoMapper
     {
         public Mapping() 
         {
-            CreateMap<MyData, MyDataDTO>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
-            CreateMap<MyDataDTO, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
-            CreateMap<MyData, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
+            CreateMap<RelayInformation, RelayInformationDTO>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
+            CreateMap<RelayInformationDTO, RelayInformation>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
+            CreateMap<RelayInformation, RelayInformation>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<User, User>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<HistoryOfChange, HistoryOfChange>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
-            CreateMap<MyDataFilterParams, MyData>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
+            CreateMap<RelayInformationFilterParams, RelayInformation>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<DisturbanceFilterParams, Disturbance>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
         }
     }

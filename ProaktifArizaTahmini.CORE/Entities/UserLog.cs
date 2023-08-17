@@ -12,10 +12,15 @@ namespace ProaktifArizaTahmini.CORE.Entities
     {
         [Column("Id")]
         public int ID { get; set; }
+        [Column("İsim")]
         public string Name { get; set; }
+        [Column("Soyisim")]
         public string Surname { get; set; }
+        [Column("Kullanici_Adi")]
         public string Username { get; set; }
+        [Column("Metot_İsmi")]
         public string MethodName { get; set; }
+        [Column("Tarih")]
         public DateTime LogDate { get; set; }
         public int? UserId { get; set; }
         public User User { get; set; }

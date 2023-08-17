@@ -24,7 +24,7 @@ namespace ProaktifArizaTahmini.UI.Helper
                     domainUser = new User()
                     {
                         Username = model.Username,
-                        TcKimlik = de.Properties["employeenumber"].Value?.ToString(),
+                        TcIdentificationNumber = de.Properties["employeenumber"].Value?.ToString(),
                         Email = de.Properties["mail"].Value?.ToString(),
                         Name = de.Properties["givenname"].Value?.ToString(),
                         Surname = de.Properties["sn"].Value?.ToString(),

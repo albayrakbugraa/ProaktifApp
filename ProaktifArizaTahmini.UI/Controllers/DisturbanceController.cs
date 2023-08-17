@@ -33,7 +33,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
-            List<Disturbance> myDataList = new List<Disturbance>();
+            List<Disturbance> relayInformationList = new List<Disturbance>();
 
             var properties = disturbanceVM.GetType().GetProperties().Where(p => !p.Name.StartsWith("Current"));
 
@@ -59,20 +59,20 @@ namespace ProaktifArizaTahmini.UI.Controllers
             }
             else
             {
-                myDataList = await disturbanceService.GetDisturbances();
+                relayInformationList = await disturbanceService.GetDisturbances();
                 RestoreFilterTexts(disturbanceVM);
             }
             RestoreCurrentFilterTexts(disturbanceVM);
 
             if (disturbanceVM.GetType().GetProperties().Any(p => p.GetValue(disturbanceVM) != null))
             {
-                myDataList = await disturbanceService.FilterList(disturbanceVM);
+                relayInformationList = await disturbanceService.FilterList(disturbanceVM);
             }
 
             DisturbanceFilterParams filterParams = mapper.Map<DisturbanceFilterParams>(disturbanceVM);
             int pageNumber = (page ?? 1);
-            IPagedList<Disturbance> myDataPagedList = new PagedList<Disturbance>(myDataList.OrderByDescending(x => x.FaultTimeStart), pageNumber, (int)ViewBag.PageSize);
-            filterParams.DisturbanceListVM = myDataPagedList;
+            IPagedList<Disturbance> relayInformationPagedList = new PagedList<Disturbance>(relayInformationList.OrderByDescending(x => x.FaultTimeStart), pageNumber, (int)ViewBag.PageSize);
+            filterParams.DisturbanceListVM = relayInformationPagedList;
             return View(filterParams);
         }
 
@@ -103,6 +103,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             disturbanceVM.FilterFaultTimeStart = DateTime.Parse(disturbanceVM.CurrentFaultTimeStart);
             disturbanceVM.FilterFaultTimeEnd = DateTime.Parse(disturbanceVM.CurrentFaultTimeEnd);
         }
+
         private void RestoreCurrentFilterTexts(DisturbanceFilterParams disturbanceVM)
         {
             disturbanceVM.CurrentFilterTm = disturbanceVM.FilterTextTm;
@@ -115,59 +116,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             disturbanceVM.CurrentFaultTimeEnd = disturbanceVM.FilterFaultTimeEnd.ToString("yyyy-MM-ddTHH:mm");
         }
 
-        [HttpPost]
-        public IActionResult DownloadFiles(string filePath1, string filePath2)
-        {
-            // Dosyaların varlığını kontrol edin
-            if (!System.IO.File.Exists(filePath1) || !System.IO.File.Exists(filePath2))
-            {
-                return NotFound();
-            }
-
-            // Dosyaların adlarını alın
-            string fileName1 = Path.GetFileName(filePath1);
-            string fileName2 = Path.GetFileName(filePath2);
-
-            // İki dosyayı kullanıcıya indirin
-            var memoryStream1 = new MemoryStream();
-            using (var fileStream1 = new FileStream(filePath1, FileMode.Open))
-            {
-                fileStream1.CopyTo(memoryStream1);
-            }
-
-            var memoryStream2 = new MemoryStream();
-            using (var fileStream2 = new FileStream(filePath2, FileMode.Open))
-            {
-                fileStream2.CopyTo(memoryStream2);
-            }
-
-            // İndirilecek dosyaların MIME türünü belirleyin
-            var mimeType = "application/octet-stream";
-
-            // İki dosyayı birleştirip kullanıcıya indirme işlemi gerçekleştirin
-            var combinedMemoryStream = new MemoryStream();
-            using (var zipArchive = new ZipArchive(combinedMemoryStream, ZipArchiveMode.Create, true))
-            {
-                // İlk dosyayı ZIP arşivine ekleyin
-                var entry1 = zipArchive.CreateEntry(fileName1);
-                using (var entryStream1 = entry1.Open())
-                {
-                    memoryStream1.Seek(0, SeekOrigin.Begin);
-                    memoryStream1.CopyTo(entryStream1);
-                }
-
-                // İkinci dosyayı ZIP arşivine ekleyin
-                var entry2 = zipArchive.CreateEntry(fileName2);
-                using (var entryStream2 = entry2.Open())
-                {
-                    memoryStream2.Seek(0, SeekOrigin.Begin);
-                    memoryStream2.CopyTo(entryStream2);
-                }
-            }
-
-            combinedMemoryStream.Seek(0, SeekOrigin.Begin);
-            return File(combinedMemoryStream, mimeType, "comtrade.zip");
-        }
         [HttpPost]
         public async Task<IActionResult> DownloadFilesFromDatabase(int ID)
         {

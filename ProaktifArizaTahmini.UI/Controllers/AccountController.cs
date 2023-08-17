@@ -32,7 +32,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = await userService.GetUserByUsername(username);
                 await userLogService.LogIn(user);
-                return RedirectToAction("List", "MyData");
+                return RedirectToAction("List", "RelayInformation");
             }
             return View();
         }
@@ -74,7 +74,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
                     await userLogService.LogIn(user);
-                    return RedirectToAction("List", "MyData");
+                    return RedirectToAction("List", "RelayInformation");
                 }
                 else if (await userService.GetChangedUser(loginModel.Username, loginModel.Password) != null)
                 {
@@ -107,7 +107,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), properties);
                     await userLogService.LogIn(user);
-                    return RedirectToAction("List", "MyData");
+                    return RedirectToAction("List", "RelayInformation");
                 }
                 else
                 {
@@ -118,10 +118,36 @@ namespace ProaktifArizaTahmini.UI.Controllers
                         domainUser.IsActive = true;
                         domainUser.UserTypeId = (int?)UserTypeNames.Domain;
                         domainUser.Password = cryptPassword;
-                        bool result = await userService.CreateUser(domainUser);
-                        loginModel.LoginResult = LoginResult.WaitingActivated;
-                        ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
-                        return View();
+                        domainUser.LastLoginDate=DateTime.Now;
+                        bool createResult = await userService.CreateUser(domainUser);
+                        //loginModel.LoginResult = LoginResult.WaitingActivated;
+                        //ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
+                        //return View();
+
+                        loginModel.LoginResult = LoginResult.LoginSuccess;
+
+                        List<Claim> claims = new List<Claim>() {
+                        new Claim(ClaimTypes.NameIdentifier, domainUser.Username),
+                        new Claim(ClaimTypes.Name,domainUser.Name),
+                        new Claim(ClaimTypes.Surname,domainUser.Surname),
+                         };
+
+                        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
+                            CookieAuthenticationDefaults.AuthenticationScheme);
+
+                        AuthenticationProperties properties = new AuthenticationProperties()
+                        {
+                            AllowRefresh = true,
+                            IsPersistent = loginModel.RememberMe
+                        };
+
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity), properties);
+                        await userLogService.LogIn(domainUser);
+                        return RedirectToAction("List", "RelayInformation");
+
+
+
                     }
                 }
             }
@@ -163,7 +189,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                     new ClaimsPrincipal(claimsIdentity), properties);
                                 await userLogService.LogIn(user);
-                                return RedirectToAction("List", "MyData");
+                                return RedirectToAction("List", "RelayInformation");
                             }
                         }
                     }

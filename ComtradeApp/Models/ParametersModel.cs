@@ -8,7 +8,7 @@ namespace ComtradeApp.Models
 {
     public class ParametersModel
     {
-        public MyData myData { get; set; }
+        public RelayInformation RelayInformation { get; set; }
         public string Host { get; set; }
         public string ComtradeFilesPath { get; set; }
         public List<string> DownloadedFiles { get; set; }

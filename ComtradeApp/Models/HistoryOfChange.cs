@@ -18,7 +18,7 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public string OldIP { get; set; }
         [Column("Degistirilme_Tarihi")]
         public DateTime ChangedDate { get; set; }
-        public int MyDataId { get; set; }
-        public MyData MyData { get; set; }
+        public int RelayInformationId { get; set; }
+        public RelayInformation RelayInformation { get; set; }
     }
 }

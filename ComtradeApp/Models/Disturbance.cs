@@ -19,7 +19,7 @@ namespace ComtradeApp.Models
         [Column("Tm_KV_Hucre")]
         public string TmKvHucre { get; set; }
         [Column("Fider_Adi")]
-        public string FiderName { get; set; }
+        public string? FiderName { get; set; }
         public string IP { get; set; }
         [Column("Role_Model")]
         public string RoleModel { get; set; }
@@ -30,25 +30,25 @@ namespace ComtradeApp.Models
         [Column("Ariza_Saati_Suresi")]
         public double TotalFaultTime { get; set; }
         [Column("Cfg_Dosya_Yolu")]
-        public string CfgFilePath { get; set; }
+        public string? CfgFilePath { get; set; }
         [Column("Cfg_Dosyasi", TypeName = "CLOB")]
-        public string CfgFileData { get; set; }
+        public string? CfgFileData { get; set; }
         [Column("Dat_Dosya_Yolu")]
-        public string DatFilePath { get; set; }
+        public string? DatFilePath { get; set; }
         [Column("Dat_Dosyasi", TypeName = "BLOB")]
         public byte[] DatFileData { get; set; }
         [Column("Comtrade_Dosya_Ismi")]
-        public string ComtradeName { get; set; }
+        public string? ComtradeName { get; set; }
         [Column("Rms_Dosya_Yolu")]
         public string? RmsDataPath { get; set; }
         [Column("Instant_Dosya_Yolu")]
         public string? InstantDataPath { get; set; }
+        [Column("Gönderilme_Tarihi")]
+        public DateTime PutTime { get; set; }
         public bool Status { get; set; }
         [Column("SFTP_Durumu")]
         public bool sFtpStatus { get; set; }
-        [Column("Gönderilme_Tarihi")]
-        public DateTime PutTime { get; set; }
-        public int MyDataId { get; set; }
-        public MyData MyData { get; set; }
+        public int RelayInformationId { get; set; }
+        public RelayInformation RelayInformation { get; set; }
     }
 }

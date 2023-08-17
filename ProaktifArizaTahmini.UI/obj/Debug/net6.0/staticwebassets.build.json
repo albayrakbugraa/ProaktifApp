@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "4IHagbTM70g0UuKy58HsFNrPVUlgv4/j51opTRZyYVM=",
+  "Hash": "nVkb9CbAc9/GPvWGVJeX+w4INcxV4+xGwJhx5Mukpxk=",
   "Source": "ProaktifArizaTahmini.UI",
   "BasePath": "_content/ProaktifArizaTahmini.UI",
   "Mode": "Default",
@@ -187,12 +187,12 @@
       "OriginalItemSpec": "wwwroot\\js\\disturbance.js"
     },
     {
-      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\js\\myData.js",
+      "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\js\\relayInformation.js",
       "SourceId": "ProaktifArizaTahmini.UI",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\",
       "BasePath": "_content/ProaktifArizaTahmini.UI",
-      "RelativePath": "js/myData.js",
+      "RelativePath": "js/relayInformation.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -201,7 +201,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\myData.js"
+      "OriginalItemSpec": "wwwroot\\js\\relayInformation.js"
     },
     {
       "Identity": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.UI\\wwwroot\\js\\site.js",

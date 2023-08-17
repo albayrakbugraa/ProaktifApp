@@ -16,26 +16,27 @@ namespace ComtradeApp.Repository
         {
             this.db = db;
         }
-        public async Task<HistoryOfChange> GetByMyDataId (int id)
+        public async Task<HistoryOfChange> GetByRelayInformationId (int id)
         {
-            return await  db.HistoryOfChanges.Where(x => x.MyDataId == id).OrderByDescending(x => x.ChangedDate).FirstOrDefaultAsync();                        
+            return await  db.HistoryOfChanges.Where(x => x.RelayInformationId == id).OrderByDescending(x => x.ChangedDate).FirstOrDefaultAsync();                        
         }
         
-        public async Task UpdateFolderNames(MyData myData,string comtradeFilesPath)
+        public async Task UpdateFolderNames(RelayInformation relayInformation,string comtradeFilesPath)
         {
             var ipChanges = await db.HistoryOfChanges.OrderBy(x=>x.ChangedDate).ToListAsync();
             foreach (var item in ipChanges)
             {
                 string oldIP = item.OldIP;
                 string newIP = item.NewIP;
-                string oldFolderPath = Path.Combine(comtradeFilesPath, $"{oldIP}-{myData.TmKvHucre}");
-                string newFolderPath = Path.Combine(comtradeFilesPath, $"{newIP}-{myData.TmKvHucre}");
+                string oldFolderPath = Path.Combine(comtradeFilesPath, $"{oldIP}-{relayInformation.TmKvHucre}");
+                string newFolderPath = Path.Combine(comtradeFilesPath, $"{newIP}-{relayInformation.TmKvHucre}");
                 if (Directory.Exists(oldFolderPath))
                 {
                     Directory.Move(oldFolderPath, newFolderPath);
                 }
             }
         }
+
         public async Task UpdateFolderNames(Disturbance disturbance, string csvFilesPath)
         {
             var ipChanges = await db.HistoryOfChanges.OrderBy(x => x.ChangedDate).ToListAsync();

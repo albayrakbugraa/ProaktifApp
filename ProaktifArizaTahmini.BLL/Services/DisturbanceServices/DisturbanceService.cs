@@ -36,8 +36,8 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
 
         public async Task<List<Disturbance>> FilterList(DisturbanceFilterParams filterParams)
         {
-            var myDatas = await disturbanceRepository.GetAll();
-            var filteredData = myDatas.Where(data =>
+            var relayInformations = await disturbanceRepository.GetAll();
+            var filteredData = relayInformations.Where(data =>
                     (string.IsNullOrEmpty(filterParams.FilterTextTm) || data.TmNo != null && data.TmNo.ToUpper().Contains(filterParams.FilterTextTm.ToUpper())) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextKv) || data.kV != null && data.kV.ToUpper().Contains(filterParams.FilterTextKv.ToUpper())) &&
                     (string.IsNullOrEmpty(filterParams.FilterTextHucre) || data.HucreNo != null && data.HucreNo.ToUpper().Contains(filterParams.FilterTextHucre.ToUpper())) &&
@@ -74,18 +74,18 @@ namespace ProaktifArizaTahmini.BLL.Services.DisturbanceServices
             return disturbanceList;
         }
 
-        public async Task<bool> UpdateByDataIdList(MyDataDTO myData)
+        public async Task<bool> UpdateByDataIdList(RelayInformationDTO relayInformation)
         {
-            var disturbances = await disturbanceRepository.GetDisturbancesById(myData.ID);
+            var disturbances = await disturbanceRepository.GetDisturbancesById(relayInformation.ID);
             foreach (var item in disturbances)
             {
-                item.IP = myData.IP;
-                item.TmNo = myData.TmNo;
-                item.HucreNo = myData.HucreNo;
-                item.FiderName = myData.FiderName;
-                item.RoleModel = myData.RoleModel;
-                item.TmKvHucre = myData.TmKvHucre;
-                item.kV = myData.kV;
+                item.IP = relayInformation.IP;
+                item.TmNo = relayInformation.TmNo;
+                item.HucreNo = relayInformation.HucreNo;
+                item.FiderName = relayInformation.FiderName;
+                item.RoleModel = relayInformation.RoleModel;
+                item.TmKvHucre = relayInformation.TmKvHucre;
+                item.kV = relayInformation.kV;
 
                 var result = disturbanceRepository.Update(item);
                 if (!result)

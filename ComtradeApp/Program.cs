@@ -25,21 +25,6 @@ var host = Host.CreateDefaultBuilder(args)
                     .ReadFrom.Configuration(hostContext.Configuration)
                     .CreateLogger();
 
-        try
-        {
-            // Loglama işlemleri
-            Log.Information("Test log message");
-            // ...
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "An error occurred while logging");
-        }
-        finally
-        {
-            Log.CloseAndFlush(); // Logları kapatmayı unutmayın
-        }
-
         JobDataMap jobDataMap = new JobDataMap
                 {
                     { "PythonExePath", hostContext.Configuration.GetSection("FilePath")["PythonExePath"] },
@@ -55,9 +40,10 @@ var host = Host.CreateDefaultBuilder(args)
                     { "SshHostKeyFingerprint", hostContext.Configuration.GetSection("sFtpSettings")["SshHostKeyFingerprint"] }
                 };
         services.AddDbContext<AppDbContext>(options => options.UseOracle(hostContext.Configuration.GetConnectionString("DefaultConnection")));
-        services.AddSingleton<MyDataRepository>();
+        services.AddSingleton<RelayInformationRepository>();
         services.AddSingleton<DisturbanceRepository>();
         services.AddSingleton<HistoryOfChangeRepository>();
+        services.AddSingleton<LogRepository>();
         services.AddSingleton<FtpService>();
         services.AddSingleton<CsvConverterService>();
         services.AddSingleton<sFtpService>();

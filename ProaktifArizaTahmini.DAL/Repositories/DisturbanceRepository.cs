@@ -19,7 +19,7 @@ namespace ProaktifArizaTahmini.DAL.Repositories
 
         public Task<List<Disturbance>> GetDisturbancesById(int Id)
         {
-            var disturbances = db.Disturbances.Where(d => d.MyDataId == Id).ToListAsync();
+            var disturbances = db.Disturbances.Where(d => d.RelayInformationId == Id).ToListAsync();
             return disturbances;
         }
     }

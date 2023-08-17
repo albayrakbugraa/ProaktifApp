@@ -15,13 +15,14 @@ namespace ComtradeApp.AppDbContext
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
 
-        public DbSet<MyData> MyDatas { get; set; }
+        public DbSet<RelayInformation> RelayInformations { get; set; }
         public DbSet<Disturbance> Disturbances { get; set; }
         public DbSet<HistoryOfChange> HistoryOfChanges { get; set; }
+        public DbSet<ServiceLog> ServiceLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MyData>().HasIndex(md => new { md.TmNo, md.kV, md.HucreNo }).IsUnique();
+            modelBuilder.Entity<RelayInformation>().HasIndex(md => new { md.TmNo, md.kV, md.HucreNo }).IsUnique();
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -14,7 +14,7 @@ namespace ComtradeApp.Repository
         {
             this.db = db;
         }
-        public async Task<List<Disturbance>> GetBySftpStatus(bool sftpStatus)
+        public List<Disturbance> GetBySftpStatus(bool sftpStatus)
         {
             var disturbances = db.Disturbances.Where(d => d.sFtpStatus == sftpStatus).ToList();
             return disturbances;

@@ -14,18 +14,21 @@ namespace ComtradeApp.Service
     {
 
         private readonly DisturbanceRepository disturbanceRepository;
+        private readonly LogRepository log;
 
-        public sFtpService(DisturbanceRepository disturbanceRepository)
+        public sFtpService(DisturbanceRepository disturbanceRepository, LogRepository log)
         {
             this.disturbanceRepository = disturbanceRepository;
+            this.log = log;
         }
         public async Task PutCsvFiles(string host, string username, string password, string directory, int port, string sshHostKeyFingerprint)
         {
             try
             {
+                await log.InformationLog("sFTP ile dosya gönderme işlemleri başladı.", "SFTP");
                 Serilog.Log.Information("sFTP ile dosya gönderme işlemleri başladı..");
 
-                var disturbances = await disturbanceRepository.GetBySftpStatus(false);
+                var disturbances = disturbanceRepository.GetBySftpStatus(false);
 
                 SessionOptions sessionOptions = new SessionOptions
                 {
@@ -66,6 +69,7 @@ namespace ComtradeApp.Service
                             }
                             else
                             {
+                                await log.ErrorLog($"RMS dosyası {item.RmsDataPath} gönderimi başarısız oldu.", rmsTransferResult.Failures[0].Message, "SFTP");
                                 Serilog.Log.Error($"RMS dosyası {item.RmsDataPath} gönderimi başarısız oldu: {rmsTransferResult.Failures[0].Message}");
                             }
 
@@ -79,6 +83,7 @@ namespace ComtradeApp.Service
                             }
                             else
                             {
+                                await log.ErrorLog($"Instant dosyası {item.InstantDataPath} gönderimi başarısız oldu.", instantTransferResult.Failures[0].Message, "SFTP");
                                 Serilog.Log.Error($"Instant dosyası {item.InstantDataPath} gönderimi başarısız oldu: {instantTransferResult.Failures[0].Message}");
                             }
 
@@ -88,6 +93,10 @@ namespace ComtradeApp.Service
                                 item.sFtpStatus = true;
                                 item.PutTime = DateTime.Now;
                                 bool result = disturbanceRepository.Update(item);
+                                if (!result)
+                                {
+                                    await log.ErrorLog("sFtpStatus durumu güncellenirken hata oluştu.", "Database güncelleme hatası", "SFTP");
+                                }
                             }
                         }
                     }
@@ -95,10 +104,12 @@ namespace ComtradeApp.Service
             }
             catch (Exception ex)
             {
+                await log.ErrorLog("SFTP işlemleri başlamadı.", ex.ToString(), "SFTP");
                 Serilog.Log.Error($"Hata oluştu: {ex.Message}");
             }
             finally
             {
+                await log.InformationLog("sFTP ile dosya gönderme işlemleri sonlandı.", "SFTP");
                 Serilog.Log.Information("sFTP ile dosya gönderme işlemleri sonlandı.. \n");
             }
 

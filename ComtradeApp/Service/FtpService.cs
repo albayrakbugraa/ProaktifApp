@@ -16,30 +16,34 @@ namespace ComtradeApp.Service
 {
     public class FtpService
     {
-        private readonly MyDataRepository myDataRepository;
+        private readonly RelayInformationRepository relayInformationRepository;
         private readonly DisturbanceRepository disturbanceRepository;
         private readonly HistoryOfChangeRepository historyOfChangeRepository;
-        public FtpService(MyDataRepository myDataRepository, DisturbanceRepository disturbanceRepository, HistoryOfChangeRepository historyOfChangeRepository)
+        private readonly LogRepository log;
+        public FtpService(RelayInformationRepository relayInformationRepository, DisturbanceRepository disturbanceRepository, HistoryOfChangeRepository historyOfChangeRepository, LogRepository log)
         {
-            this.myDataRepository = myDataRepository;
+            this.relayInformationRepository = relayInformationRepository;
             this.disturbanceRepository = disturbanceRepository;
             this.historyOfChangeRepository = historyOfChangeRepository;
+            this.log = log;
         }
         public async Task DownloadCfgAndDatFilesEfCoreAsync(string comtradeFilesPath)
         {
             try
             {
+                await log.InformationLog("FTP işlemleri başladı.", "FTP");
                 Serilog.Log.Information("FTP işlemleri başladı..");
 
-                //var data = await myDataRepository.GetWhere(x => x.ID == 1);
-                //List<MyData> myDatas = new List<MyData>();
-                //myDatas.Add(data);
-                var myDatas = await myDataRepository.GetAll();
+                //var data = await relayInformationRepository.GetWhere(x => x.ID == 1);
+                //List<RelayInformation> relayInformations = new List<RelayInformation>();
+                //relayInformations.Add(data);
+                var relayInformations = await relayInformationRepository.GetAll();
 
-                foreach (var item in myDatas)
+                foreach (var item in relayInformations)
                 {
+                    await log.InformationLog($"Bağlantı Kurulan Röle Bilgileri \r Tm_kV_Hücre : {item.TmKvHucre} \r IP : {item.IP} \r Röle Model : {item.RoleModel} \n", "FTP");
                     Serilog.Log.Information($"Bağlantı Kurulan Röle Bilgileri \r Tm_kV_Hücre : {item.TmKvHucre} \r IP : {item.IP} \r Röle Model : {item.RoleModel} \n");
-                    var historyOfChange = await historyOfChangeRepository.GetByMyDataId(item.ID);
+                    var historyOfChange = await historyOfChangeRepository.GetByRelayInformationId(item.ID);
                     if (historyOfChange != null && item.IP == historyOfChange.NewIP)
                     {
                         await historyOfChangeRepository.UpdateFolderNames(item, comtradeFilesPath);
@@ -57,47 +61,50 @@ namespace ComtradeApp.Service
                     ParametersModel parameters = new ParametersModel();
                     string[] fileNamesLocal = Directory.GetFiles(destFolderPath);
                     parameters.DownloadedFiles = new List<string>(fileNamesLocal.Select(Path.GetFileName));
-                    parameters.myData = item;
+                    parameters.RelayInformation = item;
                     parameters.Host = host;
                     parameters.ComtradeFilesPath = comtradeFilesPath;
                     parameters.DestFolderPath = destFolderPath;
                     if (item.User == "supervisor")
                     {
-                        parameters = Download(parameters);
+                        parameters = await DownloadWithWinScp(parameters);
                         if (parameters.FilesToDownload.Count > 0 && parameters.FilesToDownload != null)
                         {
-                            CheckMissingFiles(parameters);
+                            await CheckMissingFiles(parameters);
                             await CreateDisturbancesAsync(parameters);
                         }
                     }
                     else
                     {
-                        parameters.FilesToDownload = GetFilesToDownloadFromFtp(parameters);
+                        parameters.FilesToDownload = await GetFilesToDownloadFromFtp(parameters);
                         Serilog.Log.Information($"İndirelecek dosya sayısı : {parameters.FilesToDownload.Count}");
 
                         if (parameters.FilesToDownload.Count > 0)
                         {
-                            List<string>[] downloadedFilesArray = DownloadFilesFromFtp(parameters);
+                            List<string>[] downloadedFilesArray = await DownloadFilesFromFtp(parameters);
                             parameters.DownloadedCfgFiles = downloadedFilesArray[0];
                             parameters.DownloadedDatFiles = downloadedFilesArray[1];
-                            CheckMissingFiles(parameters);
+                            await CheckMissingFiles(parameters);
                             await CreateDisturbancesAsync(parameters);
                         }
                     }
                 }
-
+                await log.InformationLog("FTP sunucusundan dosyaları indirme tamamlandı.", "FTP");
                 Serilog.Log.Information("FTP sunucusundan dosyaları indirme tamamlandı.");
             }
             catch (Exception ex)
             {
+                await log.ErrorLog("Veritabanına bağlanırken hata oluştu!", ex.ToString(),"FTP");
                 Serilog.Log.Error(ex, "Veritabanına bağlanırken hata oluştu!");
             }
             finally
             {
+                await log.InformationLog("FTP işlemleri sonlandı.", "FTP");
                 Serilog.Log.Information("FTP işlemleri sonlandı.. \n");
             }
         }
-        private ParametersModel Download(ParametersModel parameters)
+
+        private async Task<ParametersModel> DownloadWithWinScp(ParametersModel parameters)
         {
             try
             {
@@ -105,9 +112,9 @@ namespace ComtradeApp.Service
                 SessionOptions sessionOptions = new SessionOptions
                 {
                     Protocol = Protocol.Ftp,
-                    HostName = parameters.myData.IP,
-                    UserName = parameters.myData.User,
-                    Password = parameters.myData.Password,
+                    HostName = parameters.RelayInformation.IP,
+                    UserName = parameters.RelayInformation.User,
+                    Password = parameters.RelayInformation.Password,
                 };
                 using (Session session = new Session())
                 {
@@ -126,7 +133,7 @@ namespace ComtradeApp.Service
                     transferOptions.TransferMode = TransferMode.Binary;
 
                     // FTP sunucusundaki klasörün adı
-                    string remoteFolderPath = parameters.myData.Path;
+                    string remoteFolderPath = parameters.RelayInformation.Path;
 
                     // Klasördeki tüm dosyaların listesini al
                     RemoteDirectoryInfo directoryInfo = session.ListDirectory(remoteFolderPath);
@@ -157,7 +164,9 @@ namespace ComtradeApp.Service
                             }
                             else
                             {
-                                Serilog.Log.Error($" Röle bilgisi aşağıdaki gibi olan röleden {fileInfo.Name} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel} \r Dosya Adı: {fileInfo.Name} \r ");
+                                await log.ErrorLog($" Röle bilgisi aşağıdaki gibi olan röleden {fileInfo.Name} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Dosya Adı: {fileInfo.Name} \r ", "Dosyayı indirirken hata oluştu!", "FTP");
+
+                                Serilog.Log.Error($" Röle bilgisi aşağıdaki gibi olan röleden {fileInfo.Name} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Dosya Adı: {fileInfo.Name} \r ");
                             }
                         }
                     }
@@ -165,20 +174,22 @@ namespace ComtradeApp.Service
             }
             catch (Exception ex)
             {
+                await log.ErrorLog("Hata", ex.ToString(), "FTP");
                 Serilog.Log.Error("Hata: " + ex.Message);
             }
             return parameters;
         }
-        private List<string> GetFilesToDownloadFromFtp(ParametersModel parameters)
+
+        private async Task<List<string>> GetFilesToDownloadFromFtp(ParametersModel parameters)
         {
             List<string> filesToDownload = new List<string>();
 
             try
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(parameters.Host + parameters.myData.Path);
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(parameters.Host + parameters.RelayInformation.Path);
                 request.Method = WebRequestMethods.Ftp.ListDirectory;
                 request.UsePassive = true;
-                request.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
+                request.Credentials = new NetworkCredential(parameters.RelayInformation.User, parameters.RelayInformation.Password);
 
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
                 Stream responseStream = response.GetResponseStream();
@@ -201,13 +212,14 @@ namespace ComtradeApp.Service
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, $"Aşağıda bilgileri bulunan röleye bağlanırken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel}");
+                await log.ErrorLog($"Aşağıda bilgileri bulunan röleye bağlanırken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel}", ex.ToString(), "FTP");
+                Serilog.Log.Error(ex, $"Aşağıda bilgileri bulunan röleye bağlanırken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel}");
             }
 
             return filesToDownload;
         }
 
-        private List<string>[] DownloadFilesFromFtp(ParametersModel parameters)
+        private async Task<List<string>[]> DownloadFilesFromFtp(ParametersModel parameters)
         {
             List<string> downloadedCfgFiles = new List<string>();
             List<string> downloadedDatFiles = new List<string>();
@@ -216,8 +228,8 @@ namespace ComtradeApp.Service
                 try
                 {
                     WebClient client = new WebClient();
-                    client.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
-                    string remoteFilePath = parameters.Host + parameters.myData.Path + file;
+                    client.Credentials = new NetworkCredential(parameters.RelayInformation.User, parameters.RelayInformation.Password);
+                    string remoteFilePath = parameters.Host + parameters.RelayInformation.Path + file;
                     string localFolderPath = Path.Combine(parameters.DestFolderPath, file);
                     if (!string.IsNullOrEmpty(file))
                     {
@@ -235,15 +247,15 @@ namespace ComtradeApp.Service
                 }
                 catch (Exception ex)
                 {
-                    Serilog.Log.Error(ex, $" Röle bilgisi aşağıdaki gibi olan röleden {file} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel} \r Dosya Adı: {file} \r ");
+                    await log.ErrorLog($" Röle bilgisi aşağıdaki gibi olan röleden {file} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Dosya Adı: {file} \r ", ex.ToString(),"FTP");
+                    Serilog.Log.Error(ex, $" Röle bilgisi aşağıdaki gibi olan röleden {file} isimli dosyayı indirirken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Dosya Adı: {file} \r ");
                 }
             }
 
             return new List<string>[] { downloadedCfgFiles, downloadedDatFiles };
         }
 
-
-        private void CheckMissingFiles(ParametersModel parameters)
+        private async Task CheckMissingFiles(ParametersModel parameters)
         {
             try
             {
@@ -253,6 +265,7 @@ namespace ComtradeApp.Service
 
                     if (!parameters.DownloadedDatFiles.Contains(datFileName, StringComparer.OrdinalIgnoreCase))
                     {
+                        await log.WarningLog($"{cfgFile} dosyasına karşılık gelen DAT dosyası eksik: {datFileName}", "Arıza Kaydı");
                         Serilog.Log.Warning($"{cfgFile} dosyasına karşılık gelen DAT dosyası eksik: {datFileName}");
                     }
                 }
@@ -262,16 +275,17 @@ namespace ComtradeApp.Service
 
                     if (!parameters.DownloadedCfgFiles.Contains(cfgFileName, StringComparer.OrdinalIgnoreCase))
                     {
+                        await log.WarningLog($"{datFile} dosyasına karşılık gelen DAT dosyası eksik: {cfgFileName}", "Arıza Kaydı");
                         Serilog.Log.Warning($"{datFile} dosyasına karşılık gelen CFG dosyası eksik: {cfgFileName}");
                     }
                 }
             }
             catch (Exception ex)
             {
+                await log.ErrorLog($"Eksik dosyalar kontrol edilirken hata oluştu! \r Dizin: {parameters.DestFolderPath}", ex.ToString(),"Arıza Kaydı");
                 Serilog.Log.Error(ex, $"Eksik dosyalar kontrol edilirken hata oluştu! \r Dizin: {parameters.DestFolderPath}");
             }
         }
-
 
         private async Task CreateDisturbancesAsync(ParametersModel parameters)
         {
@@ -295,13 +309,13 @@ namespace ComtradeApp.Service
                         double totalFaultTime = totalTime.TotalSeconds;
 
                         Disturbance disturbance = new Disturbance();
-                        disturbance.IP = parameters.myData.IP;
-                        disturbance.TmNo = parameters.myData.TmNo;
+                        disturbance.IP = parameters.RelayInformation.IP;
+                        disturbance.TmNo = parameters.RelayInformation.TmNo;
                         disturbance.CfgFilePath = cfgFilePath;
                         disturbance.FaultTimeStart = faultTimeStart;
                         disturbance.FaultTimeEnd = faultTimeEnd;   
                         disturbance.TotalFaultTime = totalFaultTime;
-                        //if (parameters.myData.User == "supervisor")
+                        //if (parameters.RelayInformation.User == "supervisor")
                         //{
                         //    FileInfo fileInfo = new FileInfo(Path.Combine(parameters.DestFolderPath, datFileName));
                         //    disturbance.FaultTimeStart = fileInfo.LastWriteTime;
@@ -310,14 +324,14 @@ namespace ComtradeApp.Service
                         //{
                         //    disturbance.FaultTimeStart = GetFileCreationTime(parameters, cfgFile);
                         //}
-                        disturbance.HucreNo = parameters.myData.HucreNo;
-                        disturbance.FiderName = parameters.myData.FiderName;
-                        disturbance.RoleModel = parameters.myData.RoleModel;
+                        disturbance.HucreNo = parameters.RelayInformation.HucreNo;
+                        disturbance.FiderName = parameters.RelayInformation.FiderName;
+                        disturbance.RoleModel = parameters.RelayInformation.RoleModel;
                         disturbance.DatFilePath = datFilePath;
-                        disturbance.TmKvHucre = parameters.myData.TmKvHucre;
-                        disturbance.kV = parameters.myData.kV;
+                        disturbance.TmKvHucre = parameters.RelayInformation.TmKvHucre;
+                        disturbance.kV = parameters.RelayInformation.kV;
                         disturbance.Status = true;
-                        disturbance.MyDataId = parameters.myData.ID;
+                        disturbance.RelayInformationId = parameters.RelayInformation.ID;
                         disturbance.CfgFileData = cfgFileData;
                         disturbance.DatFileData = datFileData;
                         disturbance.ComtradeName = Path.GetFileNameWithoutExtension(cfgFile);
@@ -327,18 +341,20 @@ namespace ComtradeApp.Service
                         bool result = await disturbanceRepository.Create(disturbance);
                         if (result)
                         {
-                            Serilog.Log.Information($"Arıza kaydı oluşturuldu. \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}");
+                            Serilog.Log.Information($"Arıza kaydı oluşturuldu. \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}");
                         }
                         else
                         {
-                            Serilog.Log.Error($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}");
+                            await log.ErrorLog($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}", "Veritabanına kaydederken hata oluştu.", "Arıza Kaydı");
+                            Serilog.Log.Error($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, $"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.myData.TmKvHucre} \r IP : {parameters.myData.IP} \r Röle Model : {parameters.myData.RoleModel}");
+                await log.ErrorLog($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel}", ex.ToString(), "Arıza Kaydı");
+                Serilog.Log.Error(ex, $"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel}");
             }
         }
 
@@ -346,10 +362,10 @@ namespace ComtradeApp.Service
         {
             try
             {
-                //FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{parameters.myData.IP}:{parameters.myData.Port}/{parameters.myData.Path}/{fileName}");
+                //FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{parameters.RelayInformation.IP}:{parameters.RelayInformation.Port}/{parameters.RelayInformation.Path}/{fileName}");
                 //request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
                 //request.UsePassive = true;
-                //request.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
+                //request.Credentials = new NetworkCredential(parameters.RelayInformation.User, parameters.RelayInformation.Password);
 
                 //FtpWebResponse response = (FtpWebResponse)request.GetResponse();
                 //DateTime creationTime = response.LastModified;
@@ -357,10 +373,10 @@ namespace ComtradeApp.Service
                 //return creationTime;
 
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{parameters.myData.IP}:{parameters.myData.Port}/{parameters.myData.Path}/{fileName}");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{parameters.RelayInformation.IP}:{parameters.RelayInformation.Port}/{parameters.RelayInformation.Path}/{fileName}");
                 request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
                 request.UsePassive = true;
-                request.Credentials = new NetworkCredential(parameters.myData.User, parameters.myData.Password);
+                request.Credentials = new NetworkCredential(parameters.RelayInformation.User, parameters.RelayInformation.Password);
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
