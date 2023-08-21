@@ -17,20 +17,5 @@ namespace ProaktifArizaTahmini.DAL.Repositories
             this.db = db;
         }
 
-        public async Task<bool> AddAllDataList(List<RelayInformation> relayInformationList)
-        {
-            foreach (var item in relayInformationList)
-            {
-                bool relayInformation = db.RelayInformations.Any(x => x.TmKvHucre == item.TmKvHucre);
-
-                if (!relayInformation)
-                {
-                    var addedData = db.RelayInformations.Add(item).Entity;
-                }
-                await db.SaveChangesAsync();
-            }
-            return true;
-        }
-
     }
 }

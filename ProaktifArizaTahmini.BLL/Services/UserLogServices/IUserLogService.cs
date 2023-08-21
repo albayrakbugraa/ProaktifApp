@@ -15,6 +15,8 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
         Task<bool> UpdateData(User user);
         Task<bool> DeleteData(User user);
         Task<bool> ImportExcel(User user);
+        Task<bool> ErrorLog(User user,string exception,string method,string message);
+        Task<bool> InformationLog(User user,string method,string message);
 
     }
 }

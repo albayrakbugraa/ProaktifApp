@@ -21,6 +21,9 @@ namespace ProaktifArizaTahmini.CORE.Entities
         [Column("Metot_İsmi")]
         public string MethodName { get; set; }
         [Column("Tarih")]
+        public string? Message { get; set; }
+        public string? Exception { get; set; }
+        public string LogLevel { get; set; }
         public DateTime LogDate { get; set; }
         public int? UserId { get; set; }
         public User User { get; set; }

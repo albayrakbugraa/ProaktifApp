@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ProaktifArizaTahmini.BLL.Models.DTOs;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
+using ProaktifArizaTahmini.BLL.Services.UserLogServices;
 using ProaktifArizaTahmini.CORE.Entities;
 using ProaktifArizaTahmini.CORE.IRepository;
 using System;
@@ -15,16 +16,29 @@ namespace ProaktifArizaTahmini.BLL.Services.RelayInformationServices
     {
         private readonly IRelayInformationRepository relayInformationRepository;
         private readonly IMapper mapper;
+        private readonly IUserLogService log;
 
-        public RelayInformationService(IRelayInformationRepository relayInformationRepository, IMapper mapper)
+        public RelayInformationService(IRelayInformationRepository relayInformationRepository, IMapper mapper, IUserLogService log)
         {
             this.relayInformationRepository = relayInformationRepository;
             this.mapper = mapper;
+            this.log = log;
         }
 
-        public async Task<bool> AddDataList(List<RelayInformation> relayInformationList)
+        public async Task AddDataList(List<RelayInformation> relayInformationList,User user)
         {
-            return await relayInformationRepository.AddAllDataList(relayInformationList);
+            foreach (var item in relayInformationList)
+            {
+                bool relayInformation = await relayInformationRepository.Any(x => x.TmKvHucre == item.TmKvHucre);
+                if (relayInformation) await log.ErrorLog(user, $"Tm_Kv_Hücre : {item.TmKvHucre} bu röle zaten mevcut.", "Excel Tablosundan Veri Girişi", "Aynı Tm_Kv_Hücre röleler tekrar eklenemez.");
+                bool isAnotherRelay = item.Path.Equals("Bilinmiyor");
+                if (isAnotherRelay) await log.ErrorLog(user, $"Röle Model : {item.RoleModel} Bu röle modeli şuanda eklenemez!", "Excel Tablosundan Veri Girişi", "Röle modeli Schneider veya ABB olmadığı için şuanda bu röleyi ekleyemezsiniz.");
+                if (!relayInformation && !isAnotherRelay)
+                {
+                    var addedData = await relayInformationRepository.Create(item);
+                    if(addedData) await log.InformationLog(user,"Excel Tablosundan Veri Girişi",$"Tm_Kv_Hücre : {item.TmKvHucre } IP : {item.IP} Röle Model : {item.RoleModel} Röle eklendi.");
+                }
+            }
         }
 
         public async Task<bool> CreateRelayInformation(RelayInformationDTO model)

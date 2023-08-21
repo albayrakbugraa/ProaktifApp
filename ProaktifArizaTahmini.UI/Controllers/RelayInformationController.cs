@@ -53,7 +53,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<IActionResult> List(RelayInformationFilterParams relayInformationVM, int? page, int? pageSize)
         {
             int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
-            ViewData["ActivePage"] = "RelayInformation";
+            ViewData["ActivePage"] = "Relay Information";
 
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
@@ -139,21 +139,22 @@ namespace ProaktifArizaTahmini.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(RelayInformationDTO model)
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+            string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userService.GetUserByUsername(username);
             try
             {
                 bool result = await relayInformationService.CreateRelayInformation(model);
                 if (result)
                 {
-                    ClaimsPrincipal claimUser = HttpContext.User;
-                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);   
-                    var user = await userService.GetUserByUsername(username);
                     await userLogService.CreateData(user);
                     return RedirectToAction(nameof(List));
                 }
                 return View(model);
             }
-            catch
+            catch(Exception ex)
             {
+                await userLogService.ErrorLog(user, ex.ToString(),"Yeni Veri Girişi", "Alanları kontrol edin.");
                 ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View(model);
             }
@@ -170,22 +171,23 @@ namespace ProaktifArizaTahmini.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int ID)
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+            string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userService.GetUserByUsername(username);
             try
             {
                 var relayInformation = await relayInformationService.GetRelayInformationByDataId(ID);
                 bool result = await relayInformationService.DeleteRelayInformation(relayInformation.ID);
                 if (result)
                 {
-                    ClaimsPrincipal claimUser = HttpContext.User;
-                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var user = await userService.GetUserByUsername(username);
                     await userLogService.DeleteData(user);
                     return RedirectToAction(nameof(List));
                 }
                 return View(relayInformation);
             }
-            catch
+            catch(Exception ex)
             {
+                await userLogService.ErrorLog(user, ex.ToString(), "Veri Silme", "Veri silme başarısız.");
                 return View();
             }
         }
@@ -202,6 +204,9 @@ namespace ProaktifArizaTahmini.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int ID, RelayInformationDTO model)
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+            string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userService.GetUserByUsername(username);
             try
             {
                 var data = await relayInformationService.GetRelayInformationByDataId(ID);
@@ -215,16 +220,14 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 bool resultHistory = await historyOfChangeService.Create(historyOfChange);
                 if (resultRelayInformation && resultDisturbance && resultHistory) 
                 {
-                    ClaimsPrincipal claimUser = HttpContext.User;
-                    string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var user = await userService.GetUserByUsername(username);
                     await userLogService.UpdateData(user);
                     return RedirectToAction(nameof(List));
                 } 
                 return View(model);
             }
-            catch
+            catch(Exception ex)
             {
+                await userLogService.ErrorLog(user, ex.ToString(), "Veri Güncelleme", "Alanları kontrol edin.");
                 ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View();
             }
@@ -232,15 +235,22 @@ namespace ProaktifArizaTahmini.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportExcel(IFormFile excelFile)
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+            string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userService.GetUserByUsername(username);
             List<RelayInformation> relayInformations = new List<RelayInformation>();
             if (excelFile != null && excelFile.Length > 0)
             {
-                relayInformations = ReadDataFromExcel(excelFile);
-                bool resultRelayInformation = await relayInformationService.AddDataList(relayInformations);
-                ClaimsPrincipal claimUser = HttpContext.User;
-                string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = await userService.GetUserByUsername(username);
-                await userLogService.ImportExcel(user);
+                try
+                {
+                    relayInformations = ReadDataFromExcel(excelFile);
+                    await relayInformationService.AddDataList(relayInformations,user);
+                    await userLogService.ImportExcel(user);
+                }
+                catch (Exception ex)
+                {
+                    await userLogService.ErrorLog(user, ex.ToString(), "Excel İmport", "Hata oluştu.");
+                }
             }
             return RedirectToAction("List");
         }
@@ -293,14 +303,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             else if (upperCaseRoleModel.Contains("ION") || upperCaseRoleModel.Contains("SCHNEIDER"))
             {
                 return "COMTRADE_1/";
-            }
-            else if (upperCaseRoleModel == "SIEMENS 7SJ80")
-            {
-                return "Bilinmiyor";
-            }
-            else if (upperCaseRoleModel == "SIEMENS 7SJ82")
-            {
-                return "WsbRecordsArea/dynfs/ram/rcd/";
             }
             else
             {

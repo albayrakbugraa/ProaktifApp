@@ -9,6 +9,5 @@ namespace ProaktifArizaTahmini.CORE.IRepository
 {
     public interface IRelayInformationRepository : IBaseRepository<RelayInformation>
     {
-        Task<bool> AddAllDataList(List<RelayInformation> relayInformationList);
     }
 }
