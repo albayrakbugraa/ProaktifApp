@@ -17,3 +17,8 @@
         location.reload();
     }, 3500)
 });
+
+
+document.getElementById("pageSizeSelect").addEventListener("change", function () {
+    document.getElementById("pageSizeForm").submit();
+});

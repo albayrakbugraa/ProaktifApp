@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
 using ProaktifArizaTahmini.BLL.AutoMapper;
 using ProaktifArizaTahmini.BLL.Services;
 using ProaktifArizaTahmini.CORE.IRepository;
@@ -15,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Mapping));
-ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Ticari olmayan kullan�m i�in
 builder.Services.AddAuthentication(
     CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {

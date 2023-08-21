@@ -13,7 +13,7 @@ using X.PagedList;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class DisturbanceController : Controller
     {
         private readonly IDisturbanceService disturbanceService;

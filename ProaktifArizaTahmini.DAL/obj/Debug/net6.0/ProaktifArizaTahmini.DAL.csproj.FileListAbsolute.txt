@@ -49,3 +49,20 @@ C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmi
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.pdb
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.genruntimeconfig.cache
 C:\Users\Bugra Albayrak\Desktop\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ref\ProaktifArizaTahmini.DAL.dll
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.deps.json
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.runtimeconfig.json
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.dll
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.DAL.pdb
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.dll
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\bin\Debug\net6.0\ProaktifArizaTahmini.CORE.pdb
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.csproj.AssemblyReference.cache
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.AssemblyInfoInputs.cache
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.AssemblyInfo.cs
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.csproj.CopyComplete
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.dll
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\refint\ProaktifArizaTahmini.DAL.dll
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.pdb
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ProaktifArizaTahmini.DAL.genruntimeconfig.cache
+C:\Users\Bugra Albayrak\Desktop\proaktif 21.08\ProaktifArizaTahmini-26.07.23\ProaktifArizaTahmini.DAL\obj\Debug\net6.0\ref\ProaktifArizaTahmini.DAL.dll

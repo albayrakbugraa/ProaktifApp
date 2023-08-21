@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using CsvHelper;
 using CsvHelper.Configuration;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
 using ProaktifArizaTahmini.BLL.Models.DTOs;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
@@ -23,7 +24,7 @@ using static NuGet.Packaging.PackagingConstants;
 
 namespace ProaktifArizaTahmini.UI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class RelayInformationController : Controller
     {
         private readonly IRelayInformationService relayInformationService;
@@ -244,70 +245,69 @@ namespace ProaktifArizaTahmini.UI.Controllers
             return RedirectToAction("List");
         }
 
-        private List<RelayInformation> ReadDataFromExcel(IFormFile excelFile)
+        public List<RelayInformation> ReadDataFromExcel(IFormFile excelFile)
         {
             List<RelayInformation> dataList = new List<RelayInformation>();
 
-            using (var package = new ExcelPackage(excelFile.OpenReadStream()))
+            using (var workbook = new XLWorkbook(excelFile.OpenReadStream()))
             {
-                var worksheet = package.Workbook.Worksheets[0]; // İlk çalışma sayfasını seçin (indeks 0'dan başlar)
+                var worksheet = workbook.Worksheet(1); // İlk çalışma sayfasını seçin
 
-                int rowCount = worksheet.Dimension.Rows;
+                int rowCount = worksheet.RowsUsed().Count();
 
                 for (int row = 2; row <= rowCount; row++) // İlk satırı başlık olarak kabul edin, bu yüzden 2'den başlıyoruz
                 {
-                    RelayInformation data = new RelayInformation();                   
-                    data.TmNo = GetValueOrDefault<string>(worksheet.Cells[row, 1]?.Value);
-                    data.kV = GetValueOrDefault<string>(worksheet.Cells[row, 2]?.Value);
-                    data.HucreNo = GetValueOrDefault<string>(worksheet.Cells[row, 3]?.Value);
+                    RelayInformation data = new RelayInformation();
+                    data.TmNo = GetValueOrDefault(worksheet.Cell(row, 1).Value);
+                    data.kV = GetValueOrDefault(worksheet.Cell(row, 2).Value);
+                    data.HucreNo = GetValueOrDefault(worksheet.Cell(row, 3).Value);
                     data.TmKvHucre = $"{data.TmNo}_{data.kV}_{data.HucreNo}";
-                    data.FiderName = GetValueOrDefault<string>(worksheet.Cells[row, 5]?.Value);
-                    data.IP = GetValueOrDefault<string>(worksheet.Cells[row, 6]?.Value);
-                    data.RoleModel = GetValueOrDefault<string>(worksheet.Cells[row, 7]?.Value);
-                    data.User = GetValueOrDefault<string>(worksheet.Cells[row, 8]?.Value);
-                    data.Password = GetValueOrDefault<string>(worksheet.Cells[row, 9]?.Value);
+                    data.FiderName = GetValueOrDefault(worksheet.Cell(row, 5).Value);
+                    data.IP = GetValueOrDefault(worksheet.Cell(row, 6).Value);
+                    data.RoleModel = GetValueOrDefault(worksheet.Cell(row, 7).Value);
+                    data.User = GetValueOrDefault(worksheet.Cell(row, 8).Value);
+                    data.Password = GetValueOrDefault(worksheet.Cell(row, 9).Value);
                     data.Port = 21;
-                    if (data.RoleModel == "REF 615" || data.RoleModel == "ABB REF 615" || data.RoleModel == "REF 616")
-                    {
-                        data.Path = "COMTRADE/";
-                    }
-                    else if (data.RoleModel == "SIEMENS 7SJ80")
-                    {
-                        data.Path = "Bilinmiyor";
-                    }
-                    else if (data.RoleModel == "SIEMENS 7SJ82")
-                    {
-                        data.Path = "WsbRecordsArea/dynfs/ram/rcd/";
-                    }
-                    else
-                    {
-                        data.Path = "Bilinmiyor";
-                    }
+                    data.Path = GetPathByRoleModel(data.RoleModel);
                     dataList.Add(data);
                 }
             }
             return dataList;
         }
 
-        private T GetValueOrDefault<T>(object value, T defaultValue = default(T))
+        private string GetValueOrDefault(XLCellValue cellValue)
         {
-            if (value != null && value != DBNull.Value)
-            {
-                if (typeof(T) == typeof(string) && (value.GetType() == typeof(double) || value.GetType() == typeof(int)))
-                {
-                    return (T)(object)value.ToString();
-                }
-
-                return (T)value;
-            }
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T)(object)"NULL";
-            }
-
-            return defaultValue;
+            return cellValue.IsBlank ? "NULL" : cellValue.ToString();
         }
+
+
+
+        private string GetPathByRoleModel(string roleModel)
+        {
+            string upperCaseRoleModel = roleModel.ToUpper();
+
+            if (upperCaseRoleModel.Contains("ABB") || upperCaseRoleModel.Contains("REC") || upperCaseRoleModel.Contains("REF"))
+            {
+                return "COMTRADE/";
+            }
+            else if (upperCaseRoleModel.Contains("ION") || upperCaseRoleModel.Contains("SCHNEIDER"))
+            {
+                return "COMTRADE_1/";
+            }
+            else if (upperCaseRoleModel == "SIEMENS 7SJ80")
+            {
+                return "Bilinmiyor";
+            }
+            else if (upperCaseRoleModel == "SIEMENS 7SJ82")
+            {
+                return "WsbRecordsArea/dynfs/ram/rcd/";
+            }
+            else
+            {
+                return "Bilinmiyor";
+            }
+        }
+
 
     }
 }

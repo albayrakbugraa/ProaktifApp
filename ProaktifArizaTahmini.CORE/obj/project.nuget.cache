@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BYCR90gVJXyA0iMaVc7nvna61hErrwrn/RYDPHPwx2R/8RU+MUhjISmgyEkUPs5rZHGVUjkzuFTsZ2YJQaZjBQ==",
+  "dgSpecHash": "FCsoBbp+1eRhSHalwxQjKxn9fGG1xgFT45MGAfCpxm1NXiEud0d1Ldsi9fm9Ve9eeQW+HfskkSZ8UlRk3tQhhA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
+  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.5\\microsoft.entityframeworkcore.7.0.5.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.5\\microsoft.entityframeworkcore.abstractions.7.0.5.nupkg.sha512",

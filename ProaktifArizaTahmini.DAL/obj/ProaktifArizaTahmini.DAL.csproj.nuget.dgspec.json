@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj": {}
+    "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
+    "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
+        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
         "projectName": "ProaktifArizaTahmini.CORE",
-        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
+        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
         "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\obj\\",
+        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -69,14 +69,14 @@
         }
       }
     },
-    "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj": {
+    "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
+        "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
         "projectName": "ProaktifArizaTahmini.DAL",
-        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
+        "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\ProaktifArizaTahmini.DAL.csproj",
         "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\obj\\",
+        "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -93,8 +93,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
-                "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj"
+              "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj": {
+                "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj"
               }
             }
           }

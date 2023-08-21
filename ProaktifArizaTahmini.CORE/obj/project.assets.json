@@ -1406,11 +1406,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
+      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
       "projectName": "ProaktifArizaTahmini.CORE",
-      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
+      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\ProaktifArizaTahmini.CORE.csproj",
       "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\obj\\",
+      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ProaktifArizaTahmini.CORE\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",
