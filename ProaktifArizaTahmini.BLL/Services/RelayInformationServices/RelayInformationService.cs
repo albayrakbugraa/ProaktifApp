@@ -25,21 +25,39 @@ namespace ProaktifArizaTahmini.BLL.Services.RelayInformationServices
             this.log = log;
         }
 
-        public async Task AddDataList(List<RelayInformation> relayInformationList,User user)
+        public async Task<(List<RelayInformation> duplicateRelays, List<RelayInformation> incompatibleRelays)> AddDataList(List<RelayInformation> relayInformationList, User user)
         {
+            List<RelayInformation> duplicateRelays = new List<RelayInformation>();
+            List<RelayInformation> incompatibleRelays = new List<RelayInformation>();
+
             foreach (var item in relayInformationList)
             {
                 bool relayInformation = await relayInformationRepository.Any(x => x.TmKvHucre == item.TmKvHucre);
-                if (relayInformation) await log.ErrorLog(user, $"Tm_Kv_Hücre : {item.TmKvHucre} bu röle zaten mevcut.", "Excel Tablosundan Veri Girişi", "Aynı Tm_Kv_Hücre röleler tekrar eklenemez.");
-                bool isAnotherRelay = item.Path.Equals("Bilinmiyor");
-                if (isAnotherRelay) await log.ErrorLog(user, $"Röle Model : {item.RoleModel} Bu röle modeli şuanda eklenemez!", "Excel Tablosundan Veri Girişi", "Röle modeli Schneider veya ABB olmadığı için şuanda bu röleyi ekleyemezsiniz.");
-                if (!relayInformation && !isAnotherRelay)
+                if (relayInformation)
                 {
-                    var addedData = await relayInformationRepository.Create(item);
-                    if(addedData) await log.InformationLog(user,"Excel Tablosundan Veri Girişi",$"Tm_Kv_Hücre : {item.TmKvHucre } IP : {item.IP} Röle Model : {item.RoleModel} Röle eklendi.");
+                    duplicateRelays.Add(item);
+                    await log.ErrorLog(user, $"Tm_Kv_Hücre : {item.TmKvHucre} bu röle zaten mevcut.", "Excel Tablosundan Veri Girişi", "Aynı Tm_Kv_Hücre röleler tekrar eklenemez.");
+                    continue; 
+                }
+
+                bool isAnotherRelay = item.Path.Equals("Bilinmiyor");
+                if (isAnotherRelay)
+                {
+                    incompatibleRelays.Add(item);
+                    await log.ErrorLog(user, $"Röle Model : {item.RoleModel} Bu röle modeli şuanda eklenemez!", "Excel Tablosundan Veri Girişi", "Röle modeli Schneider veya ABB olmadığı için şuanda bu röleyi ekleyemezsiniz.");
+                    continue; 
+                }
+
+                var addedData = await relayInformationRepository.Create(item);
+                if (addedData)
+                {
+                    await log.InformationLog(user, "Excel Tablosundan Veri Girişi", $"Tm_Kv_Hücre : {item.TmKvHucre} IP : {item.IP} Röle Model : {item.RoleModel} Röle eklendi.");
                 }
             }
+
+            return (duplicateRelays, incompatibleRelays);
         }
+
 
         public async Task<bool> CreateRelayInformation(RelayInformationDTO model)
         {
@@ -123,5 +141,6 @@ namespace ProaktifArizaTahmini.BLL.Services.RelayInformationServices
             bool result = relayInformationRepository.Update(relayInformation);
             return result;
         }
+
     }
 }

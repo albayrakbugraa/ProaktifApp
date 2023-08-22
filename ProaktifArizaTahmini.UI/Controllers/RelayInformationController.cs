@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ProaktifArizaTahmini.BLL.Models.DTOs;
 using ProaktifArizaTahmini.BLL.Models.RequestModel;
 using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
@@ -34,8 +35,9 @@ namespace ProaktifArizaTahmini.UI.Controllers
         private readonly IUserService userService;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
+        private readonly IMemoryCache memoryCache;
 
-        public RelayInformationController(IRelayInformationService relayInformationService, IMapper mapper, IDisturbanceService disturbanceService, IConfiguration configuration, IHistoryOfChangeService historyOfChangeService, IUserLogService userLogService, IUserService userService)
+        public RelayInformationController(IRelayInformationService relayInformationService, IMapper mapper, IDisturbanceService disturbanceService, IConfiguration configuration, IHistoryOfChangeService historyOfChangeService, IUserLogService userLogService, IUserService userService, IMemoryCache memoryCache)
         {
             this.relayInformationService = relayInformationService;
             this.mapper = mapper;
@@ -44,6 +46,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             this.historyOfChangeService = historyOfChangeService;
             this.userLogService = userLogService;
             this.userService = userService;
+            this.memoryCache = memoryCache;
         }
 
         public IActionResult Index()
@@ -53,7 +56,12 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<IActionResult> List(RelayInformationFilterParams relayInformationVM, int? page, int? pageSize)
         {
             int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
-            ViewData["ActivePage"] = "Relay Information";
+            ViewData["ActivePage"] = "RelayInformation";
+
+            int? duplicateRelaysCount = memoryCache.Get<int>("DuplicateRelaysCount");
+            int? incompatibleRelaysCount = memoryCache.Get<int>("IncompatibleRelaysCount");
+            ViewBag.DuplicateRelaysCount = duplicateRelaysCount;
+            ViewBag.IncompatibleRelaysCount = incompatibleRelaysCount;
 
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
@@ -239,12 +247,16 @@ namespace ProaktifArizaTahmini.UI.Controllers
             string username = claimUser.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await userService.GetUserByUsername(username);
             List<RelayInformation> relayInformations = new List<RelayInformation>();
+            List<RelayInformation> duplicateRelays = new List<RelayInformation>();
+            List<RelayInformation> incompatibleRelays = new List<RelayInformation>();
             if (excelFile != null && excelFile.Length > 0)
             {
                 try
                 {
-                    relayInformations = ReadDataFromExcel(excelFile);
-                    await relayInformationService.AddDataList(relayInformations,user);
+                    relayInformations = await ReadDataFromExcel(excelFile);
+                    var result = await relayInformationService.AddDataList(relayInformations, user);
+                    duplicateRelays = result.duplicateRelays;
+                    incompatibleRelays = result.incompatibleRelays;
                     await userLogService.ImportExcel(user);
                 }
                 catch (Exception ex)
@@ -252,10 +264,19 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     await userLogService.ErrorLog(user, ex.ToString(), "Excel İmport", "Hata oluştu.");
                 }
             }
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60) // 60 saniye boyunca sakla
+            };
+
+            memoryCache.Set("DuplicateRelaysCount", duplicateRelays.Count, cacheEntryOptions);
+            memoryCache.Set("IncompatibleRelaysCount", incompatibleRelays.Count, cacheEntryOptions);
+
             return RedirectToAction("List");
         }
 
-        public List<RelayInformation> ReadDataFromExcel(IFormFile excelFile)
+        public async Task<List<RelayInformation>> ReadDataFromExcel(IFormFile excelFile)
         {
             List<RelayInformation> dataList = new List<RelayInformation>();
 

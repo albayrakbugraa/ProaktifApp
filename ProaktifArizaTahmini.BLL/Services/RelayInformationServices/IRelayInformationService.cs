@@ -12,7 +12,7 @@ namespace ProaktifArizaTahmini.BLL.Services.RelayInformationServices
     public interface IRelayInformationService
     {
         Task<List<RelayInformation>> GetRelayInformations();
-        Task AddDataList(List<RelayInformation> relayInformationList,User user);
+        Task<(List<RelayInformation> duplicateRelays, List<RelayInformation> incompatibleRelays)> AddDataList(List<RelayInformation> relayInformationList, User user);
         Task<RelayInformation> GetRelayInformationWhere(string tMkVHucre);
         Task<RelayInformation> GetRelayInformationByDataId(int id);
         Task<bool> UpdateRelayInformation(int id, RelayInformationDTO model);

@@ -20,10 +20,14 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public string Username { get; set; }
         [Column("Metot_İsmi")]
         public string MethodName { get; set; }
-        [Column("Tarih")]
+        [Column("Açıklama")]
         public string? Message { get; set; }
+        [Column("Hata")]
         public string? Exception { get; set; }
+        [Column("Log_Seviyesi")]
         public string LogLevel { get; set; }
+
+        [Column("Tarih")]
         public DateTime LogDate { get; set; }
         public int? UserId { get; set; }
         public User User { get; set; }

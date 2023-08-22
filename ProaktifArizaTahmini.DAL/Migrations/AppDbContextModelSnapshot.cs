@@ -365,9 +365,22 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("Exception")
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Hata");
+
                     b.Property<DateTime>("LogDate")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("Tarih");
+
+                    b.Property<string>("LogLevel")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Log_Seviyesi");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("Açıklama");
 
                     b.Property<string>("MethodName")
                         .IsRequired()

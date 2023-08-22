@@ -8,17 +8,26 @@
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // Yükleme tamamlandıktan sonra yapılacak işlemler
-            //console.log(xhr.responseText);
-            //console.log(formData);
+            
+            // "yükleniyor" mesajını gizle
+            document.getElementById('loading-indicator').classList.add('d-none');
+            // "Excel'den verileri almak için dosya seçip yükleyin." mesajını göster
+            document.getElementById('excel-message').classList.remove('d-none');
+
+            location.reload();            
         }
     };
+
+    // Yükleme başladığında "yükleniyor" mesajını göster
+    document.getElementById('loading-indicator').classList.remove('d-none');
+    // "Excel'den verileri almak için dosya seçip yükleyin." mesajını gizle
+    document.getElementById('excel-message').classList.add('d-none');
+
     xhr.send(formData);
-    setTimeout(function () {
-        location.reload();
-    }, 3500)
 });
 
 
 document.getElementById("pageSizeSelect").addEventListener("change", function () {
     document.getElementById("pageSizeForm").submit();
 });
+

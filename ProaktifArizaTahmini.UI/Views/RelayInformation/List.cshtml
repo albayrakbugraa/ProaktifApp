@@ -18,10 +18,35 @@
             <button style="margin-right:20px;" type="submit" class="btn btn-primary" title="Excel dosyası yükle">Yükle</button>
         </form>
         <div>
-            Excel'den verileri almak için dosya seçip yükleyin.
+            <p style="margin-top:12px;" id="excel-message">Excel'den verileri almak için dosya seçip yükleyin.</p>
+            
+            <div id="loading-indicator" class="d-flex align-items-center d-none text-primary">
+                <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                <strong style="margin-left:8px;">Yükleniyor...</strong>
+            </div>
         </div>
+        <div style="margin-left:30px;" id="info-message">
+            @if (ViewBag.DuplicateRelaysCount >0)
+            {
+                <span class="text-danger">
+                    <p id="info-message" class="fw-bold" style="margin-top:12px;">Aynı Tm_Kv_Hücre içeren röleler tekrar eklenemez. Toplam: @ViewBag.DuplicateRelaysCount</p>
+                </span>
+            }
+
+            @if (ViewBag.IncompatibleRelaysCount > 0)
+            {
+                <span class="text-danger">
+                    <p id="info-message" class="fw-bold" style="margin-top:12px;">Röle modeli Schneider veya ABB olmadığı için eklenemedi. Toplam: @ViewBag.IncompatibleRelaysCount</p>
+                </span>
+
+            }
+        </div>
+        
     </div>
 </div>
+
+
+
 
 <div style="max-height: 680px; overflow-y: scroll; margin-top:20px;">
     <div class="table-container">
@@ -140,6 +165,3 @@
 
 
 <script src="~/js/relayInformation.js"></script>
-
-
-

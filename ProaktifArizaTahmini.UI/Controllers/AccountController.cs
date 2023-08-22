@@ -41,6 +41,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
             var cryptPassword = Encryption.Encrypt(loginModel.Password);
+
             if (new ActiveDirectory().IsAuthenticate(loginModel))
             {
                 var user = await userService.GetUser(loginModel.Username, cryptPassword);
@@ -118,7 +119,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                         domainUser.IsActive = true;
                         domainUser.UserTypeId = (int?)UserTypeNames.Domain;
                         domainUser.Password = cryptPassword;
-                        domainUser.LastLoginDate=DateTime.Now;
+                        domainUser.LastLoginDate = DateTime.Now;
                         bool createResult = await userService.CreateUser(domainUser);
                         //loginModel.LoginResult = LoginResult.WaitingActivated;
                         //ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
@@ -146,9 +147,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
                         var loginUser = await userService.GetUser(loginModel.Username, cryptPassword);
                         await userLogService.LogIn(loginUser);
                         return RedirectToAction("List", "RelayInformation");
-
-
-
                     }
                 }
             }
