@@ -176,7 +176,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             return View(relayInformation);
         }
 
-        [HttpDelete]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int ID)
         {

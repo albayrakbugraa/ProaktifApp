@@ -78,7 +78,7 @@
         </dd>
     </dl>
 
-    <form asp-action="Delete">
+    <form asp-action="Delete" method="post">
         <input type="hidden" asp-for="ID" />
         <input type="submit" value="Sil" class="btn btn-danger" /> |
         <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>
