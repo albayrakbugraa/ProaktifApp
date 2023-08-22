@@ -31,7 +31,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
         private readonly IRelayInformationService relayInformationService;
         private readonly IDisturbanceService disturbanceService;
         private readonly IHistoryOfChangeService historyOfChangeService;
-        private readonly IUserLogService userLogService ;
+        private readonly IUserLogService userLogService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
@@ -156,17 +156,18 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 if (result)
                 {
                     await userLogService.CreateData(user);
+                    await userLogService.InformationLog(user, "Yeni Veri Girişi", $"Tm_Kv_Hücre : {model.TmKvHucre} IP : {model.IP} Röle Model : {model.RoleModel} Röle eklendi.");
                     return RedirectToAction(nameof(List));
                 }
                 return View(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                await userLogService.ErrorLog(user, ex.ToString(),"Yeni Veri Girişi", "Alanları kontrol edin.");
+                await userLogService.ErrorLog(user, ex.ToString(), "Yeni Veri Girişi", "Alanları kontrol edin.");
                 ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
                 return View(model);
             }
-        
+
         }
 
         public async Task<ActionResult> DeleteAsync(int ID)
@@ -189,11 +190,12 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 if (result)
                 {
                     await userLogService.DeleteData(user);
+                    await userLogService.InformationLog(user, "Veri Silme", $"Tm_Kv_Hücre : {relayInformation.TmKvHucre} IP : {relayInformation.IP} Röle Model : {relayInformation.RoleModel} Röle silindi.");
                     return RedirectToAction(nameof(List));
                 }
                 return View(relayInformation);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await userLogService.ErrorLog(user, ex.ToString(), "Veri Silme", "Veri silme başarısız.");
                 return View();
@@ -226,14 +228,15 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 historyOfChange.ChangedDate = DateTime.Now;
                 historyOfChange.NewIP = model.IP;
                 bool resultHistory = await historyOfChangeService.Create(historyOfChange);
-                if (resultRelayInformation && resultDisturbance && resultHistory) 
+                if (resultRelayInformation && resultDisturbance && resultHistory)
                 {
                     await userLogService.UpdateData(user);
+                    await userLogService.InformationLog(user, "Veri Güncelleme", $"Tm_Kv_Hücre : {model.TmKvHucre} IP : {model.IP} Röle Model : {model.RoleModel} Röle güncellendi.");
                     return RedirectToAction(nameof(List));
-                } 
+                }
                 return View(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await userLogService.ErrorLog(user, ex.ToString(), "Veri Güncelleme", "Alanları kontrol edin.");
                 ViewBag.ErrorMessage = "Bir hata oluştu. Alanları kontrol edin. ";
