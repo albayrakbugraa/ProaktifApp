@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U6kfSxSv2ztEPyL0m3ctM0DInEDSVyvhri7kV1y7cUqbt0u16S+4k6GgQ/KxDQYie3euqCNeuPr/6TfAwVqqsQ==",
+  "dgSpecHash": "q9XQAzL2wltkKvS+3mMMIkLOGYA1+piJl3gfCeOkldLrYEkvKhXrlDbymjNWdArpMo7+HrCK3fLYe+SrM26fZw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
+  "projectFilePath": "C:\\Users\\Bugra Albayrak\\Desktop\\Proaktif\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProaktifArizaTahmini.DAL.Repositories
 {
-    public class HistoryOfChangeRepository : BaseRepository<HistoryOfChange> , IHistoryOfChangeRepository
+    public class HistoryOfChangeRepository : BaseRepository<HistoryOfChange>, IHistoryOfChangeRepository
     {
         private readonly AppDbContext db;
 

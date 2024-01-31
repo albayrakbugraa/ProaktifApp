@@ -12,7 +12,7 @@ namespace ProaktifArizaTahmini.CORE.Entities
     public class UserType
     {
         [Column("Id")]
-        public int ID { get; set; }        
+        public int ID { get; set; }
         public UserTypeNames UserTypeName { get; set; }
 
         [StringLength(500)]

@@ -17,11 +17,13 @@ namespace ProaktifArizaTahmini.UI.Controllers
     {
         private readonly IUserService userService;
         private readonly IUserLogService userLogService;
+        private readonly IConfiguration configuration;
 
-        public AccountController(IUserService userService, IUserLogService userLogService)
+        public AccountController(IUserService userService, IUserLogService userLogService, IConfiguration configuration)
         {
             this.userService = userService;
             this.userLogService = userLogService;
+            this.configuration = configuration;
         }
 
         public async Task<IActionResult> Login()
@@ -40,16 +42,25 @@ namespace ProaktifArizaTahmini.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            var cryptPassword = Encryption.Encrypt(loginModel.Password);
+            var domainGroupsSection = configuration.GetSection("AppSettings:DomainGroups");
+            var domainGroups = domainGroupsSection.Get<List<DomainGroup>>();
+            loginModel.DomainGroups = domainGroups;
+
+            if (string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
+            {
+                ModelState.AddModelError("Error", "Kullanıcı adı ve şifre girmelisiniz.");
+                loginModel.LoginResult = LoginResult.LoginFailed;
+                return View();
+            }
 
             if (new ActiveDirectory().IsAuthenticate(loginModel))
             {
-                var user = await userService.GetUser(loginModel.Username, cryptPassword);
+                var user = await userService.GetUserByUsername(loginModel.Username);
                 if (user != null)
                 {
                     if (user.IsActive == null || !user.IsActive.Value)
                     {
-                        ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
+                        ModelState.AddModelError("State", "Kullanıcınız aktif değildir !");
                         loginModel.LoginResult = LoginResult.WaitingActivated;
                         return View();
                     }
@@ -60,40 +71,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     List<Claim> claims = new List<Claim>() {
                     new Claim(ClaimTypes.NameIdentifier, user.Username),
                     new Claim(ClaimTypes.Name,user.Name),
-                    new Claim(ClaimTypes.Surname,user.Surname),
-                     };
-
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
-                        CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    AuthenticationProperties properties = new AuthenticationProperties()
-                    {
-                        AllowRefresh = true,
-                        IsPersistent = loginModel.RememberMe
-                    };
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(claimsIdentity), properties);
-                    await userLogService.LogIn(user);
-                    return RedirectToAction("List", "RelayInformation");
-                }
-                else if (await userService.GetChangedUser(loginModel.Username, loginModel.Password) != null)
-                {
-                    var changedUser = await userService.GetChangedUser(loginModel.Username, loginModel.Password);
-                    if (changedUser.IsActive == null || !changedUser.IsActive.Value)
-                    {
-                        ModelState.AddModelError("State",
-                            "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
-                        loginModel.LoginResult = LoginResult.WaitingActivated;
-                        return View();
-                    }
-                    changedUser.Password = cryptPassword;//user.Password;
-                    changedUser.LastLoginDate = DateTime.Now;
-                    bool result = await userService.UpdateUser(changedUser);
-                    loginModel.LoginResult = LoginResult.LoginSuccess;
-
-                    List<Claim> claims = new List<Claim>() {
-                    new Claim(ClaimTypes.NameIdentifier, loginModel.Username)
+                    //new Claim(ClaimTypes.Surname,user.Surname),
                      };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
@@ -116,21 +94,22 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     {
                         //İlk Kez Giriş Yapıldığı İçin Yeni Bir Kullanıcı Oluşturuyoruz
                         var domainUser = new ActiveDirectory().IsActiveDirectory(loginModel);
+                        if (domainUser == null)
+                        {
+                            ModelState.AddModelError("Error", "Bu Kullanıcı Adı ve Şifreye Ait Herhangi Bir Kayıt Bulunamadı");
+                            loginModel.LoginResult = LoginResult.LoginFailed;
+                            return View();
+                        }
                         domainUser.IsActive = true;
                         domainUser.UserTypeId = (int?)UserTypeNames.Domain;
-                        domainUser.Password = cryptPassword;
                         domainUser.LastLoginDate = DateTime.Now;
                         bool createResult = await userService.CreateUser(domainUser);
-                        //loginModel.LoginResult = LoginResult.WaitingActivated;
-                        //ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
-                        //return View();
-
                         loginModel.LoginResult = LoginResult.LoginSuccess;
 
                         List<Claim> claims = new List<Claim>() {
                         new Claim(ClaimTypes.NameIdentifier, domainUser.Username),
                         new Claim(ClaimTypes.Name,domainUser.Name),
-                        new Claim(ClaimTypes.Surname,domainUser.Surname),
+                        //new Claim(ClaimTypes.Surname,domainUser.Surname),
                          };
 
                         ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
@@ -144,7 +123,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(claimsIdentity), properties);
-                        var loginUser = await userService.GetUser(loginModel.Username, cryptPassword);
+                        var loginUser = await userService.GetUserByUsername(loginModel.Username);
                         await userLogService.LogIn(loginUser);
                         return RedirectToAction("List", "RelayInformation");
                     }
@@ -153,7 +132,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             else
             {
                 //Domainde bu kullanıcı yoksa ve sistemde varsa bu kullanıcıyı siliyoruz
-                var user = await userService.GetUser(loginModel.Username, cryptPassword);
+                var user = await userService.GetUserByUsername(loginModel.Username);
                 if (user != null)
                 {
                     if (user.UserTypeId != (int?)UserTypeNames.Domain)
@@ -162,19 +141,21 @@ namespace ProaktifArizaTahmini.UI.Controllers
                         {
                             if (user.IsActive == null || !user.IsActive.Value)
                             {
-                                ModelState.AddModelError("State", "Kullanıcınızın Aktifleştirilmesi İçin Gerekli İşlem Yapıldı En Kısa Sürede Size Dönüş Yapılacaktır");
+                                ModelState.AddModelError("State", "Kullanıcınız aktif değildir !");
                                 loginModel.LoginResult = LoginResult.WaitingActivated;
                                 return View();
                             }
                             else
                             {
-                                user.Password = cryptPassword;
                                 user.LastLoginDate = DateTime.Now;
                                 bool result = await userService.UpdateUser(user);
                                 loginModel.LoginResult = LoginResult.LoginSuccess;
+
                                 List<Claim> claims = new List<Claim>() {
-                                    new Claim(ClaimTypes.NameIdentifier, loginModel.Username)
-                                     };
+                                new Claim(ClaimTypes.NameIdentifier, user.Username),
+                                new Claim(ClaimTypes.Name,user.Name),
+                                //new Claim(ClaimTypes.Surname,user.Surname),
+                                 };
 
                                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
                                     CookieAuthenticationDefaults.AuthenticationScheme);

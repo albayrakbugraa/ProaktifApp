@@ -62,13 +62,15 @@
             Kullanıcı Adı
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User)
+            <span class="password" data-password="@Model.User">******</span>
+            <i class="icon" onclick="togglePassword(this)"><img src="~/img/eye-fill.svg" /></i>
         </dd>
         <dt class="col-sm-2">
             Şifre
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+            <span class="password" data-password="@Model.Password">******</span>
+            <i class="icon" onclick="togglePassword(this)"><img src="~/img/eye-fill.svg" /></i>
         </dd>
         <dt class="col-sm-2">
             Dosya Yolu
@@ -84,3 +86,36 @@
         <a class="btn btn-primary" asp-action="List">Listeye Geri Dön</a>
     </form>
 </div>
+
+<script>
+
+    function togglePassword(icon) {
+        var passwordSpan = icon.previousElementSibling;
+        var password = passwordSpan.getAttribute('data-password');
+        var eyeIcon = icon.querySelector('img');
+
+        if (passwordSpan.textContent === '******') {
+            $.ajax({
+                url: '@Url.Action("DecryptData","RelayInformation")',
+                type: 'POST',
+                data: {
+                    text: password
+                },
+                success: function (data) {
+                    // JSON'dan çözülen şifreyi al
+                    var decrypted = data.decrypt;
+                    // Şifreyi kullanıcıya göster
+
+                    passwordSpan.textContent = decrypted;
+                    eyeIcon.src = '/img/eye-slash-fill.svg';
+                },
+                error: function (error) {
+                    console.log('Hata:', error);
+                }
+            });
+        } else {
+            passwordSpan.textContent = '******';
+            eyeIcon.src = '/img/eye-fill.svg';
+        }
+    }
+</script>

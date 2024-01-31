@@ -25,11 +25,8 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Yeni Veri Girişi",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
-                LogLevel="Information",
-                Message="Başarılı"
+                LogLevel = "Information",
+                Message = "Başarılı"
             };
             return await userLogRepository.Create(log);
         }
@@ -42,16 +39,13 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Veri Silme",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
                 Message = "Başarılı"
             };
             return await userLogRepository.Create(log);
         }
 
-        public async Task<bool> ErrorLog(User user, string exception,string method,string message)
+        public async Task<bool> ErrorLog(User user, string exception, string method, string message)
         {
             var log = new UserLog()
             {
@@ -59,9 +53,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = method,
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Error",
                 Message = message,
                 Exception = exception
@@ -77,9 +68,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Excel Verileri Yükleme",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
                 Message = "Başarılı"
             };
@@ -94,11 +82,8 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = method,
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
-                Message = message                
+                Message = message
             };
             return await userLogRepository.Create(log);
         }
@@ -111,9 +96,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Kullanıcı Girişi",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
                 Message = "Başarılı"
             };
@@ -128,9 +110,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Kullanıcı Çıkışı",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
                 Message = "Başarılı"
             };
@@ -145,9 +124,6 @@ namespace ProaktifArizaTahmini.BLL.Services.UserLogServices
                 UserId = user.ID,
                 LogDate = DateTime.Now,
                 MethodName = "Veri Güncelleme",
-                Name = user.Name,
-                Surname = user.Surname,
-                Username = user.Username,
                 LogLevel = "Information",
                 Message = "Başarılı"
             };

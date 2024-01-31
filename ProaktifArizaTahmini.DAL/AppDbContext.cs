@@ -14,13 +14,13 @@ namespace ProaktifArizaTahmini.DAL
     {
         public AppDbContext()
         {
-            
+
         }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseOracle("User Id=USER1;Password=1234;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XEPDB1)))");
+            //optionsBuilder.UseOracle("User Id=CMTUSR;Password=dEX_2023*;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.41.83.112)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=EDCMTDB)))");
         }
 
         public DbSet<RelayInformation> RelayInformations { get; set; }

@@ -16,5 +16,6 @@ namespace ComtradeApp.Models
         public string ServiceName { get; set; }
         public string LogLevel { get; set; }
         public DateTime TimeStamp { get; set; }
+        public int ThreadID { get; set; }
     }
 }

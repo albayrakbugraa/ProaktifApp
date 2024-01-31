@@ -21,10 +21,6 @@ namespace ProaktifArizaTahmini.CORE.Entities
         [StringLength(50)]
         public string Username { get; set; }
 
-        [Column("Sifre")]
-        [StringLength(1000)]
-        public string Password { get; set; }
-
         [Column("İsim")]
         [StringLength(50)]
         public string? Name { get; set; }

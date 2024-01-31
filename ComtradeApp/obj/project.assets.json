@@ -7816,11 +7816,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
+      "projectUniqueName": "C:\\Users\\Bugra Albayrak\\Desktop\\Proaktif\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
       "projectName": "ComtradeApp",
-      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
+      "projectPath": "C:\\Users\\Bugra Albayrak\\Desktop\\Proaktif\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\ComtradeApp.csproj",
       "packagesPath": "C:\\Users\\Bugra Albayrak\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\proaktif 21.08\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\obj\\",
+      "outputPath": "C:\\Users\\Bugra Albayrak\\Desktop\\Proaktif\\ProaktifArizaTahmini-26.07.23\\ComtradeApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bugra Albayrak\\AppData\\Roaming\\NuGet\\NuGet.Config",

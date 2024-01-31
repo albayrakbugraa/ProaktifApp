@@ -97,14 +97,14 @@
                             <td>@item.FiderName</td>
                             <td>@item.IP</td>
                             <td>@item.RoleModel</td>
-                            <td>@item.FaultTimeStart</td>
-                            <td>@item.FaultTimeEnd</td>
+                            <td>@item.FaultTimeStart.@item.FaultTimeStart.Millisecond</td>
+                            <td>@item.FaultTimeEnd.@item.FaultTimeEnd.Millisecond</td>
                             <td>@item.TotalFaultTime</td>
                             <td>
                                 <div id="dynamicFilePaths">
                                     @*<input type="hidden" id="filePath1" value="@item.CfgFilePath" />
-                                    <input type="hidden" id="filePath2" value="@item.DatFilePath" />
-                                    <button style="height:36px;" class="downloadButton btn btn-success">Dosyaları İndir</button>*@
+                            <input type="hidden" id="filePath2" value="@item.DatFilePath" />
+                            <button style="height:36px;" class="downloadButton btn btn-success">Dosyaları İndir</button>*@
                                     @using (Html.BeginForm("DownloadFilesFromDatabase", "Disturbance"))
                                     {
                                         <input type="hidden" asp-for="@item.ID" value="@item.ID" /> <!-- İlk dosyanın ID'sini buraya ekleyin -->

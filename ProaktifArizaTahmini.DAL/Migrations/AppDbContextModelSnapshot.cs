@@ -172,10 +172,12 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnName("Fider_Adi");
 
                     b.Property<string>("HucreNo")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(450)")
                         .HasColumnName("Hucre_No");
 
                     b.Property<string>("IP")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Password")
@@ -183,6 +185,7 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Path")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("Port")
@@ -207,13 +210,13 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("kV")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("TmNo", "kV", "HucreNo")
-                        .IsUnique()
-                        .HasFilter("\"kV\" IS NOT NULL AND \"Hucre_No\" IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("RelayInformations");
                 });

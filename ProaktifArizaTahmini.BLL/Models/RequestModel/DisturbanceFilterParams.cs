@@ -30,7 +30,7 @@ namespace ProaktifArizaTahmini.BLL.Models.RequestModel
         public string? CurrentFilterIp { get; set; }
         public string? CurrentFilterRole { get; set; }
         public string CurrentFaultTimeStart { get; set; }
-        public string CurrentFaultTimeEnd { get; set; } 
+        public string CurrentFaultTimeEnd { get; set; }
         public IPagedList<Disturbance> DisturbanceListVM { get; set; }
     }
 }

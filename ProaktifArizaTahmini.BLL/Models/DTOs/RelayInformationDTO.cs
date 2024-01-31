@@ -36,19 +36,20 @@ namespace ProaktifArizaTahmini.BLL.Models.DTOs
             }
         }
 
-        public string? HucreNo { get; set; }
+        public string HucreNo { get; set; }
         public string TmKvHucre
         {
             get { return $"{TmNo}_{kV}_{HucreNo}"; }
             set { }
         }
-        public string? FiderName { get; set; }
-        public string? IP { get; set; }
-        public string? RoleModel { get; set; }
+        public string FiderName { get; set; }
+        public string IP { get; set; }
+        public string RoleModel { get; set; }
         public int Port { get; set; }
         public string User { get; set; }
         public string Password { get; set; }
-        public string? Path { get; set; }
+        public string Path { get; set; }
+        public bool Status { get; set; }
         public ICollection<Disturbance> Disturbances { get; set; }
     }
 }

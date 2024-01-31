@@ -16,16 +16,12 @@ namespace ProaktifArizaTahmini.BLL.Models.RequestModel
         public string? FilterTextFider { get; set; }
         public string? FilterTextIp { get; set; }
         public string? FilterTextRole { get; set; }
-        public string? FilterTextKullanici { get; set; }
-        public string? FilterTextSifre { get; set; }
         public string? CurrentFilterTm { get; set; }
         public string? CurrentFilterKv { get; set; }
         public string? CurrentFilterHucre { get; set; }
         public string? CurrentFilterFider { get; set; }
         public string? CurrentFilterIp { get; set; }
         public string? CurrentFilterRole { get; set; }
-        public string? CurrentFilterKullanici { get; set; }
-        public string? CurrentFilterSifre { get; set; }
         public IPagedList<RelayInformation> RelayInformationList { get; set; }
     }
 }

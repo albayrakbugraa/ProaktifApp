@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ComtradeApp.Service
 {
+    /// <summary>
+    /// Bu sınıfın temel amacı, belirli veri türlerini içeren .dat ve .cfg dosyalarını Python betiği aracılığıyla CSV (Comma-Separated Values) formatına dönüştürmek ve sonuçları kaydetmektir. 
+    /// </summary>
     public class CsvConverterService
     {
         private readonly DisturbanceRepository disturbanceRepository;
@@ -20,9 +23,24 @@ namespace ComtradeApp.Service
             this.log = log;
         }
 
+        /// <summary>
+        /// Bu metot .dat ve .cfg dosyalarını alır, bunları Python betiği kullanarak  RMS (Root Mean Square) verilerini içeren CSV formatına dönüştürür ve sonuçları verilen bir yol altında kaydeder.
+        /// Bu metot, önce bir log kaydı oluşturur ve ardından DisturbanceRepository ile veritabanından arıza kaydı (disturbance) verilerini alır. Alınan veriler üzerinde döngü oluşturur ve her bir bozulma verisi için şu işlemleri gerçekleştirir:
+        /// İlgili .dat ve .cfg dosyalarının yollarını oluşturur.
+        /// Belirli bir CSV dosyasının ismini oluşturur.
+        /// CSV dosyasının daha önce oluşturulup oluşturulmadığını kontrol eder.
+        /// Eğer CSV dosyası daha önce oluşturulmamışsa, Python betiği kullanarak.dat ve .cfg dosyalarını dönüştürür.
+        /// Dönüştürme işlemi hata içeriyorsa, bu hataları kaydeder.
+        /// Dönüşen CSV dosyasının yolunu günceller ve bu işlem hata içermezse veritabanını günceller.
+        /// </summary>
+        /// <param name="pythonExePath">Python yürütücüsünün yolunu içerir.</param>
+        /// <param name="script">Kullanılacak Python betiğinin yolunu içerir.</param>
+        /// <param name="csvFilesPath">CSV dosyalarının kaydedileceği dizin yolu.</param>
+        /// <returns>Bu metot, async ve asenkron bir işlem gerçekleştirir, ancak herhangi bir değer döndürmez. Bu tür metotlar, işlemleri başlatmak, bitirmek veya asenkron olarak yürütmek için kullanılır, ancak bir sonuç döndürmezler.</returns>
         public async Task ConvertDatAndCfgFilesToCsvAsRMSDataAsync(string pythonExePath, string script, string csvFilesPath)
         {
-            log.InformationLog("RMS formatında CSV dönüştürücü başladı.", "CSV Dönüştürücü");
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            log.InformationLog("RMS formatında CSV dönüştürücü başladı.", "CSV Dönüştürücü", threadId);
 
             Serilog.Log.Information("RMS formatında CSV dönüştürücü başladı..");
             try
@@ -67,7 +85,7 @@ namespace ComtradeApp.Service
                                     string error = reader.ReadToEnd();
                                     if (!string.IsNullOrEmpty(error))
                                     {
-                                        log.ErrorLog("Python hatası.", error, "Python");
+                                        log.ErrorLog("Python hatası.", error, "Python", threadId);
                                         Serilog.Log.Error("Python hatası: {Error}", error);
                                     }
                                 }
@@ -77,7 +95,7 @@ namespace ComtradeApp.Service
                         }
                         catch (Exception ex)
                         {
-                            log.ErrorLog("Hata oluştu.", ex.ToString(), "Python");
+                            log.ErrorLog("Hata oluştu.", ex.ToString(), "Python", threadId);
                             Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
                         }
                         if (File.Exists(csvName))
@@ -86,39 +104,47 @@ namespace ComtradeApp.Service
                             bool result = disturbanceRepository.Update(item);
                             if (!result)
                             {
-                                log.ErrorLog("RMS formatındaki CSV dosyasının yolu kaydedilemedi.", "Database hatası", "CSV Dönüştürücü");
+                                log.ErrorLog("RMS formatındaki CSV dosyasının yolu kaydedilemedi.", "Database hatası", "CSV Dönüştürücü", threadId);
                                 Serilog.Log.Error("RMS formatındaki CSV dosyasının yolu kaydedilemedi.");
                             }
                             Serilog.Log.Information($"CSV dosyası RMS formatında başarılı şekilde oluşturuldu : {csvName}");
                         }
                         else
                         {
-                            log.ErrorLog($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile}","Dönüştürme hatası", "CSV Dönüştürücü");
+                            log.ErrorLog($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile}", "Dönüştürme hatası", "CSV Dönüştürücü", threadId);
                             Serilog.Log.Error($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile} ");
                         }
                     }
                     else
                     {
-                        log.WarningLog($"CSV dosyası daha önce dönüştürülmüş: {csvName}", "CSV Dönüştürücü");
+                        log.WarningLog($"CSV dosyası daha önce dönüştürülmüş: {csvName}", "CSV Dönüştürücü", threadId);
                         Serilog.Log.Information($"CSV dosyası daha önce dönüştürülmüş: {csvName}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                log.ErrorLog("Veritabanına bağlanırken hata oluştu!", ex.ToString(), "CSV Dönüştürücü");
+                log.ErrorLog("Veritabanına bağlanırken hata oluştu!", ex.ToString(), "CSV Dönüştürücü", threadId);
                 Serilog.Log.Error(ex, "Veritabanına bağlanırken hata oluştu!");
             }
             finally
             {
-                log.InformationLog("RMS formatındaki CSV dönüştürücü kapandı.", "CSV Dönüştürücü");
-                Serilog.Log.Debug("RMS formatındaki CSV dönüştürücü kapandı.. \n");
+                log.InformationLog("RMS formatındaki CSV dönüştürücü kapandı.", "CSV Dönüştürücü", threadId);
+                Serilog.Log.Information("RMS formatındaki CSV dönüştürücü kapandı.. \n");
             }
         }
 
+        /// <summary>
+        /// Bu metot, RMS verileri yerine anlık (instantaneous) verileri içeren .dat ve .cfg dosyalarını dönüştürmek için benzer bir işlemi gerçekleştirir. İşlevi ve kullanımı, yukarıda açıklanan ConvertDatAndCfgFilesToCsvAsRMSDataAsync metoduna benzerdir, ancak dönüştürülen verinin türü farklıdır.
+        /// </summary>
+        /// <param name="pythonExePath">Python yürütücüsünün yolunu içerir.</param>
+        /// <param name="script">Kullanılacak Python betiğinin yolunu içerir.</param>
+        /// <param name="csvFilesPath">CSV dosyalarının kaydedileceği dizin yolu.</param>
+        /// <returns>Bu metot, async ve asenkron bir işlem gerçekleştirir, ancak herhangi bir değer döndürmez. Bu tür metotlar, işlemleri başlatmak, bitirmek veya asenkron olarak yürütmek için kullanılır, ancak bir sonuç döndürmezler.</returns>
         public async Task ConvertDatAndCfgFilesToCsvAsInstantData(string pythonExePath, string script, string csvFilesPath)
         {
-            log.InformationLog("Instantaneous formatında CSV dönüştürücü başladı.", "CSV Dönüştürücü");
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            log.InformationLog("Instantaneous formatında CSV dönüştürücü başladı.", "CSV Dönüştürücü", threadId);
             Serilog.Log.Information("Instantaneous formatında CSV dönüştürücü başladı..");
             try
             {
@@ -162,7 +188,7 @@ namespace ComtradeApp.Service
                                     string error = reader.ReadToEnd();
                                     if (!string.IsNullOrEmpty(error))
                                     {
-                                        log.ErrorLog("Python hatası.", error, "Python");
+                                        log.ErrorLog("Python hatası.", error, "Python", threadId);
                                         Serilog.Log.Error("Python hatası: {Error}", error);
                                     }
                                 }
@@ -171,7 +197,7 @@ namespace ComtradeApp.Service
                         }
                         catch (Exception ex)
                         {
-                            log.ErrorLog("Hata oluştu.", ex.ToString(), "Python");
+                            log.ErrorLog("Hata oluştu.", ex.ToString(), "Python", threadId);
                             Serilog.Log.Error(ex, "Hata oluştu: {ErrorMessage}", ex.Message);
                         }
                         if (File.Exists(csvName))
@@ -180,7 +206,7 @@ namespace ComtradeApp.Service
                             bool result = disturbanceRepository.Update(item);
                             if (!result)
                             {
-                                log.ErrorLog("Instant formatındaki CSV dosyasının yolu kaydedilemedi.", "Database hatası", "CSV Dönüştürücü");
+                                log.ErrorLog("Instant formatındaki CSV dosyasının yolu kaydedilemedi.", "Database hatası", "CSV Dönüştürücü", threadId);
                                 Serilog.Log.Error("Instant formatındaki CSV dosyasının yolu kaydedilemedi.");
                             }
 
@@ -188,13 +214,13 @@ namespace ComtradeApp.Service
                         }
                         else
                         {
-                            log.ErrorLog($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile}", "Dönüştürme hatası", "CSV Dönüştürücü");
+                            log.ErrorLog($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile}", "Dönüştürme hatası", "CSV Dönüştürücü", threadId);
                             Serilog.Log.Error($"CSV dosyası oluşturulamadı : {cfgFile} - {datFile} ");
                         }
                     }
                     else
                     {
-                        log.WarningLog($"CSV dosyası daha önce dönüştürülmüş: {csvName}", "CSV Dönüştürücü");
+                        log.WarningLog($"CSV dosyası daha önce dönüştürülmüş: {csvName}", "CSV Dönüştürücü", threadId);
                         Serilog.Log.Information($"CSV dosyası daha önce dönüştürülmüş: {csvName}");
                     }
 
@@ -202,13 +228,13 @@ namespace ComtradeApp.Service
             }
             catch (Exception ex)
             {
-                log.ErrorLog("Veritabanına bağlanırken hata oluştu!", ex.ToString(), "CSV Dönüştürücü");
+                log.ErrorLog("Veritabanına bağlanırken hata oluştu!", ex.ToString(), "CSV Dönüştürücü", threadId);
                 Serilog.Log.Error(ex, "Veritabanına bağlanırken hata oluştu!");
             }
             finally
             {
-                log.InformationLog("Instant formatındaki CSV dönüştürücü kapandı.", "CSV Dönüştürücü");
-                Serilog.Log.Debug("Instant formatındaki CSV dönüştürücü kapandı.. \n");
+                log.InformationLog("Instant formatındaki CSV dönüştürücü kapandı.", "CSV Dönüştürücü", threadId);
+                Serilog.Log.Information("Instant formatındaki CSV dönüştürücü kapandı.. \n");
             }
         }
 

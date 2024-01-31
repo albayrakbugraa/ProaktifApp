@@ -10,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace ProaktifArizaTahmini.BLL.AutoMapper
 {
+    /// <summary>
+    /// AutoMapper kütüphanesini kullanarak nesne eşleme (object mapping) işlemlerini tanımlayan bir AutoMapper profilini göstermektedir. AutoMapper, bir nesnenin verilerini başka bir nesneye kopyalamak veya dönüştürmek için kullanılan bir kütüphanedir. Genellikle veritabanı nesneleri ile DTO (Data Transfer Object) gibi veri transferi amacıyla kullanılan nesneler arasında veri aktarımını kolaylaştırmak için kullanılır.
+    /// </summary>
     public class Mapping : Profile
     {
-        public Mapping() 
+        public Mapping()
         {
             CreateMap<RelayInformation, RelayInformationDTO>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());
             CreateMap<RelayInformationDTO, RelayInformation>().ReverseMap().ForAllMembers(x => x.UseDestinationValue());

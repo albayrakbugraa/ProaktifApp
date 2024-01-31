@@ -14,19 +14,28 @@
     <div class="d-flex align-items-center justify-content-around">
         <a style="margin-right:20px; margin-left:25px;" type="button" class="btn btn-success" asp-action="Create">Yeni Oluştur</a>
         <form class="d-flex justify-content-between" id="uploadExcel" method="post" enctype="multipart/form-data">
-            <input style="margin-right:20px;" type="file" class="form-control" id="input" name="excelFile" accept=".xls,.xlsx,.ods" />
+            <input style="margin-right:20px;" type="file" class="form-control" id="input" name="excelFile" accept=".xls,.xlsx" />
             <button style="margin-right:20px;" type="submit" class="btn btn-primary" title="Excel dosyası yükle">Yükle</button>
         </form>
         <div>
-            <p style="margin-top:12px;" id="excel-message">Excel'den verileri almak için dosya seçip yükleyin.</p>
-            
+            @if (!string.IsNullOrEmpty(ViewBag.ExcelInputError))
+            {
+                <span class="text-danger">
+                    <p id="excel-message" class="fw-bold" style="margin-top:12px;">@ViewBag.ExcelInputError</p>
+                </span>
+            }
+            else
+            {
+                <p style="margin-top:12px;" id="excel-message">Excel'den verileri almak için dosya yükleyin.</p>
+            }
+
             <div id="loading-indicator" class="d-flex align-items-center d-none text-primary">
                 <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
                 <strong style="margin-left:8px;">Yükleniyor...</strong>
             </div>
         </div>
         <div style="margin-left:30px;" id="info-message">
-            @if (ViewBag.DuplicateRelaysCount >0)
+            @if (ViewBag.DuplicateRelaysCount > 0)
             {
                 <span class="text-danger">
                     <p id="info-message" class="fw-bold" style="margin-top:12px;">Aynı Tm_Kv_Hücre içeren röleler tekrar eklenemez. Toplam: @ViewBag.DuplicateRelaysCount</p>
@@ -40,8 +49,16 @@
                 </span>
 
             }
+            @if (ViewBag.BlankRowRelaysCount > 0)
+            {
+                <span class="text-danger">
+                    <p id="info-message" class="fw-bold" style="margin-top:12px;">Röle bilgilerinde boş alanlar mevcut. Toplam: @ViewBag.BlankRowRelaysCount</p>
+                </span>
+
+            }
+
         </div>
-        
+
     </div>
 </div>
 
@@ -62,8 +79,6 @@
                             <th><input type="text" class="form-control" id="SearchString" placeholder="Fider Adı" name="filterTextFider" value="@Model.CurrentFilterFider" /></th>
                             <th><input type="text" class="form-control" id="SearchString" placeholder="IP" name="filterTextIp" value="@Model.CurrentFilterIp" /></th>
                             <th><input type="text" class="form-control" id="SearchString" placeholder="Röle Model" name="filterTextRole" value="@Model.CurrentFilterRole" /></th>
-                            <th><input type="text" class="form-control" id="SearchString" placeholder="Kullanıcı Adı" name="filterTextKullanici" value="@Model.CurrentFilterKullanici" /></th>
-                            <th><input type="text" class="form-control" id="SearchString" placeholder="Şifre" name="filterTextSifre" value="@Model.CurrentFilterSifre" /></th>
                             <th><button style="margin-left:20px;" type="submit" class="btn btn-primary">Ara</button></th>
                         </tr>
                     </thead>
@@ -89,7 +104,7 @@
                     <th>IP</th>
                     <th>Role Model</th>
                     <th>Kullanıcı Adı</th>
-                    <th>Şifre</th>
+                    <th>Şifre </th>
                     <th>Aksiyonlar</th>
                 </tr>
             </thead>
@@ -108,14 +123,21 @@
                             <td>@item.FiderName</td>
                             <td>@item.IP</td>
                             <td>@item.RoleModel</td>
-                            <td>@item.User</td>
-                            <td>@item.Password</td>
+                            <td>
+                                <span class="password" data-password="@item.User">******</span>
+                                <i class="icon" onclick="togglePassword(this)"><img src="~/img/eye-fill.svg" /></i>
+                            </td>
+                            <td>
+                                <span class="password" data-password="@item.Password">******</span>
+                                <i class="icon" onclick="togglePassword(this)"><img src="~/img/eye-fill.svg" /></i>
+                            </td>
+
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.ID" style=" text-decoration: none;">
-                                    @*<i class="fas fa-edit alert-success"></i>*@<img style="width: 16px;" src="~/img/edit-solid.svg" />
+                                    <img style="width: 16px;" src="~/img/edit-solid.svg" />
                                 </a> |
                                 <a asp-action="Delete" asp-route-id="@item.ID" style=" text-decoration: none;">
-                                    @*<i class="fas fa-trash-alt alert-danger"></i>*@<img style="width: 16px;" src="~/img/trash-alt-solid.svg" />
+                                    <img style="width: 16px;" src="~/img/trash-alt-solid.svg" />
                                 </a>
                             </td>
                         </tr>
@@ -146,14 +168,12 @@
                     <input type="hidden" class="form-control" id="SearchString" placeholder="Fider Adı" name="filterTextFider" value="@Model.CurrentFilterFider" />
                     <input type="hidden" class="form-control" id="SearchString" placeholder="IP" name="filterTextIp" value="@Model.CurrentFilterIp" />
                     <input type="hidden" class="form-control" id="SearchString" placeholder="Röle Model" name="filterTextRole" value="@Model.CurrentFilterRole" />
-                    <input type="hidden" class="form-control" id="SearchString" placeholder="Kullanıcı Adı" name="filterTextKullanici" value="@Model.CurrentFilterKullanici" />
-                    <input type="hidden" class="form-control" id="SearchString" placeholder="Şifre" name="filterTextSifre" value="@Model.CurrentFilterSifre" />
                 </select>
             </form>
         </div>
         <div style="margin-left:10px;">
 
-            @Html.PagedListPager(Model.RelayInformationList, page => Url.Action("List", new { page,pageSize=ViewBag.PageSize, CurrentFilterTm = Model.CurrentFilterTm,CurrentFilterKv = @Model.CurrentFilterKv,CurrentFilterHucre = @Model.CurrentFilterHucre,CurrentFilterFider = @Model.CurrentFilterFider,CurrentFilterIp = @Model.CurrentFilterIp,CurrentFilterRole = @Model.CurrentFilterRole,CurrentFilterKullanici = @Model.CurrentFilterKullanici,CurrentFilterSifre = @Model.CurrentFilterSifre, RelayInformationList=Model.RelayInformationList}), new PagedListRenderOptions {
+            @Html.PagedListPager(Model.RelayInformationList, page => Url.Action("List", new { page,pageSize=ViewBag.PageSize, CurrentFilterTm = Model.CurrentFilterTm,CurrentFilterKv = @Model.CurrentFilterKv,CurrentFilterHucre = @Model.CurrentFilterHucre,CurrentFilterFider = @Model.CurrentFilterFider,CurrentFilterIp = @Model.CurrentFilterIp,CurrentFilterRole = @Model.CurrentFilterRole,RelayInformationList=Model.RelayInformationList}), new PagedListRenderOptions {
             UlElementClasses = new[] { "pagination", "my-custom-class" },
             LiElementClasses = new[] { "page-item" },
             PageClasses = new[] { "page-link" }
@@ -164,4 +184,68 @@
 </div>
 
 
+
 <script src="~/js/relayInformation.js"></script>
+
+<script>
+    document.getElementById('uploadExcel').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var form = e.target;
+        var formData = new FormData(form);
+        var url = '@Url.Action("ImportExcel", "RelayInformation")';
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Yükleme tamamlandıktan sonra yapılacak işlemler
+
+                // "yükleniyor" mesajını gizle
+                document.getElementById('loading-indicator').classList.add('d-none');
+                // "Excel'den verileri almak için dosya seçip yükleyin." mesajını göster
+                document.getElementById('excel-message').classList.remove('d-none');
+
+                location.reload();
+            }
+        };
+
+        // Yükleme başladığında "yükleniyor" mesajını göster
+        document.getElementById('loading-indicator').classList.remove('d-none');
+        // "Excel'den verileri almak için dosya seçip yükleyin." mesajını gizle
+        document.getElementById('excel-message').classList.add('d-none');
+
+        xhr.send(formData);
+    });
+
+    function togglePassword(icon) {
+        var passwordSpan = icon.previousElementSibling;
+        var password = passwordSpan.getAttribute('data-password');
+        var eyeIcon = icon.querySelector('img');
+
+        if (passwordSpan.textContent === '******') {
+            $.ajax({
+                url: '@Url.Action("DecryptData","RelayInformation")',
+                type: 'POST',
+                data: {
+                    text: password
+                },
+                success: function (data) {
+                    // JSON'dan çözülen şifreyi al
+                    var decrypted = data.decrypt;
+                    // Şifreyi kullanıcıya göster
+
+                    passwordSpan.textContent = decrypted;
+                    eyeIcon.src = '/img/eye-slash-fill.svg';
+                },
+                error: function (error) {
+                    console.log('Hata:', error);
+                }
+            });
+        } else {
+            passwordSpan.textContent = '******';
+            eyeIcon.src = '/img/eye-fill.svg';
+        }
+    }
+
+
+
+</script>

@@ -16,6 +16,7 @@ using ProaktifArizaTahmini.BLL.Services.UserLogServices;
 using ProaktifArizaTahmini.BLL.Services.UserServices;
 using ProaktifArizaTahmini.CORE.Entities;
 using ProaktifArizaTahmini.CORE.IRepository;
+using ProaktifArizaTahmini.UI.Helper;
 using ProaktifArizaTahmini.UI.Models;
 using System.Formats.Asn1;
 using System.Globalization;
@@ -55,13 +56,19 @@ namespace ProaktifArizaTahmini.UI.Controllers
         }
         public async Task<IActionResult> List(RelayInformationFilterParams relayInformationVM, int? page, int? pageSize)
         {
+            string path = configuration.GetValue<string>("AppSettings:Path"); // JS için projenin alt klasör yolu.
+            ViewBag.Path = path;
             int minCharLimit = configuration.GetValue<int>("AppSettings:MinimumCharacterLimit");
             ViewData["ActivePage"] = "RelayInformation";
 
             int? duplicateRelaysCount = memoryCache.Get<int>("DuplicateRelaysCount");
             int? incompatibleRelaysCount = memoryCache.Get<int>("IncompatibleRelaysCount");
+            int? blankRowRelaysCount = memoryCache.Get<int>("BlankRowRelaysCount");
+            string? excelInputError = memoryCache.Get<string>("ExcelInputError");
             ViewBag.DuplicateRelaysCount = duplicateRelaysCount;
             ViewBag.IncompatibleRelaysCount = incompatibleRelaysCount;
+            ViewBag.BlankRowRelaysCount = blankRowRelaysCount;
+            ViewBag.ExcelInputError = excelInputError;
 
             int defaultPageSize = 20;
             ViewBag.PageSize = pageSize ?? defaultPageSize;
@@ -81,6 +88,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
             else
             {
                 relayInformationList = await relayInformationService.GetRelayInformations();
+                foreach (var item in relayInformationList)
+                {
+                    item.User = Encryption.Encrypt(item.User);
+                }
                 RestoreFilterTexts(relayInformationVM);
             }
             RestoreCurrentFilterTexts(relayInformationVM);
@@ -88,6 +99,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
             if (relayInformationVM.GetType().GetProperties().Any(p => p.GetValue(relayInformationVM) != null))
             {
                 relayInformationList = await relayInformationService.FilterList(relayInformationVM);
+                foreach (var item in relayInformationList)
+                {
+                    item.User = Encryption.Encrypt(item.User);
+                }
             }
 
             RelayInformationFilterParams filterParams = mapper.Map<RelayInformationFilterParams>(relayInformationVM);
@@ -122,8 +137,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             relayInformationVM.FilterTextFider = relayInformationVM.CurrentFilterFider;
             relayInformationVM.FilterTextIp = relayInformationVM.CurrentFilterIp;
             relayInformationVM.FilterTextRole = relayInformationVM.CurrentFilterRole;
-            relayInformationVM.FilterTextKullanici = relayInformationVM.CurrentFilterKullanici;
-            relayInformationVM.FilterTextSifre = relayInformationVM.CurrentFilterSifre;
         }
 
         private void RestoreCurrentFilterTexts(RelayInformationFilterParams relayInformationVM)
@@ -134,8 +147,6 @@ namespace ProaktifArizaTahmini.UI.Controllers
             relayInformationVM.CurrentFilterFider = relayInformationVM.FilterTextFider;
             relayInformationVM.CurrentFilterIp = relayInformationVM.FilterTextIp;
             relayInformationVM.CurrentFilterRole = relayInformationVM.FilterTextRole;
-            relayInformationVM.CurrentFilterKullanici = relayInformationVM.FilterTextKullanici;
-            relayInformationVM.CurrentFilterSifre = relayInformationVM.FilterTextSifre;
         }
 
         public ActionResult Create()
@@ -152,6 +163,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             var user = await userService.GetUserByUsername(username);
             try
             {
+                model.Password = Encryption.Encrypt(model.Password);
                 bool result = await relayInformationService.CreateRelayInformation(model);
                 if (result)
                 {
@@ -172,7 +184,8 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
         public async Task<ActionResult> DeleteAsync(int ID)
         {
-            var relayInformation = await relayInformationService.GetRelayInformationByDataId(ID);
+            var relayInformation = await relayInformationService.GetRelayInformationById(ID);
+            relayInformation.User = Encryption.Encrypt(relayInformation.User);
             return View(relayInformation);
         }
 
@@ -185,7 +198,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             var user = await userService.GetUserByUsername(username);
             try
             {
-                var relayInformation = await relayInformationService.GetRelayInformationByDataId(ID);
+                var relayInformation = await relayInformationService.GetRelayInformationById(ID);
                 bool result = await relayInformationService.DeleteRelayInformation(relayInformation.ID);
                 if (result)
                 {
@@ -204,9 +217,10 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
         public async Task<ActionResult> Edit(int ID)
         {
-            var relayInformation = await relayInformationService.GetRelayInformationByDataId(ID);
+            var relayInformation = await relayInformationService.GetRelayInformationById(ID);
             RelayInformationDTO relayInformationDTO = new RelayInformationDTO();
             relayInformationDTO = mapper.Map(relayInformation, relayInformationDTO);
+            relayInformationDTO.Password = Encryption.Decrypt(relayInformationDTO.Password);
             return View(relayInformationDTO);
         }
 
@@ -219,15 +233,21 @@ namespace ProaktifArizaTahmini.UI.Controllers
             var user = await userService.GetUserByUsername(username);
             try
             {
-                var data = await relayInformationService.GetRelayInformationByDataId(ID);
-                HistoryOfChange historyOfChange = new HistoryOfChange();
-                historyOfChange.OldIP = data.IP;
+                bool resultHistory = true;
+                var data = await relayInformationService.GetRelayInformationById(ID);
+                if (model.IP != data.IP)
+                {
+                    HistoryOfChange historyOfChange = new HistoryOfChange();
+                    historyOfChange.OldIP = data.IP;
+                    historyOfChange.RelayInformationId = ID;
+                    historyOfChange.ChangedDate = DateTime.Now;
+                    historyOfChange.NewIP = model.IP;
+                    resultHistory = await historyOfChangeService.Create(historyOfChange);
+                }
+                model.Password = Encryption.Encrypt(model.Password);
                 bool resultRelayInformation = await relayInformationService.UpdateRelayInformation(ID, model);
                 bool resultDisturbance = await disturbanceService.UpdateByDataIdList(model);
-                historyOfChange.RelayInformationId = ID;
-                historyOfChange.ChangedDate = DateTime.Now;
-                historyOfChange.NewIP = model.IP;
-                bool resultHistory = await historyOfChangeService.Create(historyOfChange);
+
                 if (resultRelayInformation && resultDisturbance && resultHistory)
                 {
                     await userLogService.UpdateData(user);
@@ -252,20 +272,41 @@ namespace ProaktifArizaTahmini.UI.Controllers
             List<RelayInformation> relayInformations = new List<RelayInformation>();
             List<RelayInformation> duplicateRelays = new List<RelayInformation>();
             List<RelayInformation> incompatibleRelays = new List<RelayInformation>();
+            List<RelayInformation> blankRowRelays = new List<RelayInformation>();
+            string excelInputError = "";
+
+
+
             if (excelFile != null && excelFile.Length > 0)
             {
-                try
+                // Dosya uzantısını kontrol etme
+                if (Path.GetExtension(excelFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
                 {
-                    relayInformations = await ReadDataFromExcel(excelFile);
-                    var result = await relayInformationService.AddDataList(relayInformations, user);
-                    duplicateRelays = result.duplicateRelays;
-                    incompatibleRelays = result.incompatibleRelays;
-                    await userLogService.ImportExcel(user);
+                    try
+                    {
+                        relayInformations = await ReadDataFromExcel(excelFile);
+                        var result = await relayInformationService.AddDataList(relayInformations, user);
+                        duplicateRelays = result.duplicateRelays;
+                        incompatibleRelays = result.incompatibleRelays;
+                        blankRowRelays = result.blankRowRelays;
+                        await userLogService.ImportExcel(user);
+                    }
+                    catch (Exception ex)
+                    {
+                        await userLogService.ErrorLog(user, ex.ToString(), "Excel İmport", "Hata oluştu.");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    await userLogService.ErrorLog(user, ex.ToString(), "Excel İmport", "Hata oluştu.");
+                    // Eğer dosya uzantısı .xlsx değilse hata mesajı döndür
+                    excelInputError = "Lütfen sadece Excel (.xlsx) dosyalarını yükleyin.";
+
                 }
+            }
+            else
+            {
+                // Dosya yüklenmediyse hata mesajı döndür
+                excelInputError = "Lütfen bir dosya seçin.";
             }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
@@ -275,6 +316,8 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
             memoryCache.Set("DuplicateRelaysCount", duplicateRelays.Count, cacheEntryOptions);
             memoryCache.Set("IncompatibleRelaysCount", incompatibleRelays.Count, cacheEntryOptions);
+            memoryCache.Set("BlankRowRelaysCount", blankRowRelays.Count, cacheEntryOptions);
+            memoryCache.Set("ExcelInputError", excelInputError, cacheEntryOptions);
 
             return RedirectToAction("List");
         }
@@ -300,7 +343,9 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     data.IP = GetValueOrDefault(worksheet.Cell(row, 6).Value);
                     data.RoleModel = GetValueOrDefault(worksheet.Cell(row, 7).Value);
                     data.User = GetValueOrDefault(worksheet.Cell(row, 8).Value);
-                    data.Password = GetValueOrDefault(worksheet.Cell(row, 9).Value);
+                    string password = GetValueOrDefault(worksheet.Cell(row, 9).Value);
+                    password = string.IsNullOrEmpty(password) ? "" : Encryption.Encrypt(password);
+                    data.Password = password;
                     data.Port = 21;
                     data.Path = GetPathByRoleModel(data.RoleModel);
                     dataList.Add(data);
@@ -311,7 +356,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
 
         private string GetValueOrDefault(XLCellValue cellValue)
         {
-            return cellValue.IsBlank ? "NULL" : cellValue.ToString();
+            return cellValue.IsBlank ? string.Empty : cellValue.ToString();
         }
 
 
@@ -328,10 +373,25 @@ namespace ProaktifArizaTahmini.UI.Controllers
             {
                 return "COMTRADE_1/";
             }
+            else if (string.IsNullOrEmpty(upperCaseRoleModel))
+            {
+                return null;
+            }
             else
             {
                 return "Bilinmiyor";
             }
+        }
+
+        [HttpPost]
+        public IActionResult DecryptData(string text)
+        {
+            string decryptedText = Encryption.Decrypt(text);
+            var result = new
+            {
+                decrypt = decryptedText,
+            };
+            return Json(result);
         }
 
 

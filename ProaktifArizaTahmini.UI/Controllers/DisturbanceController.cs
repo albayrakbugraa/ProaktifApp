@@ -53,7 +53,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                     ClearInvalidProperties(disturbanceVM, minCharLimit);
                 }
             }
-            if (properties.Any(p => p.GetValue(disturbanceVM) != null) && page==null)
+            if (properties.Any(p => p.GetValue(disturbanceVM) != null) && page == null)
             {
                 page = 1;
             }
@@ -133,7 +133,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
                 // .cfg dosyasını zip arşivine ekleyin
-                var cfgEntry = zipArchive.CreateEntry(comtradeName+".cfg", CompressionLevel.Optimal);
+                var cfgEntry = zipArchive.CreateEntry(comtradeName + ".cfg", CompressionLevel.Optimal);
                 using (var cfgEntryStream = cfgEntry.Open())
                 using (var cfgMemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(cfgFile)))
                 {
@@ -141,7 +141,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
                 }
 
                 // .dat dosyasını zip arşivine ekleyin
-                var datEntry = zipArchive.CreateEntry(comtradeName+".dat", CompressionLevel.Optimal);
+                var datEntry = zipArchive.CreateEntry(comtradeName + ".dat", CompressionLevel.Optimal);
                 using (var datEntryStream = datEntry.Open())
                 using (var datMemoryStream = new MemoryStream(datFile))
                 {
@@ -150,7 +150,7 @@ namespace ProaktifArizaTahmini.UI.Controllers
             }
 
             memoryStream.Seek(0, SeekOrigin.Begin);
-            return File(memoryStream, "application/zip", "Comtrade-Files.zip");
+            return File(memoryStream, "application/zip", $"{disturbance.TmNo}-{disturbance.FiderName}-{disturbance.FaultTimeStart:dd.MM.yyyy-HH-mm-ss.fff}.zip");
         }
 
     }
