@@ -29,6 +29,8 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public DateTime FaultTimeEnd { get; set; }
         [Column("Ariza_Saati_Suresi")]
         public double TotalFaultTime { get; set; }
+        [Column("Saat_Farki")]
+        public int TimeDifference { get; set; }
         [Column("Cfg_Dosya_Yolu")]
         public string? CfgFilePath { get; set; }
         [Column("Cfg_Dosyasi", TypeName = "CLOB")]

@@ -410,6 +410,33 @@ namespace ComtradeApp.Service
                             string[] lines = cfgFileData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                             DateTime faultTimeEnd = DateTime.ParseExact(lines[lines.Length - 3], "d/M/yyyy,H:m:s.ffffff", CultureInfo.InvariantCulture, DateTimeStyles.None);
                             DateTime faultTimeStart = DateTime.ParseExact(lines[lines.Length - 4], "d/M/yyyy,H:m:s.ffffff", CultureInfo.InvariantCulture, DateTimeStyles.None);
+
+                            if(parameters.RelayInformation.TimeDifference > 0)
+                            {
+                                try
+                                {
+                                    faultTimeEnd = faultTimeEnd.AddMinutes(parameters.RelayInformation.TimeDifference);
+                                    faultTimeStart = faultTimeStart.AddMinutes(parameters.RelayInformation.TimeDifference);
+                                    string fileTimeEnd = faultTimeEnd.ToString("dd/MM/yyyy,HH:mm:ss.ffffff", CultureInfo.InvariantCulture);
+                                    string fileTimeStart = faultTimeStart.ToString("dd/MM/yyyy,HH:mm:ss.ffffff", CultureInfo.InvariantCulture);
+                                    // Güncellenmiş saat değerini dosyanın içeriğine dahil et
+                                    lines[lines.Length - 3] = lines[lines.Length - 3].Replace(lines[lines.Length - 3], fileTimeEnd);
+                                    lines[lines.Length - 4] = lines[lines.Length - 4].Replace(lines[lines.Length - 4], fileTimeStart);
+                                    // Dosyanın içeriğini güncellenmiş haliyle birleştir
+                                    string updatedFileContent = string.Join(Environment.NewLine, lines);
+                                    // Güncellenmiş içeriği dosyaya yaz
+                                    File.WriteAllText(cfgFilePath, updatedFileContent);
+
+                                    await log.WarningLog($"Röledeki saat farkı eklendi. \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}", "Arıza Kaydı", threadId);
+                                    Serilog.Log.Warning($"Röledeki saat farkı eklendi. \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r CFG dosyası : {cfgFile} \r DAT dosyası : {datFileName}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    await log.ErrorLog($"Röledeki saat farkı eklenirken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.GetFileNameWithoutExtension(cfgFile)}", ex.ToString(), "Arıza Kaydı", threadId);
+                                    Serilog.Log.Error(ex, $"Röledeki saat farkı eklenirken hata oluştu!  \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.GetFileNameWithoutExtension(cfgFile)}", ex.ToString(), "Arıza Kaydı");
+                                }
+                            }
+
                             TimeSpan totalTime = faultTimeEnd - faultTimeStart;
                             double totalFaultTime = totalTime.TotalSeconds;
 
@@ -433,6 +460,7 @@ namespace ComtradeApp.Service
                             disturbance.ComtradeName = Path.GetFileNameWithoutExtension(cfgFile);
                             disturbance.sFtpStatus = false;
                             disturbance.PutTime = DateTime.MinValue;
+                            disturbance.TimeDifference = parameters.RelayInformation.TimeDifference;
 
                             bool result = await disturbanceRepository.Create(disturbance);
                             if (result)
@@ -449,8 +477,8 @@ namespace ComtradeApp.Service
                     }
                     catch (Exception ex)
                     {
-                        await log.ErrorLog($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.ChangeExtension(cfgFile, ".dat")}", ex.ToString(), "Arıza Kaydı", threadId);
-                        Serilog.Log.Error(ex, $"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.ChangeExtension(cfgFile, ".dat")}", ex.ToString(), "Arıza Kaydı");
+                        await log.ErrorLog($"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.GetFileNameWithoutExtension(cfgFile)}", ex.ToString(), "Arıza Kaydı", threadId);
+                        Serilog.Log.Error(ex, $"Arıza kaydı oluşturulurken hata oluştu! \r Tm_kV_Hücre : {parameters.RelayInformation.TmKvHucre} \r IP : {parameters.RelayInformation.IP} \r Röle Model : {parameters.RelayInformation.RoleModel} \r Comtrade Dosya Adı : {Path.GetFileNameWithoutExtension(cfgFile)}", ex.ToString(), "Arıza Kaydı");
                     }
                 }
             }

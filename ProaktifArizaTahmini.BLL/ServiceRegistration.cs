@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProaktifArizaTahmini.BLL.Services.DisturbanceServices;
 using ProaktifArizaTahmini.BLL.Services.HistoryOfChangeServices;
+using ProaktifArizaTahmini.BLL.Services.LogService;
 using ProaktifArizaTahmini.BLL.Services.RelayInformationServices;
 using ProaktifArizaTahmini.BLL.Services.UserLogServices;
 using ProaktifArizaTahmini.BLL.Services.UserServices;
@@ -33,11 +34,13 @@ namespace ProaktifArizaTahmini.BLL
             services.AddTransient<IHistoryOfChangeRepository, HistoryOfChangeRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserLogRepository, UserLogRepository>();
+            services.AddTransient<ILogReposiory, LogRepository>();
             services.AddScoped<IRelayInformationService, RelayInformationService>();
             services.AddScoped<IDisturbanceService, DisturbanceService>();
             services.AddScoped<IHistoryOfChangeService, HistoryOfChangeService>();
             services.AddScoped<IUserLogService, UserLogService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILogService, LogService>();
         }
     }
 }

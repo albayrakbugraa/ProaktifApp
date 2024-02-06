@@ -96,6 +96,10 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int>("TimeDifference")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Saat_Farki");
+
                     b.Property<string>("TmKvHucre")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
@@ -195,6 +199,13 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("Role_Model");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("TimeDifference")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("Saat_Farki");
+
                     b.Property<string>("TmKvHucre")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
@@ -244,6 +255,9 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                     b.Property<string>("ServiceName")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("ThreadID")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("TIMESTAMP(7)");
@@ -312,12 +326,6 @@ namespace ProaktifArizaTahmini.DAL.Migrations
                         .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("İsim");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("NVARCHAR2(1000)")
-                        .HasColumnName("Sifre");
-
                     b.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("NVARCHAR2(20)")
@@ -383,31 +391,16 @@ namespace ProaktifArizaTahmini.DAL.Migrations
 
                     b.Property<string>("Message")
                         .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("Açıklama");
+                        .HasColumnName("Aciklama");
 
                     b.Property<string>("MethodName")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("Metot_İsmi");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("İsim");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("Soyisim");
+                        .HasColumnName("Metot_Ismi");
 
                     b.Property<int?>("UserId")
                         .IsRequired()
                         .HasColumnType("NUMBER(10)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("Kullanici_Adi");
 
                     b.HasKey("ID");
 

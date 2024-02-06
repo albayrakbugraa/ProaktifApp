@@ -44,6 +44,7 @@ namespace ProaktifArizaTahmini.BLL.Models.DTOs
         }
         public string FiderName { get; set; }
         public string IP { get; set; }
+        public int TimeDifference { get; set; }
         public string RoleModel { get; set; }
         public int Port { get; set; }
         public string User { get; set; }

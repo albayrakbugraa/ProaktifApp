@@ -24,6 +24,8 @@ namespace ProaktifArizaTahmini.CORE.Entities
         public string IP { get; set; }
         [Column("Role_Model")]
         public string? RoleModel { get; set; }
+        [Column("Saat_Farki")]
+        public int TimeDifference { get; set; }
         public int Port { get; set; }
         public string User { get; set; }
         public string Password { get; set; }

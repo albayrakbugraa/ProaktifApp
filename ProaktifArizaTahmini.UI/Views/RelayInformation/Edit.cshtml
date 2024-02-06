@@ -38,6 +38,11 @@
                 <span asp-validation-for="IP" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TimeDifference" class="control-label">Saat Farkı(dk)</label>
+                <input asp-for="TimeDifference" class="form-control" onblur="trimInput(this)" />
+                <span asp-validation-for="TimeDifference" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="RoleModel" class="control-label">Röle Model</label>
                 <input asp-for="RoleModel" class="form-control" onblur="trimInput(this)" />
                 <span asp-validation-for="RoleModel" class="text-danger"></span>

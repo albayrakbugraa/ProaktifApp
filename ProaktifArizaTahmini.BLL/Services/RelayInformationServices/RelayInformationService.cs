@@ -130,7 +130,8 @@ namespace ProaktifArizaTahmini.BLL.Services.RelayInformationServices
                      Path = x.Path,
                      Port = x.Port,
                      TmKvHucre = x.TmKvHucre,
-                     Status = x.Status
+                     Status = x.Status,
+                     TimeDifference = x.TimeDifference
                  },
                  expression: x => x.Status == true,
                  orderBy: x => x.OrderBy(x => x.TmNo)

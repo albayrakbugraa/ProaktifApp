@@ -75,9 +75,9 @@ namespace ComtradeApp.Job
                     Task task = Task.Run(async () =>
                     {
                         await ftpService.DownloadCfgAndDatFilesEfCoreAsync(comtradeFilesPath, relays[currentIndex]);
-                        await csvConverterService.ConvertDatAndCfgFilesToCsvAsRMSDataAsync(pythonExePath, rmsScript, csvFilesPath);
-                        await csvConverterService.ConvertDatAndCfgFilesToCsvAsInstantData(pythonExePath, instantScript, csvFilesPath);
                     });
+                    await csvConverterService.ConvertDatAndCfgFilesToCsvAsRMSDataAsync(pythonExePath, rmsScript, csvFilesPath);
+                    await csvConverterService.ConvertDatAndCfgFilesToCsvAsInstantData(pythonExePath, instantScript, csvFilesPath);
 
                     tasks.Add(task);
                 }

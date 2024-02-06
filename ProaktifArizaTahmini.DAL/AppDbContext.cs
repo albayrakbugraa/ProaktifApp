@@ -20,7 +20,7 @@ namespace ProaktifArizaTahmini.DAL
         { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseOracle("User Id=CMTUSR;Password=dEX_2023*;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.41.83.112)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=EDCMTDB)))");
+            optionsBuilder.UseOracle("User Id=USER1;Password=12345;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XEPDB1)))");
         }
 
         public DbSet<RelayInformation> RelayInformations { get; set; }

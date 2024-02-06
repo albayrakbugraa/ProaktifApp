@@ -1,0 +1,150 @@
+﻿@using ProaktifArizaTahmini.BLL.Models.RequestModel;
+@using ProaktifArizaTahmini.CORE.Entities;
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+@model LogModel
+
+@{
+    ViewData["Title"] = "Logs";
+    int counter = (Model.ServiceLogs.PageNumber - 1) * Model.ServiceLogs.PageSize + 1;
+}
+<style>
+    table {
+        font-size: 12px; 
+    }
+
+    th, td {
+        padding: 8px; 
+    }
+</style>
+
+<div style="max-height: 680px; overflow-y: scroll; margin-top:20px;">
+    <div class="table-container">   
+        <form asp-action="Index" method="get">
+            <div class="filter-container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="d-flex">
+                            <th></th>
+                            <th>
+                                <span class="input-group-text" id="addon-wrapping">Mesaj</span>
+                                <input type="text" class="form-control" id="SearchString" name="filterMessage" value="@Model.CurrentMessage" aria-describedby="addon-wrapping" />
+                            </th>
+                            <th>
+                                <span class="input-group-text" id="addon-wrapping">Hata</span>
+                                <input type="text" class="form-control" id="SearchString" name="filterException" value="@Model.CurrentException" aria-describedby="addon-wrapping" />
+                            </th>
+                            <th>                                
+                                <span class="input-group-text" id="addon-wrapping">Log Seviyesi</span>
+                                @*<select id="logLevelFilter" name="filterLogLevel" class="form-select" asp-for="FilterLogLevel">
+                                    <option value="">Tümü</option>
+                                    <option value="Information">Information</option>
+                                    <option value="Error">Error</option>
+                                    <option value="Warning">Warning</option>
+                                </select>*@
+                                <select asp-for="FilterLogLevel" name="filterLogLevel" class="form-control" id="logLevelFilter" asp-items="ViewBag.LogLevels">
+                                    <option value="">Tümü</option>
+                                </select>
+                            </th>
+                            <th>
+                                <span class="input-group-text" id="addon-wrapping">Servis İsmi</span>
+                                @*<select id="logServiceNameFilter" name="filterServiceName" class="form-select" asp-for="FilterServiceName">
+                                    <option value="">Tümü</option>
+                                    <option value="FTP">FTP</option>
+                                    <option value="SFTP">SFTP</option>
+                                    <option value="CSV Dönüştürücü">CSV Dönüştürücü</option>
+                                </select>*@
+                                <select asp-for="FilterServiceName" name="filterServiceName" class="form-control" id="logServiceNameFilter" asp-items="ViewBag.ServiceNames">
+                                    <option value="">Tümü</option>
+                                </select>
+                            </th>
+                            <th>
+                                <span class="input-group-text" id="addon-wrapping">Başlangıç Tarihi</span>
+                                <input style="margin-right:20px;" type="datetime-local" class="form-control" id="startDatetimepicker" name="FilterFaultTimeStart" aria-describedby="addon-wrapping" value="@Model.CurrentFaultTimeStart" />
+                            </th>
+                            <th>
+                                <span class="input-group-text" id="addon-wrapping">Bitiş Tarihi</span>
+                                <input style="margin-right:20px;" type="datetime-local" class="form-control" id="endDatetimepicker" name="FilterFaultTimeEnd" value="@Model.CurrentFaultTimeEnd" />
+                            </th>
+                            <th><button style="margin-left:20px;" type="submit" class="btn btn-primary">Ara</button></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </form>
+        <table class="table table-striped" id="example">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Log Seviyesi</th>
+                    <th>Tarih</th>
+                    <th>Mesaj</th>
+                    <th>Hata</th>
+                    <th>Servis İsmi</th>
+                    <th>Thread ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    @foreach (var item in Model.ServiceLogs)
+                    {
+                        <tr>
+                            <td>
+                                @counter
+                            </td>
+                            <td>@item.LogLevel</td>
+                            <td>@item.TimeStamp</td>
+                            <td>@item.Message</td>
+                            <td>@item.Exception</td>
+                            <td>@item.ServiceName</td>
+                            <td>@item.ThreadID</td>                            
+                        </tr>
+                        counter++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        Toplam @Model.ServiceLogs.TotalItemCount kayıt bulundu. Bu sayfada @Model.ServiceLogs.FirstItemOnPage ile @Model.ServiceLogs.LastItemOnPage arası kayıtlar gösteriliyor.
+    </div>
+    <div class="d-flex justify-content-end flex-nowrap">
+        <div>
+            <form id="pageSizeForm" method="post">
+                <select class="form-select" id="pageSizeSelect" name="PageSize">
+                    <option disabled selected>@ViewBag.PageSize</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <input type="hidden" class="form-control" id="SearchString" placeholder="TM No" name="filterLogLevel" value="@Model.CurrentLogLevel" />
+                    <input type="hidden" class="form-control" id="SearchString" placeholder="kV" name="filterMessage" value="@Model.CurrentMessage" />
+                    <input type="hidden" class="form-control" id="SearchString" placeholder="Hücre No" name="filterServiceName" value="@Model.CurrentServiceName" />
+                    <input type="hidden" class="form-control" id="SearchString" placeholder="Hücre No" name="filterException" value="@Model.CurrentException" />
+                    <input type="hidden" class="form-control" id="startDatetimepicker" name="FilterFaultTimeStart" value="@Model.CurrentFaultTimeStart" />
+                    <input type="hidden" class="form-control" id="startDatetimepicker" name="FilterFaultTimeEnd" value="@Model.CurrentFaultTimeEnd" />
+                </select>
+            </form>
+        </div>
+        <div style="margin-left:10px;">
+
+            @Html.PagedListPager(Model.ServiceLogs, page => Url.Action("Index", new { page,pageSize=ViewBag.PageSize, CurrentLogLevel = Model.CurrentLogLevel,CurrentMessage = @Model.CurrentMessage,CurrentException = @Model.CurrentException,CurrentServiceName = @Model.CurrentServiceName, CurrentFaultTimeStart= @Model.CurrentFaultTimeStart,CurrentFaultTimeEnd = @Model.CurrentFaultTimeEnd, }), new PagedListRenderOptions {
+            UlElementClasses = new[] { "pagination", "my-custom-class" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" }
+            })
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("pageSizeSelect").addEventListener("change", function () {
+        document.getElementById("pageSizeForm").submit();
+    });
+
+</script>
